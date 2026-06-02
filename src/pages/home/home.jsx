@@ -121,11 +121,13 @@ export default function Home() {
       // Loop over surfboards to collect reviews (workaround since there's no global reviews endpoint)
       for (const product of surfboards) {
         try {
-          const res = await reviewService.getByProduct(product.id, { limit: 5 });
+          const res = await reviewService.getByProduct(product.id, {
+            limit: 5,
+          });
           if (res.data?.reviews) {
-            const productReviews = res.data.reviews.map(r => ({
+            const productReviews = res.data.reviews.map((r) => ({
               ...r,
-              product: { id: product.id, name: product.name }
+              product: { id: product.id, name: product.name },
             }));
             allReviews.push(...productReviews);
           }
@@ -480,7 +482,7 @@ export default function Home() {
       </section>
 
       {/* SHOP BY WAVE */}
-      <section className="w-full bg-[#252525] py-24 border-t border-[#333]">
+      <section className="w-full bg-[#1f1f1f] py-24 border-t border-[#333]">
         <Container>
           <FadeUp>
             <h3 className="font-oswald text-3xl font-bold tracking-[0.3em] text-gray-400 uppercase text-center mb-12">
@@ -492,7 +494,7 @@ export default function Home() {
                   title: "SMALL WAVES",
                   img: smallWavesImg,
                   desc: "Longboards & Funboards",
-                  imgClass: "w-20 md:w-24",
+                  imgClass: "w-28 md:w-36",
                 },
                 {
                   title: "MEDIUM WAVES",
@@ -504,7 +506,7 @@ export default function Home() {
                   title: "BIG WAVES",
                   img: bigWavesImg,
                   desc: "Guns & Step-Ups",
-                  imgClass: "w-36 md:w-48",
+                  imgClass: "w-28 md:w-36",
                 },
               ].map((wave, idx) => (
                 <motion.div
