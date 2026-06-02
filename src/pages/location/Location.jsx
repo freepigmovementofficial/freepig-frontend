@@ -13,7 +13,7 @@ const shopsData = {
       "Jl. Benesari No.55b, Legian, Kec. Kuta, Kabupaten Badung, Bali 80361",
     hours: "Buka · Tutup pukul 20.00",
     phone: "0812-2422-2380",
-    website: "freepigmovement.com",
+    instagram: "https://www.instagram.com/freepigmovement/",
     mapLink:
       "https://www.google.com/maps/place/RPM+Surf+Shop/@-8.715316,115.1723369,710m/data=!3m2!1e3!4b1!4m6!3m5!1s0x2dd246c09dad6f5b:0x3322c6c891fd323b!8m2!3d-8.715316!4d115.1723369!16s%2Fg%2F1pzw586l9!18m1!1e1?entry=ttu",
     iframeSrc:
@@ -28,7 +28,8 @@ const shopsData = {
       "Jl. Raya Legian No.64, Kuta, Kec. Kuta, Kabupaten Badung, Bali 80361",
     hours: "Buka · Tutup pukul 20.00",
     phone: "0878-3911-9590",
-    website: "freepigmovement.com",
+    instagram:
+      "https://www.instagram.com/freepigmovement?igsh=MWo3NDg2cXR2bGtzdA%3D%3D",
     mapLink:
       "https://www.google.com/maps/place/The+Pit+Surf+Shop,+Jl.+Raya+Legian+No.64,+Kuta,+Kec.+Kuta,+Kabupaten+Badung,+Bali+80361/data=!4m2!3m1!1s0x2dd246b9a6778a4f:0xa1d362ac4aa28fb6!18m1!1e1?utm_source=mstt_1&entry=gps",
     iframeSrc:
@@ -129,16 +130,30 @@ export default function Location() {
               <div className="flex items-start gap-4 group">
                 <FiGlobe className="text-white-teal text-2xl mt-0.5" />
                 <div>
-                  <h4 className="text-white font-bold tracking-widest uppercase mb-1">
-                    Website
+                  <h4 className="text-white font-bold tracking-widest uppercase mb-2">
+                    Instagram
                   </h4>
+
                   <a
-                    href={`https://${shop.website}`}
+                    href={shop.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-blue-400 hover:text-blue-300 transition duration-300 underline"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white-500/30 bg-white-500/10 text-white-400 hover:bg-blue-500 hover:text-white hover:border-white-500 transition-all duration-300 text-sm font-medium"
                   >
-                    {shop.website}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4"
+                    >
+                      <path d="M7.75 2C4.574 2 2 4.574 2 7.75v8.5C2 19.426 4.574 22 7.75 22h8.5C19.426 22 22 19.426 22 16.25v-8.5C22 4.574 19.426 2 16.25 2h-8.5zm0 2h8.5A3.75 3.75 0 0 1 20 7.75v8.5A3.75 3.75 0 0 1 16.25 20h-8.5A3.75 3.75 0 0 1 4 16.25v-8.5A3.75 3.75 0 0 1 7.75 4zm9.5 1a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
+                    </svg>
+                    @
+                    {shop.instagram
+                      .replace("https://www.instagram.com/", "")
+                      .replace("http://www.instagram.com/", "")
+                      .replace(/\?.*/, "")
+                      .replace(/\/$/, "")}
                   </a>
                 </div>
               </div>
