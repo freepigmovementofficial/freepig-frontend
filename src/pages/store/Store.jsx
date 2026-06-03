@@ -69,6 +69,7 @@ export default function Store() {
       if (activeSkill) params.skillLevel = activeSkill;
       if (activeWave) params.waveLevel = activeWave;
       if (activeTab === 'ACCESSORIES' && activeCategory) params.categoryId = activeCategory;
+      params.productType = activeTab === 'ACCESSORIES' ? 'ACCESSORY' : 'SURFBOARD';
       const res = await productService.getAll(params, { signal });
       setProducts(res.data?.products || []);
       setIsLoading(false);
@@ -179,25 +180,26 @@ export default function Store() {
             </div>
           )}
 
-          {/* Accessories filter */}
           {activeTab === 'ACCESSORIES' && categories.length > 0 && (
             <div className="flex items-center gap-3 flex-wrap">
               <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase w-24 shrink-0">CATEGORY</span>
               <div className="flex gap-2 flex-wrap">
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    id={`filter-cat-${cat.slug}`}
-                    onClick={() => setActiveCategory((prev) => (prev === cat.id ? null : cat.id))}
-                    className={`px-4 py-1.5 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
-                      activeCategory === cat.id
-                        ? 'bg-white text-black border-white shadow-lg'
-                        : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
-                    }`}
-                  >
-                    {cat.name.toUpperCase()}
-                  </button>
-                ))}
+                {categories
+                  .filter((cat) => ['traction-pad', 'leash', 'fins', 'board-bag', 'sock'].includes(cat.slug))
+                  .map((cat) => (
+                    <button
+                      key={cat.id}
+                      id={`filter-cat-${cat.slug}`}
+                      onClick={() => setActiveCategory((prev) => (prev === cat.id ? null : cat.id))}
+                      className={`px-4 py-1.5 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
+                        activeCategory === cat.id
+                          ? 'bg-white text-black border-white shadow-lg'
+                          : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
+                      }`}
+                    >
+                      {cat.name.toUpperCase()}
+                    </button>
+                  ))}
               </div>
             </div>
           )}

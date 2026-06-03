@@ -2,7 +2,24 @@ import api from './axios';
 
 export const productService = {
   getAll: async (params, config = {}) => {
-    const response = await api.get('/products', { params, ...config });
+    let url = '/products';
+    if (params && Object.keys(params).length > 0) {
+      const searchParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, val]) => {
+        if (val !== undefined && val !== null) {
+          if (Array.isArray(val)) {
+            val.forEach(item => searchParams.append(key, item));
+          } else {
+            searchParams.append(key, val);
+          }
+        }
+      });
+      const queryString = searchParams.toString();
+      if (queryString) {
+        url = `${url}?${queryString}`;
+      }
+    }
+    const response = await api.get(url, config);
     return response.data;
   },
   getBySlug: async (slug) => {

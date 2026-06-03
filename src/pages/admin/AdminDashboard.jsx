@@ -51,14 +51,24 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.waveLevels.length === 0) { setError('Select at least one wave level.'); return; }
     setLoading(true);
     setError('');
     
-    // Filter out WAVE_POOL because backend validation schema doesn't accept it
     const payload = { ...form };
-    payload.waveLevels = payload.waveLevels.filter(w => w !== 'WAVE_POOL');
-    if (payload.waveLevels.length === 0) payload.waveLevels = ['SMALL'];
+    const selectedCategory = categories.find((c) => c.id === form.categoryId);
+    const accessorySlugs = ['traction-pad', 'leash', 'fins', 'board-bag', 'sock'];
+    const isAccessory = selectedCategory && accessorySlugs.includes(selectedCategory.slug);
+
+    if (isAccessory) {
+      payload.productType = 'ACCESSORY';
+      delete payload.skillLevel;
+      delete payload.waveLevels;
+    } else {
+      payload.productType = 'SURFBOARD';
+      payload.waveLevels = (payload.waveLevels || []).filter(w => w !== 'WAVE_POOL');
+      if (payload.waveLevels.length === 0) payload.waveLevels = ['SMALL'];
+    }
+
     if (!payload.description) delete payload.description;
 
     try {

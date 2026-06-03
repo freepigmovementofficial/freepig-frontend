@@ -96,7 +96,7 @@ export default function Home() {
     const fetchSurfboards = async () => {
       try {
         setSurfboardsLoading(true);
-        const res = await productService.getAll({ limit: 4 });
+        const res = await productService.getAll({ limit: 4, productType: 'SURFBOARD' });
         // format response: { data: { products: [...] } } — sesuai Store.jsx
         const items = res.data?.products ?? [];
         setSurfboards(Array.isArray(items) ? items.slice(0, 4) : []);
