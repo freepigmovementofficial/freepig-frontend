@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { getDisplayImage } from "../../utils/productImage";
 import Rectangle94 from "../../assets/Rectangle94.png";
 import {
@@ -22,7 +22,8 @@ import categoryGroms from "../../assets/CategoryGroms.jpg";
 import CTAPopup from "../../components/CTAPopup";
 import { newReleaseService } from "../../api/newReleases";
 import { productService } from "../../api/products";
-import { reviewService } from "../../api/reviews";
+import { featuredService } from "../../api/featured";
+import { storeReviewService } from "../../api/storeReviews";
 
 const FadeUp = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -57,16 +58,20 @@ export default function Home() {
   const [surfboards, setSurfboards] = useState([]);
   const [surfboardsLoading, setSurfboardsLoading] = useState(true);
 
-  // Reviews state
+  // Store Reviews state
   const [reviews, setReviews] = useState([]);
+  const [reviewsMeta, setReviewsMeta] = useState({ avgRating: 0, totalReviews: 0 });
   const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [hasReviewed, setHasReviewed] = useState(false);
+  const [myReview, setMyReview] = useState(null);      // user's own review object
+  // Form state
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewHover, setReviewHover] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [reviewSuccess, setReviewSuccess] = useState("");
-  const [selectedProductId, setSelectedProductId] = useState("");
+  const [isEditMode, setIsEditMode] = useState(false);  // editing own review
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   const navigate = useNavigate();
@@ -96,11 +101,15 @@ export default function Home() {
     const fetchSurfboards = async () => {
       try {
         setSurfboardsLoading(true);
-        const res = await productService.getAll({ limit: 4, productType: 'SURFBOARD' });
-        // format response: { data: { products: [...] } } — sesuai Store.jsx
-        const items = res.data?.products ?? [];
-        setSurfboards(Array.isArray(items) ? items.slice(0, 4) : []);
+        // Fetch curated products from the active featured section (set by admin)
+        const res = await featuredService.getActive();
+        const featuredProducts = res.data?.products ?? [];
+        // The API returns featured entries: { product: { ... } }
+        // so we map each entry to its nested product object
+        const items = featuredProducts.map((entry) => entry.product ?? entry);
+        setSurfboards(Array.isArray(items) ? items : []);
       } catch (err) {
+        // 404 means no active featured section — fallback to empty
         setSurfboards([]);
       } finally {
         setSurfboardsLoading(false);
@@ -109,47 +118,35 @@ export default function Home() {
     fetchSurfboards();
   }, []);
 
-  // Fetch reviews using the available getByProduct endpoint across loaded surfboards
-  const fetchAllReviews = async () => {
-    if (surfboards.length === 0) {
-      setReviewsLoading(false);
-      return;
-    }
+  // Fetch store reviews
+  const fetchStoreReviews = async () => {
     try {
       setReviewsLoading(true);
-      const allReviews = [];
-      // Loop over surfboards to collect reviews (workaround since there's no global reviews endpoint)
-      for (const product of surfboards) {
-        try {
-          const res = await reviewService.getByProduct(product.id, {
-            limit: 5,
-          });
-          if (res.data?.reviews) {
-            const productReviews = res.data.reviews.map((r) => ({
-              ...r,
-              product: { id: product.id, name: product.name },
-            }));
-            allReviews.push(...productReviews);
-          }
-        } catch (e) {
-          // ignore error for a single product
-        }
+      const res = await storeReviewService.getAll({ limit: 20 });
+      const data = res.data;
+      setReviews(data?.reviews ?? []);
+      setReviewsMeta({
+        avgRating: data?.avgRating ?? 0,
+        totalReviews: data?.totalReviews ?? 0,
+      });
+      setHasReviewed(data?.hasReviewed ?? false);
+      // Find own review to allow edit/delete
+      if (user && data?.reviews) {
+        const mine = data.reviews.find((r) => r.userId === user.id);
+        setMyReview(mine ?? null);
       }
-      // Shuffle or just slice the first 10
-      setReviews(allReviews.slice(0, 10));
-    } catch (err) {
+    } catch {
       setReviews([]);
     } finally {
       setReviewsLoading(false);
     }
   };
 
-  // Fetch reviews whenever surfboards are loaded
   useEffect(() => {
-    fetchAllReviews();
-  }, [surfboards]);
+    fetchStoreReviews();
+  }, []);
 
-  // Submit review handler
+  // Submit or update store review
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     setReviewError("");
@@ -159,11 +156,6 @@ export default function Home() {
       navigate("/login");
       return;
     }
-
-    if (!selectedProductId) {
-      setReviewError("Please select a product to review.");
-      return;
-    }
     if (reviewRating === 0) {
       setReviewError("Please select a star rating.");
       return;
@@ -171,21 +163,59 @@ export default function Home() {
 
     setReviewSubmitting(true);
     try {
-      await reviewService.create(selectedProductId, {
-        rating: reviewRating,
-        comment: reviewComment || undefined,
-      });
-      setReviewSuccess("Review submitted successfully!");
+      if (isEditMode && myReview) {
+        await storeReviewService.update(myReview.id, {
+          rating: reviewRating,
+          comment: reviewComment || undefined,
+        });
+        setReviewSuccess("Review updated successfully!");
+      } else {
+        await storeReviewService.create({
+          rating: reviewRating,
+          comment: reviewComment || undefined,
+        });
+        setReviewSuccess("Review submitted successfully!");
+      }
       setReviewRating(0);
       setReviewComment("");
-      setSelectedProductId("");
-      // Refresh reviews
-      fetchAllReviews();
+      setIsEditMode(false);
+      fetchStoreReviews();
     } catch (err) {
       setReviewError(err.response?.data?.message || "Failed to submit review.");
     } finally {
       setReviewSubmitting(false);
     }
+  };
+
+  // Delete own review
+  const handleDeleteReview = async () => {
+    if (!myReview) return;
+    if (!window.confirm("Delete your review?")) return;
+    try {
+      await storeReviewService.delete(myReview.id);
+      setMyReview(null);
+      setHasReviewed(false);
+      fetchStoreReviews();
+    } catch (err) {
+      setReviewError(err.response?.data?.message || "Failed to delete review.");
+    }
+  };
+
+  // Start editing own review
+  const handleStartEdit = () => {
+    if (!myReview) return;
+    setReviewRating(myReview.rating);
+    setReviewComment(myReview.comment || "");
+    setIsEditMode(true);
+    setReviewError("");
+    setReviewSuccess("");
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditMode(false);
+    setReviewRating(0);
+    setReviewComment("");
+    setReviewError("");
   };
 
   // Star rendering helper
@@ -442,7 +472,7 @@ export default function Home() {
         <Container>
           <FadeUp>
             <h3 className="font-oswald text-3xl font-bold tracking-[0.3em] text-gray-400 uppercase text-center mb-12">
-              Shop By Skill
+              find your level
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
@@ -486,7 +516,7 @@ export default function Home() {
         <Container>
           <FadeUp>
             <h3 className="font-oswald text-3xl font-bold tracking-[0.3em] text-gray-400 uppercase text-center mb-12">
-              Shop By Wave
+              find your wave
             </h3>
             <div className="flex flex-col md:flex-row justify-center items-end gap-12 md:gap-24 text-center mt-12">
               {[
@@ -557,17 +587,11 @@ export default function Home() {
 
           {/* Loading skeleton */}
           {surfboardsLoading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="bg-[#1e1e1e] border border-[#2a2a2a] overflow-hidden animate-pulse"
-                >
-                  <div className="h-72 bg-[#2a2a2a]" />
-                  <div className="p-4 border-t border-[#333]">
-                    <div className="h-3 bg-[#333] rounded w-1/3 mb-2" />
-                    <div className="h-5 bg-[#333] rounded w-2/3" />
-                  </div>
+                <div key={i} className="flex flex-col animate-pulse">
+                  <div className="bg-[#333] aspect-[3/4]" />
+                  <div className="bg-[#3a3a3a] px-4 py-3 h-14" />
                 </div>
               ))}
             </div>
@@ -575,7 +599,7 @@ export default function Home() {
 
           {/* Actual products */}
           {!surfboardsLoading && surfboards.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {surfboards.map((product, idx) => {
                 const firstImage = getDisplayImage(product);
                 const category =
@@ -584,39 +608,36 @@ export default function Home() {
                   product.type ??
                   "Surfboard";
                 return (
-                  <motion.div
-                    key={product.id ?? idx}
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: idx * 0.1 }}
-                    onClick={() => navigate(`/store`)}
-                    className="bg-[#1e1e1e] border border-[#2a2a2a] flex flex-col group cursor-pointer hover:border-accent-teal hover:-translate-y-2 transition duration-500 shadow-lg hover:shadow-2xl overflow-hidden"
-                  >
-                    <div className="h-72 w-full bg-[#161616] flex items-center justify-center overflow-hidden p-6">
-                      <img
-                        src={firstImage}
-                        alt={product.name}
-                        className="h-full object-contain group-hover:scale-110 transition duration-700 drop-shadow-2xl"
-                        onError={(e) => {
-                          e.target.src = "/black_surfboard.png";
-                        }}
-                      />
-                    </div>
-                    <div className="mt-auto border-t border-[#333] pt-4 px-4 pb-4">
-                      <p className="text-[10px] text-accent-teal tracking-[0.2em] mb-1 uppercase font-semibold">
-                        {category}
-                      </p>
-                      <h4 className="font-oswald text-xl font-bold tracking-widest group-hover:text-white transition text-gray-200">
-                        {product.name?.toUpperCase()}
-                      </h4>
-                      {product.price && (
-                        <p className="text-sm text-gray-400 mt-1">
-                          Rp {Number(product.price).toLocaleString("id-ID")}
+                  <Link key={product.id ?? idx} to={`/product/${product.slug}`}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 24 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.35, delay: idx * 0.08 }}
+                      className="flex flex-col cursor-pointer group"
+                    >
+                      {/* Image — full-frame, no padding, white bg */}
+                      <div className="bg-white overflow-hidden aspect-[3/4]">
+                        <img
+                          src={firstImage}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            e.target.src = "/black_surfboard.png";
+                          }}
+                        />
+                      </div>
+                      {/* Info bar */}
+                      <div className="bg-[#3a3a3a] px-4 py-3">
+                        <p className="text-[9px] text-gray-400 tracking-[0.18em] uppercase mb-0.5 font-semibold">
+                          {category}
                         </p>
-                      )}
-                    </div>
-                  </motion.div>
+                        <p className="font-oswald text-sm font-bold tracking-wider uppercase text-white group-hover:text-accent-teal transition duration-300">
+                          {product.name}
+                        </p>
+                      </div>
+                    </motion.div>
+                  </Link>
                 );
               })}
             </div>
@@ -637,11 +658,18 @@ export default function Home() {
       <section className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-3 h-[600px]">
           {[
-            { topTitle: "MEET", bottomTitle: "THE RIDERS", img: meetTheRiders },
-            { topTitle: "OUR", bottomTitle: "CUSTOMER", img: ourCustomer },
             {
-              topTitle: "CUSTOM",
-              bottomTitle: "RESIN TINT",
+              topTitle: "RIDERS",
+              bottomTitle: "SPOTLIGHT",
+              img: meetTheRiders,
+            },
+            {
+              topTitle: "LOVED BY",
+              bottomTitle: "SURFERS WORLDWIDE",
+              img: ourCustomer,
+            },
+            {
+              bottomTitle: "GALERY",
               img: customresinTint,
             },
           ].map((item, idx) => (
@@ -793,13 +821,27 @@ export default function Home() {
       <section className="w-full bg-[#151515] py-24">
         <Container>
           <FadeUp>
+            {/* Header + rating summary */}
             <div className="text-center mb-16">
               <h2 className="font-oswald text-4xl md:text-5xl font-bold tracking-widest text-white mb-3">
                 Voices From The Lineup
               </h2>
-              <p className="text-gray-400 text-sm tracking-widest">
+              <p className="text-gray-400 text-sm tracking-widest mb-6">
                 Trusted by Riders. Proven in Every Wave.
               </p>
+              {reviewsMeta.totalReviews > 0 && (
+                <div className="flex items-center justify-center gap-3">
+                  <div className="flex">
+                    {renderStars(Math.round(reviewsMeta.avgRating), "text-xl")}
+                  </div>
+                  <span className="text-white font-bold text-lg">
+                    {reviewsMeta.avgRating.toFixed(1)}
+                  </span>
+                  <span className="text-gray-500 text-sm tracking-widest">
+                    ({reviewsMeta.totalReviews} reviews)
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Reviews carousel */}
@@ -820,50 +862,75 @@ export default function Home() {
                 ))}
               </div>
             ) : reviews.length > 0 ? (
-              <div className="relative">
-                <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
-                  {reviews.map((review, idx) => (
+              <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
+                {reviews.map((review, idx) => {
+                  const isOwn = user && review.userId === user.id;
+                  return (
                     <motion.div
                       key={review.id}
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: idx * 0.08 }}
-                      className="min-w-[300px] md:min-w-[340px] snap-start bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl p-6 flex flex-col hover:border-accent-teal/40 transition duration-500 group"
+                      className={`min-w-[300px] md:min-w-[340px] snap-start rounded-xl p-6 flex flex-col transition duration-500 group border ${
+                        isOwn
+                          ? "bg-accent-teal/5 border-accent-teal/30"
+                          : "bg-[#1e1e1e] border-[#2a2a2a] hover:border-accent-teal/40"
+                      }`}
                     >
                       {/* User info + rating */}
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-teal/30 to-[#333] flex items-center justify-center text-white font-bold text-sm uppercase">
-                          {review.user?.name?.[0] || "?"}
-                        </div>
-                        <div>
-                          <p className="text-white font-semibold text-sm tracking-wide">
-                            {review.user?.name || "Anonymous"}
-                          </p>
-                          <div className="flex">
-                            {renderStars(review.rating, "text-sm")}
+                      <div className="flex items-center justify-between gap-3 mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-teal/30 to-[#333] flex items-center justify-center text-white font-bold text-sm uppercase">
+                            {review.user?.name?.[0] || "?"}
+                          </div>
+                          <div>
+                            <p className="text-white font-semibold text-sm tracking-wide flex items-center gap-2">
+                              {review.user?.name || "Anonymous"}
+                              {isOwn && (
+                                <span className="text-[9px] font-bold text-accent-teal tracking-widest bg-accent-teal/10 px-1.5 py-0.5 rounded">
+                                  YOU
+                                </span>
+                              )}
+                            </p>
+                            <div className="flex">{renderStars(review.rating, "text-sm")}</div>
                           </div>
                         </div>
+                        {/* Edit/Delete for own review */}
+                        {isOwn && (
+                          <div className="flex gap-1.5 shrink-0">
+                            <button
+                              onClick={handleStartEdit}
+                              className="px-2 py-1 text-[9px] font-bold tracking-widest border border-gray-600 rounded-full text-gray-400 hover:border-white hover:text-white transition"
+                            >
+                              EDIT
+                            </button>
+                            <button
+                              onClick={handleDeleteReview}
+                              className="px-2 py-1 text-[9px] font-bold tracking-widest border border-red-500/40 rounded-full text-red-400 hover:bg-red-500/10 transition"
+                            >
+                              DEL
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       {/* Comment */}
                       <p className="text-gray-400 text-sm leading-relaxed flex-1">
                         {review.comment || (
-                          <span className="italic text-gray-600">
-                            No comment
-                          </span>
+                          <span className="italic text-gray-600">No comment</span>
                         )}
                       </p>
 
-                      {/* Product name */}
-                      {review.product && (
-                        <p className="text-[10px] text-accent-teal/70 tracking-widest uppercase mt-4 pt-3 border-t border-[#2a2a2a]">
-                          {review.product.name}
-                        </p>
-                      )}
+                      {/* Date */}
+                      <p className="text-[10px] text-gray-600 tracking-widest mt-4 pt-3 border-t border-[#2a2a2a]">
+                        {new Date(review.createdAt).toLocaleDateString("en-GB", {
+                          day: "numeric", month: "short", year: "numeric",
+                        })}
+                      </p>
                     </motion.div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             ) : (
               <div className="text-center py-12 text-gray-500">
@@ -877,98 +944,131 @@ export default function Home() {
           {/* RATE & REVIEW FORM */}
           <FadeUp delay={0.2}>
             <div className="mt-20 max-w-lg mx-auto">
-              <h3 className="font-oswald text-3xl font-bold tracking-widest text-white text-center mb-8">
-                Rate & Review
+              <h3 className="font-oswald text-3xl font-bold tracking-widest text-white text-center mb-2">
+                {isEditMode ? "Edit Your Review" : "Rate & Review"}
               </h3>
+              <p className="text-gray-500 text-xs tracking-widest text-center mb-8">
+                Share your experience with Freepig Movement
+              </p>
 
-              <div className="relative">
-                {(!token || !user) && (
-                  <div
-                    className="absolute inset-0 z-10 cursor-pointer"
-                    onClick={() => setShowLoginPrompt(true)}
-                  ></div>
-                )}
-                <form
-                  onSubmit={handleReviewSubmit}
-                  className={`flex flex-col gap-6 ${!token || !user ? "opacity-70" : ""}`}
-                >
-                  {/* Star rating */}
-                  <div className="flex justify-center gap-2">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        onClick={() => setReviewRating(i + 1)}
-                        onMouseEnter={() => setReviewHover(i + 1)}
-                        onMouseLeave={() => setReviewHover(0)}
-                        className={`text-4xl transition-all duration-200 ${
-                          i < (reviewHover || reviewRating)
-                            ? "text-yellow-400 scale-110"
-                            : "text-gray-600 hover:text-yellow-400/60"
-                        }`}
-                      >
-                        ★
-                      </button>
-                    ))}
+              {/* If user already reviewed and NOT editing — show their review summary */}
+              {token && user && hasReviewed && !isEditMode ? (
+                <div className="bg-accent-teal/5 border border-accent-teal/20 rounded-2xl p-6 text-center">
+                  <p className="text-accent-teal text-xs font-bold tracking-widest mb-3">
+                    ✓ YOU HAVE ALREADY REVIEWED
+                  </p>
+                  <div className="flex justify-center mb-3">
+                    {renderStars(myReview?.rating ?? 0, "text-2xl")}
                   </div>
-
-                  {/* Product selector */}
-                  <select
-                    value={selectedProductId}
-                    onChange={(e) => setSelectedProductId(e.target.value)}
-                    className="w-full bg-[#222] border border-[#333] rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-accent-teal transition appearance-none cursor-pointer"
-                  >
-                    <option value="">Select a product to review...</option>
-                    {surfboards.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-
-                  {/* Comment textarea */}
-                  <textarea
-                    rows={4}
-                    value={reviewComment}
-                    onChange={(e) => setReviewComment(e.target.value)}
-                    placeholder="Share your experience..."
-                    className="w-full bg-[#222] border border-[#333] rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none placeholder-gray-600"
-                  />
-
-                  {/* Error / success messages */}
-                  {reviewError && (
-                    <div className="px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs text-center">
-                      {reviewError}
-                    </div>
+                  {myReview?.comment && (
+                    <p className="text-gray-300 text-sm italic mb-4">"{myReview.comment}"</p>
                   )}
-                  {reviewSuccess && (
-                    <div className="px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-xs text-center">
-                      {reviewSuccess}
-                    </div>
-                  )}
-
-                  {/* User info + submit */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-teal/30 to-[#333] flex items-center justify-center text-white font-bold text-xs uppercase">
-                        {user?.name?.[0] || "?"}
-                      </div>
-                      <span className="text-sm text-gray-300 tracking-wide">
-                        {user?.name || "Anonymous"}
-                      </span>
-                    </div>
-                    <motion.button
-                      type="submit"
-                      disabled={reviewSubmitting}
-                      className="px-6 py-2.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[11px] font-bold tracking-[0.15em] uppercase disabled:opacity-50"
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.97 }}
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={handleStartEdit}
+                      className="px-6 py-2.5 border border-white/40 rounded-full text-white text-xs font-bold tracking-widest hover:bg-white hover:text-black transition"
                     >
-                      {reviewSubmitting ? "SUBMITTING..." : "SUBMIT"}
-                    </motion.button>
+                      EDIT REVIEW
+                    </button>
+                    <button
+                      onClick={handleDeleteReview}
+                      className="px-6 py-2.5 border border-red-500/40 rounded-full text-red-400 text-xs font-bold tracking-widest hover:bg-red-500/10 transition"
+                    >
+                      DELETE
+                    </button>
                   </div>
-                </form>
-              </div>
+                </div>
+              ) : (
+                <div className="relative">
+                  {(!token || !user) && (
+                    <div
+                      className="absolute inset-0 z-10 cursor-pointer"
+                      onClick={() => setShowLoginPrompt(true)}
+                    />
+                  )}
+                  <form
+                    onSubmit={handleReviewSubmit}
+                    className={`flex flex-col gap-6 ${!token || !user ? "opacity-70" : ""}`}
+                  >
+                    {/* Star rating */}
+                    <div className="flex justify-center gap-2">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => setReviewRating(i + 1)}
+                          onMouseEnter={() => setReviewHover(i + 1)}
+                          onMouseLeave={() => setReviewHover(0)}
+                          className={`text-4xl transition-all duration-200 ${
+                            i < (reviewHover || reviewRating)
+                              ? "text-yellow-400 scale-110"
+                              : "text-gray-600 hover:text-yellow-400/60"
+                          }`}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Comment textarea */}
+                    <textarea
+                      rows={4}
+                      value={reviewComment}
+                      onChange={(e) => setReviewComment(e.target.value)}
+                      placeholder="Share your experience with Freepig Movement..."
+                      className="w-full bg-[#222] border border-[#333] rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none placeholder-gray-600"
+                    />
+
+                    {/* Error / success messages */}
+                    {reviewError && (
+                      <div className="px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs text-center">
+                        {reviewError}
+                      </div>
+                    )}
+                    {reviewSuccess && (
+                      <div className="px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-xs text-center">
+                        {reviewSuccess}
+                      </div>
+                    )}
+
+                    {/* User info + buttons */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-teal/30 to-[#333] flex items-center justify-center text-white font-bold text-xs uppercase">
+                          {user?.name?.[0] || "?"}
+                        </div>
+                        <span className="text-sm text-gray-300 tracking-wide">
+                          {user?.name || "Guest"}
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        {isEditMode && (
+                          <button
+                            type="button"
+                            onClick={handleCancelEdit}
+                            className="px-4 py-2.5 border border-gray-600 rounded-full text-gray-400 text-[11px] font-bold tracking-[0.15em] uppercase hover:border-white hover:text-white transition"
+                          >
+                            CANCEL
+                          </button>
+                        )}
+                        <motion.button
+                          type="submit"
+                          disabled={reviewSubmitting}
+                          className="px-6 py-2.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[11px] font-bold tracking-[0.15em] uppercase disabled:opacity-50"
+                          whileHover={{ scale: 1.04 }}
+                          whileTap={{ scale: 0.97 }}
+                        >
+                          {reviewSubmitting
+                            ? "SAVING..."
+                            : isEditMode
+                            ? "UPDATE"
+                            : "SUBMIT"}
+                        </motion.button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              )}
             </div>
           </FadeUp>
         </Container>

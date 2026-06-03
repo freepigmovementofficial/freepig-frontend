@@ -272,11 +272,11 @@ export default function Store() {
                       transition={{ duration: 0.35, delay: idx * 0.04 }}
                       className="flex flex-col cursor-pointer group"
                     >
-                      <div className="bg-white flex justify-center items-center overflow-hidden aspect-[3/4] p-4">
+                      <div className="bg-white overflow-hidden aspect-[3/4]">
                         <img
                           src={getProductImage(product)}
                           alt={product.name}
-                          className="h-full w-auto object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-lg"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       <div className="bg-[#3a3a3a] px-4 py-3">

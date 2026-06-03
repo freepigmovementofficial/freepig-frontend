@@ -4,6 +4,8 @@ import { productService } from '../../api/products';
 import { adminService } from '../../api/admin';
 import { authService } from '../../api/auth';
 import { newReleaseService } from '../../api/newReleases';
+import { featuredService } from '../../api/featured';
+import { storeReviewService } from '../../api/storeReviews';
 import { useNavigate } from 'react-router-dom';
 
 // ─── Product Form Modal ──────────────────────────────────────────────────────
@@ -1003,6 +1005,384 @@ function NewReleasesTable() {
   );
 }
 
+// ─── Featured Sections Table ──────────────────────────────────────────────────
+function FeaturedSectionsTable() {
+  const [sections, setSections] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  // Modal states
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [createError, setCreateError] = useState('');
+  const [createLoading, setCreateLoading] = useState(false);
+
+  // Edit-products modal
+  const [editSection, setEditSection] = useState(null);
+  const [selectedProductIds, setSelectedProductIds] = useState([]);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState('');
+
+  // Delete confirm
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const [secRes, prodRes] = await Promise.all([
+        featuredService.getAll(),
+        productService.getAll({ limit: 200 }),
+      ]);
+      setSections(secRes.data || []);
+      setAllProducts(prodRes.data?.products || []);
+    } catch {
+      setSections([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const handleToggleActive = async (id) => {
+    setActionLoading(true);
+    try {
+      await featuredService.toggleActive(id);
+      load();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to toggle active status.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    setActionLoading(true);
+    try {
+      await featuredService.delete(id);
+      setDeleteConfirm(null);
+      load();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to delete section.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    setCreateLoading(true);
+    setCreateError('');
+    try {
+      await featuredService.create({ title: newTitle });
+      setNewTitle('');
+      setCreateModalOpen(false);
+      load();
+    } catch (err) {
+      setCreateError(err.response?.data?.message || 'Failed to create section.');
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
+  const openEditProducts = (section) => {
+    setEditSection(section);
+    const currentIds = (section.products || []).map((p) => p.productId ?? p.product?.id ?? p.id);
+    setSelectedProductIds(currentIds);
+    setEditError('');
+  };
+
+  const toggleProductSelection = (productId) => {
+    setSelectedProductIds((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId]
+    );
+  };
+
+  const handleSaveProducts = async () => {
+    if (selectedProductIds.length === 0) {
+      setEditError('Please select at least 1 product.');
+      return;
+    }
+    setEditLoading(true);
+    setEditError('');
+    try {
+      await featuredService.setProducts(editSection.id, selectedProductIds);
+      setEditSection(null);
+      load();
+    } catch (err) {
+      setEditError(err.response?.data?.message || 'Failed to save products.');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  // Surfboard-only products for selection
+  const surfboardProducts = allProducts.filter(
+    (p) => p.isActive !== false
+  );
+
+  return (
+    <div className="flex flex-col h-full p-8 pb-0">
+      <div className="flex items-center justify-between mb-6 shrink-0">
+        <div>
+          <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">FEATURED SECTIONS</h2>
+          <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">Pilih produk yang tampil di halaman Home</p>
+        </div>
+        <button
+          onClick={() => { setNewTitle(''); setCreateError(''); setCreateModalOpen(true); }}
+          className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition"
+        >
+          + ADD SECTION
+        </button>
+      </div>
+
+      {/* Create Modal */}
+      <AnimatePresence>
+        {createModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            onClick={() => setCreateModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
+              className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-md shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="font-oswald text-2xl font-bold tracking-widest text-white mb-6">CREATE FEATURED SECTION</h2>
+              {createError && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{createError}</div>}
+              <form onSubmit={handleCreate} className="flex flex-col gap-4">
+                <div>
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Section Title *</label>
+                  <input
+                    required
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    placeholder="e.g. Summer Picks 2026"
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
+                  />
+                </div>
+                <div className="flex gap-3 mt-2">
+                  <button type="button" onClick={() => setCreateModalOpen(false)} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition">CANCEL</button>
+                  <button type="submit" disabled={createLoading} className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">
+                    {createLoading ? 'CREATING...' : 'CREATE'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Products Modal */}
+      <AnimatePresence>
+        {editSection && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 py-10 overflow-y-auto"
+            onClick={() => setEditSection(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
+              className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-2xl shadow-2xl my-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-2">
+                <div>
+                  <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">PILIH PRODUK</h2>
+                  <p className="text-gray-500 text-xs tracking-widest mt-0.5">{editSection.title}</p>
+                </div>
+                <button onClick={() => setEditSection(null)} className="text-gray-400 hover:text-white text-lg font-bold w-8 h-8 flex items-center justify-center">✕</button>
+              </div>
+
+              <div className="mb-4 px-3 py-2 bg-accent-teal/5 border border-accent-teal/20 rounded-lg text-[10px] text-gray-400 tracking-wide">
+                ✓ Centang produk yang ingin ditampilkan di halaman Home. Urutan pilihan menentukan urutan tampilan.
+              </div>
+
+              {editError && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{editError}</div>}
+
+              <div className="max-h-[420px] overflow-y-auto custom-scrollbar rounded-xl border border-white/5 mb-5">
+                {surfboardProducts.length === 0 ? (
+                  <div className="py-12 text-center text-gray-500 text-sm">No products available.</div>
+                ) : (
+                  <table className="w-full text-sm">
+                    <thead className="sticky top-0 z-10">
+                      <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase">
+                        <th className="px-4 py-3 text-left w-10">✓</th>
+                        <th className="px-4 py-3 text-left">Image</th>
+                        <th className="px-4 py-3 text-left">Name</th>
+                        <th className="px-4 py-3 text-left">Category</th>
+                        <th className="px-4 py-3 text-left">Skill</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {surfboardProducts.map((p, idx) => {
+                        const isSelected = selectedProductIds.includes(p.id);
+                        const selectionOrder = selectedProductIds.indexOf(p.id);
+                        return (
+                          <tr
+                            key={p.id}
+                            onClick={() => toggleProductSelection(p.id)}
+                            className={`border-t border-white/5 cursor-pointer transition ${
+                              isSelected
+                                ? 'bg-accent-teal/10 hover:bg-accent-teal/15'
+                                : idx % 2 === 0 ? 'bg-[#1c1c1c] hover:bg-white/5' : 'bg-[#1a1a1a] hover:bg-white/5'
+                            }`}
+                          >
+                            <td className="px-4 py-3">
+                              <div className={`w-5 h-5 rounded flex items-center justify-center border text-[10px] font-black transition ${
+                                isSelected ? 'bg-accent-teal border-accent-teal text-black' : 'border-gray-600 text-transparent'
+                              }`}>
+                                {isSelected ? selectionOrder + 1 : '✓'}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="w-10 h-10 bg-[#333] rounded overflow-hidden flex items-center justify-center">
+                                {p.images?.[0]?.url ? (
+                                  <img src={p.images[0].url} alt={p.name} className="w-full h-full object-cover" />
+                                ) : (
+                                  <span className="text-gray-600 text-[9px]">—</span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 font-bold text-white tracking-wide">{p.name}</td>
+                            <td className="px-4 py-3 text-gray-400 text-xs">{p.category?.name || '—'}</td>
+                            <td className="px-4 py-3">
+                              <span className="px-2 py-0.5 rounded-full bg-white/10 text-[9px] font-bold tracking-widest text-gray-300">
+                                {p.skillLevel || '—'}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-500 tracking-widest">
+                  {selectedProductIds.length} produk dipilih
+                </p>
+                <div className="flex gap-3">
+                  <button onClick={() => setEditSection(null)} className="px-6 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition">CANCEL</button>
+                  <button
+                    onClick={handleSaveProducts}
+                    disabled={editLoading || selectedProductIds.length === 0}
+                    className="px-6 py-2.5 bg-accent-teal text-black rounded-full text-xs font-bold tracking-widest hover:bg-accent-teal/80 transition disabled:opacity-50"
+                  >
+                    {editLoading ? 'SAVING...' : 'SAVE PRODUCTS'}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirm */}
+      <AnimatePresence>
+        {deleteConfirm && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4">
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} className="bg-[#1a1a1a] border border-red-500/30 rounded-2xl p-8 max-w-sm w-full text-center">
+              <h3 className="font-oswald text-xl font-bold text-white mb-2">DELETE SECTION?</h3>
+              <p className="text-gray-400 text-sm mb-6">All featured product entries will be removed. This cannot be undone.</p>
+              <div className="flex gap-3">
+                <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition">CANCEL</button>
+                <button onClick={() => handleDelete(deleteConfirm)} disabled={actionLoading} className="flex-1 py-2.5 bg-red-500 text-white rounded-full text-xs font-bold tracking-widest hover:bg-red-600 transition disabled:opacity-50">
+                  {actionLoading ? 'DELETING...' : 'DELETE'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
+        {loading ? (
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">Loading sections...</div>
+        ) : sections.length === 0 ? (
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No featured sections yet. Create one to get started.</div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase shadow-md">
+                <th className="px-4 py-3 text-left">Title</th>
+                <th className="px-4 py-3 text-left">Products</th>
+                <th className="px-4 py-3 text-left">Status</th>
+                <th className="px-4 py-3 text-left">Updated</th>
+                <th className="px-4 py-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sections.map((s, idx) => (
+                <tr key={s.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? 'bg-[#1c1c1c]' : 'bg-[#1a1a1a]'}`}>
+                  <td className="px-4 py-3 font-bold text-white tracking-wide">{s.title}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-1">
+                      {(s.products || []).slice(0, 3).map((entry) => {
+                        const prod = entry.product ?? entry;
+                        return (
+                          <span key={entry.id ?? prod.id} className="px-2 py-0.5 bg-white/10 text-gray-300 rounded-full text-[9px] font-bold tracking-widest">
+                            {prod.name}
+                          </span>
+                        );
+                      })}
+                      {(s.products || []).length > 3 && (
+                        <span className="px-2 py-0.5 bg-white/5 text-gray-500 rounded-full text-[9px] font-bold tracking-widest">
+                          +{(s.products || []).length - 3} more
+                        </span>
+                      )}
+                      {(s.products || []).length === 0 && (
+                        <span className="text-gray-600 text-[9px] italic">No products</span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => handleToggleActive(s.id)}
+                      disabled={actionLoading}
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest transition border ${
+                        s.isActive
+                          ? 'bg-green-500/20 text-green-400 border-green-500/30'
+                          : 'bg-gray-500/20 text-gray-400 border-gray-600 hover:bg-gray-700/50'
+                      }`}
+                    >
+                      {s.isActive ? '● ACTIVE' : 'INACTIVE'}
+                    </button>
+                  </td>
+                  <td className="px-4 py-3 text-gray-500 text-xs">
+                    {new Date(s.updatedAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => openEditProducts(s)}
+                        className="px-3 py-1 bg-accent-teal/20 border border-accent-teal/30 rounded-full text-[10px] font-bold tracking-widest text-accent-teal hover:bg-accent-teal/30 transition"
+                      >
+                        SET PRODUCTS
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirm(s.id)}
+                        className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition"
+                      >
+                        DELETE
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Dashboard Stats ─────────────────────────────────────────────────────────
 function DashboardOverview() {
   const [stats, setStats] = useState(null);
@@ -1059,9 +1439,10 @@ function DashboardOverview() {
   );
 }
 
-// ─── Reviews Table ───────────────────────────────────────────────────────────
+// ─── Store Reviews Table ──────────────────────────────────────────────────
 function ReviewsTable() {
   const [reviews, setReviews] = useState([]);
+  const [meta, setMeta] = useState({ avgRating: 0, totalReviews: 0 });
   const [loading, setLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -1069,8 +1450,12 @@ function ReviewsTable() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await adminService.getReviews({ limit: 100 });
+      const res = await storeReviewService.getAll({ limit: 100 });
       setReviews(res.data?.reviews || []);
+      setMeta({
+        avgRating: res.data?.avgRating ?? 0,
+        totalReviews: res.data?.totalReviews ?? 0,
+      });
     } catch {
       setReviews([]);
     } finally {
@@ -1078,14 +1463,12 @@ function ReviewsTable() {
     }
   };
 
-  useEffect(() => {
-    load();
-  }, []);
+  useEffect(() => { load(); }, []);
 
   const handleDelete = async (id) => {
     setDeleteLoading(true);
     try {
-      await adminService.deleteReview(id);
+      await storeReviewService.delete(id);
       setDeleteConfirm(null);
       load();
     } catch (err) {
@@ -1095,14 +1478,19 @@ function ReviewsTable() {
     }
   };
 
-  const renderStars = (rating) => {
-    return '★'.repeat(rating) + '☆'.repeat(5 - rating);
-  };
+  const renderStars = (rating) => '★'.repeat(rating) + '☆'.repeat(5 - rating);
 
   return (
     <div className="flex flex-col h-full p-8 pb-0">
-      <div className="flex items-center justify-between mb-6 shrink-0">
-        <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">REVIEWS</h2>
+      <div className="flex items-center justify-between mb-4 shrink-0">
+        <div>
+          <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">STORE REVIEWS</h2>
+          {meta.totalReviews > 0 && (
+            <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">
+              {meta.totalReviews} reviews • avg {meta.avgRating.toFixed(1)} ★
+            </p>
+          )}
+        </div>
       </div>
 
       <AnimatePresence>
@@ -1138,12 +1526,11 @@ function ReviewsTable() {
         {loading ? (
           <div className="py-20 text-center text-gray-500 tracking-widest text-sm">Loading reviews...</div>
         ) : reviews.length === 0 ? (
-          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No reviews found.</div>
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No store reviews yet.</div>
         ) : (
           <table className="w-full text-sm">
             <thead className="sticky top-0 z-10">
               <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase shadow-md">
-                <th className="px-4 py-3 text-left">Product</th>
                 <th className="px-4 py-3 text-left">User</th>
                 <th className="px-4 py-3 text-left">Rating</th>
                 <th className="px-4 py-3 text-left w-1/3">Comment</th>
@@ -1154,8 +1541,12 @@ function ReviewsTable() {
             <tbody>
               {reviews.map((r, idx) => (
                 <tr key={r.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? 'bg-[#1c1c1c]' : 'bg-[#1a1a1a]'}`}>
-                  <td className="px-4 py-3 font-bold text-white tracking-wide">{r.product?.name || '—'}</td>
-                  <td className="px-4 py-3 text-gray-400">{r.user?.name || r.user?.email || '—'}</td>
+                  <td className="px-4 py-3">
+                    <div>
+                      <p className="font-bold text-white text-sm">{r.user?.name || '—'}</p>
+                      <p className="text-gray-500 text-[10px]">{r.user?.email || ''}</p>
+                    </div>
+                  </td>
                   <td className="px-4 py-3 text-accent-teal">{renderStars(r.rating)}</td>
                   <td className="px-4 py-3 text-gray-400 text-xs italic">
                     {r.comment ? `"${r.comment}"` : <span className="text-gray-600">No comment</span>}
@@ -1186,6 +1577,7 @@ const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview' },
   { id: 'products', label: 'Products' },
   { id: 'new-releases', label: 'New Releases' },
+  { id: 'featured', label: 'Featured Sections' },
   { id: 'reviews', label: 'Reviews' },
 ];
 
@@ -1269,6 +1661,7 @@ export default function AdminDashboard() {
             {active === 'overview' && <DashboardOverview />}
             {active === 'products' && <ProductsTable categories={categories} />}
             {active === 'new-releases' && <NewReleasesTable />}
+            {active === 'featured' && <FeaturedSectionsTable />}
             {active === 'reviews' && <ReviewsTable />}
           </motion.div>
         </AnimatePresence>
