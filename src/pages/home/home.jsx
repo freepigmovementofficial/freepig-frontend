@@ -431,6 +431,21 @@ export default function Home() {
                 {newRelease?.description ||
                   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
               </p>
+              <motion.button
+                onClick={() => {
+                  const slug = newRelease?.product?.slug;
+                  if (slug) {
+                    navigate(`/product/${slug}`);
+                  } else {
+                    navigate("/store");
+                  }
+                }}
+                className="mt-6 px-8 py-3.5 bg-white text-black rounded-full text-[12px] font-bold tracking-[0.2em] uppercase hover:bg-transparent hover:text-white hover:border-white border border-transparent transition-all duration-300"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                SHOP NOW →
+              </motion.button>
             </div>
           </FadeUp>
         </div>
