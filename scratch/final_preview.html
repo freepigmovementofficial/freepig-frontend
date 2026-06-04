@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Animated Pig Preview</title>
+  <style>
+    body {
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      color: white;
+    }
+    .loader-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    svg {
+      overflow: visible;
+    }
+    /* Board float + tilt */
+    @keyframes boardFloat {
+      0%, 100% { transform: translateY(0px) rotate(-3deg); }
+      50% { transform: translateY(-4px) rotate(3deg); }
+    }
+    /* Pig jump + squash-stretch */
+    @keyframes pigJump {
+      0%, 100% { transform: translateY(0) scaleY(1); }
+      30% { transform: translateY(-22px) scaleY(0.9); }
+      70% { transform: translateY(-4px) scaleY(1.05); }
+      90% { transform: translateY(0) scaleY(0.95); }
+    }
+    /* Leg swing front */
+    @keyframes legSwingFront {
+      0%, 100% { transform: rotate(0deg); }
+      30% { transform: rotate(-20deg); }
+      70% { transform: rotate(15deg); }
+    }
+    /* Leg swing back */
+    @keyframes legSwingBack {
+      0%, 100% { transform: rotate(0deg); }
+      30% { transform: rotate(15deg); }
+      70% { transform: rotate(-15deg); }
+    }
+    /* Tail wiggle */
+    @keyframes tailWiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(12deg); }
+      75% { transform: rotate(-12deg); }
+    }
+    /* Ear flap */
+    @keyframes earFlap {
+      0%, 100% { transform: rotate(0deg); }
+      40% { transform: rotate(-8deg); }
+    }
+    /* Wave left */
+    @keyframes waveLeft {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-40px); }
+    }
+    /* Wave right */
+    @keyframes waveRight {
+      0% { transform: translateX(-40px); }
+      100% { transform: translateX(0); }
+    }
+    /* Splash */
+    @keyframes splashUp {
+      0% { opacity: 0; transform: translateY(0) scale(0.3); }
+      40% { opacity: 0.9; transform: translateY(-10px) scale(1); }
+      100% { opacity: 0; transform: translateY(4px) scale(0.4); }
+    }
+    /* Blink text */
+    @keyframes blinkText {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .board-group {
+      animation: boardFloat 2.8s ease-in-out infinite;
+      transform-origin: 60px 75px;
+    }
+    .pig-group {
+      animation: pigJump 1.4s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+      transform-origin: 55px 73px;
+    }
+    .leg-front-outer {
+      animation: legSwingFront 1.4s ease-in-out infinite;
+      transform-origin: 50px 65px;
+    }
+    .leg-front-inner {
+      animation: legSwingFront 1.4s ease-in-out infinite 0.08s;
+      transform-origin: 52px 65px;
+    }
+    .leg-back-outer {
+      animation: legSwingBack 1.4s ease-in-out infinite;
+      transform-origin: 35px 65px;
+    }
+    .leg-back-inner {
+      animation: legSwingBack 1.4s ease-in-out infinite 0.08s;
+      transform-origin: 38px 65px;
+    }
+    .tail-group {
+      animation: tailWiggle 0.7s ease-in-out infinite;
+      transform-origin: 28px 50px;
+    }
+    .ear-group {
+      animation: earFlap 0.9s ease-in-out infinite;
+      transform-origin: 66px 35px;
+    }
+    .wave-left { animation: waveLeft 2.5s linear infinite; }
+    .wave-right { animation: waveRight 3s linear infinite; }
+    .splash1 { animation: splashUp 1.4s ease-out infinite 0.88s; opacity: 0; }
+    .splash2 { animation: splashUp 1.4s ease-out infinite 0.88s; opacity: 0; }
+    .splash3 { animation: splashUp 1.4s ease-out infinite 0.9s; opacity: 0; }
+    .loading-text { animation: blinkText 1.5s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="loader-box">
+    <svg viewBox="0 0 120 120" width="260" height="260" style="overflow:visible;">
+      <defs>
+        <clipPath id="circle-clip">
+          <circle cx="60" cy="60" r="42" />
+        </clipPath>
+        <!-- Pink gradient for body -->
+        <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffb8cb" />
+          <stop offset="100%" stop-color="#ff7fa0" />
+        </linearGradient>
+        <!-- Darker pink for depth legs -->
+        <linearGradient id="legGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8799b" />
+          <stop offset="100%" stop-color="#c94e72" />
+        </linearGradient>
+        <!-- Light pink inner parts -->
+        <linearGradient id="snoutGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffd0e0" />
+          <stop offset="100%" stop-color="#ffb0c8" />
+        </linearGradient>
+      </defs>
+
+      <!-- Outer dark circle background -->
+      <circle cx="60" cy="60" r="42" fill="#141414" stroke="#222" stroke-width="3" />
+
+      <!-- Clipped water waves -->
+      <g clip-path="url(#circle-clip)">
+        <g class="wave-right">
+          <path d="M -40,72 Q -30,68 -20,72 T 0,72 T 20,72 T 40,72 T 60,72 T 80,72 T 100,72 T 120,72 T 140,72 T 160,72 L 160,120 L -40,120 Z" fill="#162c38" opacity="0.6"/>
+        </g>
+        <g class="wave-left">
+          <path d="M -40,75 Q -30,70 -20,75 T 0,75 T 20,75 T 40,75 T 60,75 T 80,75 T 100,75 T 120,75 T 140,75 T 160,75 L 160,120 L -40,120 Z" fill="#009ebf" opacity="0.8"/>
+        </g>
+        <g class="wave-left">
+          <path d="M -40,78 Q -30,73 -20,78 T 0,78 T 20,78 T 40,78 T 60,78 T 80,78 T 100,78 T 120,78 T 140,78 T 160,78 L 160,120 L -40,120 Z" fill="#00e5ff" />
+          <path d="M -40,78 Q -30,73 -20,78 T 0,78 T 20,78 T 40,78 T 60,78 T 80,78 T 100,78 T 120,78 T 140,78 T 160,78" fill="none" stroke="white" stroke-width="1.5" opacity="0.8"/>
+        </g>
+      </g>
+
+      <!-- Board + Pig Group (floats together) -->
+      <g class="board-group">
+
+        <!-- Splash particles -->
+        <ellipse class="splash1" cx="36" cy="74" rx="3.5" ry="1.8" fill="#00e5ff" />
+        <ellipse class="splash2" cx="75" cy="74" rx="3.5" ry="1.8" fill="#00e5ff" />
+        <circle class="splash3" cx="55" cy="72" r="2" fill="white" />
+
+        <!-- ╔═══ PIG SVG - all coordinates in 120x120 space ═══╗ -->
+        <g class="pig-group">
+
+          <!-- Back leg outer (further from viewer - darker) -->
+          <g class="leg-back-outer">
+            <path d="M 30,56 L 26,64 L 29,71" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 30,56 L 26,64 L 29,71" fill="none" stroke="url(#legGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+
+          <!-- Front leg outer (further from viewer - darker) -->
+          <g class="leg-front-outer">
+            <path d="M 59,58 L 62,66 L 58,72" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 59,58 L 62,66 L 58,72" fill="none" stroke="url(#legGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+
+          <!-- Tail -->
+          <g class="tail-group">
+            <path d="M 22,47 C 17,47 18,38 22,36 C 25,35 27,40 24,42 C 22,43 21,42 22,40" fill="none" stroke="#111" stroke-width="2.8" stroke-linecap="round"/>
+            <path d="M 22,47 C 17,47 18,38 22,36 C 25,35 27,40 24,42 C 22,43 21,42 22,40" fill="none" stroke="#ff9ebb" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- Body (main mass) -->
+          <ellipse cx="42" cy="50" rx="22" ry="15" fill="url(#bodyGrad)" stroke="#111" stroke-width="2"/>
+
+          <!-- Head -->
+          <circle cx="63" cy="43" r="11" fill="url(#bodyGrad)" stroke="#111" stroke-width="2"/>
+
+          <!-- Ear -->
+          <g class="ear-group">
+            <path d="M 60,34 C 57,29 62,28 64,31 C 66,34 63,38 60,34 Z" fill="#ff9ebb" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M 61,34 C 59,31 62,30 63,32 C 64,34 62,36 61,34 Z" fill="#ffb8cb"/>
+          </g>
+
+          <!-- Snout -->
+          <ellipse cx="72" cy="46" rx="5" ry="4" fill="url(#snoutGrad)" stroke="#111" stroke-width="1.5"/>
+          <circle cx="71" cy="45" r="0.8" fill="#d45080" opacity="0.8"/>
+          <circle cx="73" cy="47" r="0.8" fill="#d45080" opacity="0.8"/>
+
+          <!-- Eye -->
+          <circle cx="66" cy="39" r="1.8" fill="white"/>
+          <circle cx="66.5" cy="39.5" r="1.1" fill="#222"/>
+          <circle cx="67" cy="39" r="0.4" fill="white"/>
+
+          <!-- Blush cheek -->
+          <ellipse cx="69" cy="44" rx="2.5" ry="1.5" fill="#ff7fa0" opacity="0.4"/>
+
+          <!-- Front leg inner (closer to viewer - lighter) -->
+          <g class="leg-front-inner">
+            <path d="M 55,59 L 52,67 L 55,72" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 55,59 L 52,67 L 55,72" fill="none" stroke="url(#bodyGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+
+          <!-- Back leg inner (closer to viewer - lighter) -->
+          <g class="leg-back-inner">
+            <path d="M 35,57 L 32,65 L 35,71" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 35,57 L 32,65 L 35,71" fill="none" stroke="url(#bodyGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+
+        </g>
+        <!-- ╚═══════════════════════════════════════════════════╝ -->
+
+        <!-- Surfboard fin -->
+        <path d="M 32,75 C 30,79 26,83 24,85 C 28,83 33,79 35,75 Z" fill="#111" stroke="black" stroke-width="2"/>
+        <!-- Surfboard body -->
+        <path d="M 20,74 C 35,68 75,68 90,74 C 75,78 35,78 20,74 Z" fill="#00D8FF" stroke="black" stroke-width="2.5" stroke-linejoin="round"/>
+        <!-- Board stripe gloss -->
+        <path d="M 22,73 Q 55,72 88,73" fill="none" stroke="white" stroke-width="1" opacity="0.6"/>
+
+      </g>
+    </svg>
+
+    <p style="font-family: 'Courier New'; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: white; font-weight: bold; margin: 0;">
+      FREEPIG MOVEMENT
+    </p>
+    <p class="loading-text" style="font-size: 9px; letter-spacing: 3px; color: #00e5ff; text-transform: uppercase; margin: 0;">
+      Loading...
+    </p>
+  </div>
+</body>
+</html>

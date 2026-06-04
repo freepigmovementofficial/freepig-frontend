@@ -23,7 +23,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    // Exclude login & verify-otp: a 401 there just means wrong credentials,
+    // not an expired session. The component will handle showing the error.
+    const url = error.config?.url || '';
+    const isLoginOrOtp = url.includes('/auth/login') || url.includes('/auth/verify-otp');
+    if (error.response && error.response.status === 401 && !isLoginOrOtp) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';
