@@ -686,10 +686,12 @@ export default function Home() {
             {
               bottomTitle: "GALERY",
               img: customresinTint,
+              link: "/gallery"
             },
           ].map((item, idx) => (
             <div
               key={idx}
+              onClick={() => item.link && navigate(item.link)}
               className="relative group overflow-hidden cursor-pointer h-full"
             >
               <img

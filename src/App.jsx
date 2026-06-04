@@ -10,6 +10,7 @@ import Location from './pages/location/Location';
 import ProductDetail from './pages/product/ProductDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import Gallery from './pages/gallery/Gallery';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/location/:shopId?" element={<Location />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/gallery" element={<Gallery />} />
         <Route
           path="/admin/dashboard"
           element={

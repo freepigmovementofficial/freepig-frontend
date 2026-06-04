@@ -6,6 +6,7 @@ import { authService } from '../../api/auth';
 import { newReleaseService } from '../../api/newReleases';
 import { featuredService } from '../../api/featured';
 import { storeReviewService } from '../../api/storeReviews';
+import { galleryService } from '../../api/gallery';
 import { useNavigate } from 'react-router-dom';
 
 // ─── Product Form Modal ──────────────────────────────────────────────────────
@@ -1572,6 +1573,214 @@ function ReviewsTable() {
   );
 }
 
+// ─── Gallery Management ──────────────────────────────────────────────────────
+function GalleryTable() {
+  const [galleries, setGalleries] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
+  
+  // For upload
+  const [files, setFiles] = useState([]);
+  // For edit
+  const [caption, setCaption] = useState('');
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await galleryService.getAll({ limit: 100 });
+      setGalleries(res.data?.data?.galleries || []);
+    } catch {
+      setGalleries([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!files.length) return;
+    setActionLoading(true);
+    const formData = new FormData();
+    Array.from(files).forEach(f => formData.append('images', f));
+    try {
+      await galleryService.upload(formData);
+      setUploadOpen(false);
+      setFiles([]);
+      load();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to upload images');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleUpdateCaption = async (e) => {
+    e.preventDefault();
+    setActionLoading(true);
+    try {
+      await galleryService.updateCaption(editItem.id, { caption: caption || null });
+      setEditItem(null);
+      load();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to update caption');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    setActionLoading(true);
+    try {
+      await galleryService.delete(id);
+      setDeleteConfirm(null);
+      load();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to delete image');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-full p-8 pb-0">
+      <div className="flex items-center justify-between mb-6 shrink-0">
+        <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">GALLERY</h2>
+        <button
+          onClick={() => setUploadOpen(true)}
+          className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition"
+        >
+          + UPLOAD PHOTOS
+        </button>
+      </div>
+
+      {/* Upload Modal */}
+      <AnimatePresence>
+        {uploadOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4">
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg">
+              <h3 className="font-oswald text-xl font-bold text-white mb-4">UPLOAD PHOTOS</h3>
+              <form onSubmit={handleUpload} className="flex flex-col gap-4">
+                <input
+                  type="file" multiple accept="image/jpeg,image/png,image/webp"
+                  onChange={(e) => setFiles(e.target.files)}
+                  className="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-white/10 file:text-white hover:file:bg-white/20 transition"
+                />
+                <div className="flex gap-3 mt-4">
+                  <button type="button" onClick={() => setUploadOpen(false)} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition">CANCEL</button>
+                  <button type="submit" disabled={!files.length || actionLoading} className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">
+                    {actionLoading ? 'UPLOADING...' : 'UPLOAD'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Caption Modal */}
+      <AnimatePresence>
+        {editItem && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4">
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg">
+              <h3 className="font-oswald text-xl font-bold text-white mb-4">EDIT CAPTION</h3>
+              <form onSubmit={handleUpdateCaption} className="flex flex-col gap-4">
+                <textarea
+                  rows={3}
+                  value={caption}
+                  onChange={(e) => setCaption(e.target.value)}
+                  placeholder="Enter caption..."
+                  className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-accent-teal transition resize-none"
+                />
+                <div className="flex gap-3 mt-4">
+                  <button type="button" onClick={() => setEditItem(null)} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition">CANCEL</button>
+                  <button type="submit" disabled={actionLoading} className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">
+                    {actionLoading ? 'SAVING...' : 'SAVE'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirm Modal */}
+      <AnimatePresence>
+        {deleteConfirm && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4">
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} className="bg-[#1a1a1a] border border-red-500/30 rounded-2xl p-8 max-w-sm text-center">
+              <h3 className="font-oswald text-xl font-bold text-white mb-2">DELETE PHOTO?</h3>
+              <p className="text-gray-400 text-sm mb-6">This action cannot be undone.</p>
+              <div className="flex gap-3">
+                <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition">CANCEL</button>
+                <button onClick={() => handleDelete(deleteConfirm)} disabled={actionLoading} className="flex-1 py-2.5 bg-red-500 text-white rounded-full text-xs font-bold tracking-widest hover:bg-red-600 transition disabled:opacity-50">
+                  {actionLoading ? 'DELETING...' : 'DELETE'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
+        {loading ? (
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">Loading gallery...</div>
+        ) : galleries.length === 0 ? (
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No photos in gallery.</div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase shadow-md">
+                <th className="px-4 py-3 text-left">Image</th>
+                <th className="px-4 py-3 text-left">Caption</th>
+                <th className="px-4 py-3 text-left">Date</th>
+                <th className="px-4 py-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {galleries.map((img, idx) => (
+                <tr key={img.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? 'bg-[#1c1c1c]' : 'bg-[#1a1a1a]'}`}>
+                  <td className="px-4 py-3">
+                    <div className="w-16 h-16 bg-[#333] rounded overflow-hidden">
+                      <img src={img.url} alt="Gallery" className="w-full h-full object-cover" />
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-gray-400 italic text-xs">
+                    {img.caption || 'No caption'}
+                  </td>
+                  <td className="px-4 py-3 text-gray-500 text-xs">
+                    {new Date(img.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => { setEditItem(img); setCaption(img.caption || ''); }}
+                        className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition"
+                      >
+                        EDIT CAPTION
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirm(img.id)}
+                        className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition"
+                      >
+                        DELETE
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Admin Dashboard ────────────────────────────────────────────────────
 const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview' },
@@ -1579,6 +1788,7 @@ const SIDEBAR_ITEMS = [
   { id: 'new-releases', label: 'New Releases' },
   { id: 'featured', label: 'Featured Sections' },
   { id: 'reviews', label: 'Reviews' },
+  { id: 'gallery', label: 'Gallery' },
 ];
 
 export default function AdminDashboard() {
@@ -1663,6 +1873,7 @@ export default function AdminDashboard() {
             {active === 'new-releases' && <NewReleasesTable />}
             {active === 'featured' && <FeaturedSectionsTable />}
             {active === 'reviews' && <ReviewsTable />}
+            {active === 'gallery' && <GalleryTable />}
           </motion.div>
         </AnimatePresence>
       </main>
