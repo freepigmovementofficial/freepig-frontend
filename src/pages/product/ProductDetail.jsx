@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { productService } from '../../api/products';
 import headingImg from '../../assets/Heading.png';
+import PigLoader from '../../components/PigLoader';
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -36,9 +37,9 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#1c1c1c] flex items-center justify-center font-poppins">
-        <div className="w-12 h-12 border-4 border-white/20 border-t-accent-teal rounded-full animate-spin"></div>
-      </div>
+      <AnimatePresence>
+        <PigLoader key="loader" fullScreen text="Loading board details..." />
+      </AnimatePresence>
     );
   }
 
@@ -85,12 +86,27 @@ export default function ProductDetail() {
   return (
     <div className="bg-[#222] min-h-screen font-poppins text-white pb-24">
       {/* ── HERO BANNER ── */}
-      <div
-        className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
-        style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
-      >
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+      {product.videoUrl ? (
+        <div className="relative w-full overflow-hidden bg-black" style={{ height: '350px' }}>
+          <iframe
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-full min-h-full"
+            style={{ width: '100vw', height: '56.25vw', minHeight: '350px', minWidth: '622px' }}
+            src={`${product.videoUrl}?autoplay=1&mute=1&loop=1&playlist=${product.videoUrl.split('/').pop()?.split('?')[0]}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`}
+            title="YouTube Video Hero"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+      ) : (
+        <div
+          className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
+          style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
+        >
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 mt-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">

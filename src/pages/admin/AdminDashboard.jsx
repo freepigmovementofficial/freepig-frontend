@@ -8,6 +8,7 @@ import { featuredService } from '../../api/featured';
 import { storeReviewService } from '../../api/storeReviews';
 import { galleryService } from '../../api/gallery';
 import { useNavigate } from 'react-router-dom';
+import PigLoader from '../../components/PigLoader';
 
 // ─── Product Form Modal ──────────────────────────────────────────────────────
 function ProductFormModal({ open, onClose, product, categories, onSaved }) {
@@ -18,6 +19,7 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
     categoryId: '',
     skillLevel: 'BEGINNER',
     waveLevels: ['SMALL'],
+    videoUrl: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,9 +35,10 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
         categoryId: product.categoryId || product.category?.id || '',
         skillLevel: product.skillLevel || 'BEGINNER',
         waveLevels: Array.isArray(product.waveLevels) ? product.waveLevels : ['SMALL'],
+        videoUrl: product.videoUrl || '',
       });
     } else {
-      setForm({ name: '', description: '', categoryId: '', skillLevel: 'BEGINNER', waveLevels: ['SMALL'] });
+      setForm({ name: '', description: '', categoryId: '', skillLevel: 'BEGINNER', waveLevels: ['SMALL'], videoUrl: '' });
     }
     setError('');
   }, [product, open]);
@@ -76,9 +79,18 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
 
     try {
       if (isEdit) {
-        await productService.update(product.id, payload);
+        const updatePayload = {
+          ...payload,
+          videoUrl: payload.videoUrl || null,
+        };
+        await productService.update(product.id, updatePayload);
       } else {
-        await productService.create(payload);
+        const createPayload = { ...payload };
+        delete createPayload.videoUrl;
+        const res = await productService.create(createPayload);
+        if (payload.videoUrl) {
+          await productService.update(res.data.id, { videoUrl: payload.videoUrl });
+        }
       }
       onSaved();
       onClose();
@@ -136,6 +148,16 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
                 value={form.description}
                 onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
                 className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">YouTube Video URL</label>
+              <input
+                value={form.videoUrl}
+                onChange={(e) => setForm((p) => ({ ...p, videoUrl: e.target.value }))}
+                placeholder="https://www.youtube.com/watch?v=..."
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
               />
             </div>
 
@@ -198,13 +220,13 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
               >
                 CANCEL
               </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50"
-              >
-                {loading ? 'SAVING...' : isEdit ? 'UPDATE' : 'CREATE'}
-              </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {loading ? <PigLoader size="mini" text="SAVING..." /> : isEdit ? 'UPDATE' : 'CREATE'}
+                </button>
             </div>
           </form>
         </motion.div>
@@ -438,7 +460,7 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
                 disabled={files.length === 0 || loading}
                 className="py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50"
               >
-                {loading ? 'UPLOADING...' : `UPLOAD ${files.length > 0 ? `(${files.length} FILE${files.length > 1 ? 'S' : ''})` : ''}`}
+                {loading ? <PigLoader size="mini" text="UPLOADING..." /> : `UPLOAD ${files.length > 0 ? `(${files.length} FILE${files.length > 1 ? 'S' : ''})` : ''}`}
               </button>
             </form>
           </div>
@@ -547,7 +569,9 @@ function ProductsTable({ categories }) {
 
       <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
         {loading ? (
-          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">Loading products...</div>
+          <div className="py-16 flex justify-center">
+            <PigLoader size="mini" text="Loading products..." />
+          </div>
         ) : products.length === 0 ? (
           <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No products found.</div>
         ) : (
@@ -729,7 +753,7 @@ function NewReleaseFormModal({ open, onClose, release, onSaved, products }) {
             <div className="flex gap-3 mt-4">
               <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition">CANCEL</button>
               <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">
-                {loading ? 'SAVING...' : isEdit ? 'UPDATE' : 'CREATE'}
+                {loading ? <PigLoader size="mini" text="SAVING..." /> : isEdit ? 'UPDATE' : 'CREATE'}
               </button>
             </div>
           </form>
@@ -959,7 +983,9 @@ function NewReleasesTable() {
 
       <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
         {loading ? (
-          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">Loading releases...</div>
+          <div className="py-16 flex justify-center">
+            <PigLoader size="mini" text="Loading releases..." />
+          </div>
         ) : releases.length === 0 ? (
           <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No new releases found.</div>
         ) : (
@@ -1304,7 +1330,9 @@ function FeaturedSectionsTable() {
 
       <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
         {loading ? (
-          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">Loading sections...</div>
+          <div className="py-16 flex justify-center">
+            <PigLoader size="mini" text="Loading sections..." />
+          </div>
         ) : sections.length === 0 ? (
           <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No featured sections yet. Create one to get started.</div>
         ) : (
@@ -1525,7 +1553,9 @@ function ReviewsTable() {
 
       <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
         {loading ? (
-          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">Loading reviews...</div>
+          <div className="py-16 flex justify-center">
+            <PigLoader size="mini" text="Loading reviews..." />
+          </div>
         ) : reviews.length === 0 ? (
           <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No store reviews yet.</div>
         ) : (
@@ -1728,7 +1758,9 @@ function GalleryTable() {
 
       <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
         {loading ? (
-          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">Loading gallery...</div>
+          <div className="py-16 flex justify-center">
+            <PigLoader size="mini" text="Loading gallery..." />
+          </div>
         ) : galleries.length === 0 ? (
           <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No photos in gallery.</div>
         ) : (

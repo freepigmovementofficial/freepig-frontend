@@ -12,10 +12,13 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Gallery from './pages/gallery/Gallery';
 import ContactPopup from './components/ContactPopup';
+import CtaPopup from './components/CtaPopup';
+
 
 function App() {
   return (
     <BrowserRouter>
+
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -37,6 +40,7 @@ function App() {
         />
       </Routes>
       <ContactPopup />
+      <CtaPopup />
     </BrowserRouter>
   );
 }

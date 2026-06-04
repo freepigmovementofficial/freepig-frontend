@@ -9,6 +9,8 @@ const skillLevels = ['ADVANCED', 'INTERMEDIATE', 'BEGINNER', 'GROMS'];
 const waveTypes = ['SMALL', 'MEDIUM', 'BIG'];
 const waveLabelMap = { SMALL: 'SMALL WAVES', MEDIUM: 'MEDIUM WAVES', BIG: 'BIG WAVES' };
 
+import PigLoader from '../../components/PigLoader';
+
 export default function Store() {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(() => {
@@ -242,13 +244,8 @@ export default function Store() {
         {/* Product Grid */}
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-              {Array(8).fill(null).map((_, i) => (
-                <div key={i} className="flex flex-col animate-pulse">
-                  <div className="bg-[#333] aspect-[3/4]" />
-                  <div className="bg-[#3a3a3a] px-4 py-3 h-14" />
-                </div>
-              ))}
+            <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-center items-center py-20 w-full">
+              <PigLoader />
             </motion.div>
           ) : (
             <motion.div
