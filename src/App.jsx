@@ -11,6 +11,7 @@ import ProductDetail from './pages/product/ProductDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Gallery from './pages/gallery/Gallery';
+import ContactPopup from './components/ContactPopup';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           }
         />
       </Routes>
+      <ContactPopup />
     </BrowserRouter>
   );
 }

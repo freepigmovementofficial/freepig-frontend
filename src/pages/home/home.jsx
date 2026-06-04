@@ -60,10 +60,13 @@ export default function Home() {
 
   // Store Reviews state
   const [reviews, setReviews] = useState([]);
-  const [reviewsMeta, setReviewsMeta] = useState({ avgRating: 0, totalReviews: 0 });
+  const [reviewsMeta, setReviewsMeta] = useState({
+    avgRating: 0,
+    totalReviews: 0,
+  });
   const [reviewsLoading, setReviewsLoading] = useState(true);
   const [hasReviewed, setHasReviewed] = useState(false);
-  const [myReview, setMyReview] = useState(null);      // user's own review object
+  const [myReview, setMyReview] = useState(null); // user's own review object
   // Form state
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewHover, setReviewHover] = useState(0);
@@ -71,7 +74,7 @@ export default function Home() {
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [reviewSuccess, setReviewSuccess] = useState("");
-  const [isEditMode, setIsEditMode] = useState(false);  // editing own review
+  const [isEditMode, setIsEditMode] = useState(false); // editing own review
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   const navigate = useNavigate();
@@ -323,6 +326,7 @@ export default function Home() {
             Custom surfboards made for your identity.
           </p>
           <motion.button
+            onClick={() => window.dispatchEvent(new Event('openContactPopup'))}
             className="px-8 py-3.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[12px] font-bold tracking-[0.15em] uppercase"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
@@ -686,7 +690,7 @@ export default function Home() {
             {
               bottomTitle: "GALERY",
               img: customresinTint,
-              link: "/gallery"
+              link: "/gallery",
             },
           ].map((item, idx) => (
             <div
@@ -711,78 +715,6 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* COMMUNITY SECTION — Instagram-style grid */}
-      <section className="w-full bg-[#111] py-20">
-        <Container>
-          <FadeUp>
-            <div className="text-center mb-14">
-              <p className="text-xs tracking-[0.4em] text-accent-teal font-bold mb-3 uppercase">
-                Join The Community
-              </p>
-              <h2 className="font-oswald text-4xl md:text-5xl font-bold tracking-widest text-white">
-                Follow Our Journey
-              </h2>
-              <p className="text-gray-400 mt-3 tracking-widest text-sm font-semibold">
-                @FreepigMovement
-              </p>
-            </div>
-
-            {/* Asymmetric grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 auto-rows-[200px]">
-              {/* Large featured tile */}
-              <div className="col-span-2 row-span-2 relative group overflow-hidden cursor-pointer bg-[#222]">
-                <img
-                  src={Rectangle94}
-                  alt="Community"
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
-                />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition duration-500"></div>
-                <div className="absolute bottom-5 left-5">
-                  <span className="text-xs font-bold tracking-widest text-accent-teal uppercase bg-black/60 px-3 py-1">
-                    Featured Rider
-                  </span>
-                </div>
-              </div>
-
-              {/* Small tiles */}
-              {[
-                { label: "Local Surf Session" },
-                { label: "Workshop" },
-                { label: "Custom Build" },
-                { label: "Community Ride" },
-              ].map((tile, idx) => (
-                <div
-                  key={idx}
-                  className="relative group overflow-hidden cursor-pointer bg-[#2a2a2a] border border-[#333] hover:border-accent-teal transition duration-300"
-                >
-                  <img
-                    src="/action_surfer.png"
-                    alt={tile.label}
-                    className="w-full h-full object-cover opacity-60 group-hover:opacity-90 group-hover:scale-105 transition duration-500"
-                  />
-                  <div className="absolute inset-0 flex items-end p-4">
-                    <span className="text-[10px] font-bold tracking-widest text-white uppercase opacity-0 group-hover:opacity-100 transition duration-300 bg-black/60 px-2 py-0.5">
-                      {tile.label}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex justify-center mt-10">
-              <motion.a
-                href="#"
-                className="px-8 py-3.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[12px] font-bold tracking-[0.15em] uppercase"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                View Instagram
-              </motion.a>
-            </div>
-          </FadeUp>
-        </Container>
       </section>
 
       {/* FAQ SECTION */}
@@ -910,7 +842,9 @@ export default function Home() {
                                 </span>
                               )}
                             </p>
-                            <div className="flex">{renderStars(review.rating, "text-sm")}</div>
+                            <div className="flex">
+                              {renderStars(review.rating, "text-sm")}
+                            </div>
                           </div>
                         </div>
                         {/* Edit/Delete for own review */}
@@ -935,15 +869,22 @@ export default function Home() {
                       {/* Comment */}
                       <p className="text-gray-400 text-sm leading-relaxed flex-1">
                         {review.comment || (
-                          <span className="italic text-gray-600">No comment</span>
+                          <span className="italic text-gray-600">
+                            No comment
+                          </span>
                         )}
                       </p>
 
                       {/* Date */}
                       <p className="text-[10px] text-gray-600 tracking-widest mt-4 pt-3 border-t border-[#2a2a2a]">
-                        {new Date(review.createdAt).toLocaleDateString("en-GB", {
-                          day: "numeric", month: "short", year: "numeric",
-                        })}
+                        {new Date(review.createdAt).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          },
+                        )}
                       </p>
                     </motion.div>
                   );
@@ -978,7 +919,9 @@ export default function Home() {
                     {renderStars(myReview?.rating ?? 0, "text-2xl")}
                   </div>
                   {myReview?.comment && (
-                    <p className="text-gray-300 text-sm italic mb-4">"{myReview.comment}"</p>
+                    <p className="text-gray-300 text-sm italic mb-4">
+                      "{myReview.comment}"
+                    </p>
                   )}
                   <div className="flex gap-3 justify-center">
                     <button
@@ -1078,8 +1021,8 @@ export default function Home() {
                           {reviewSubmitting
                             ? "SAVING..."
                             : isEditMode
-                            ? "UPDATE"
-                            : "SUBMIT"}
+                              ? "UPDATE"
+                              : "SUBMIT"}
                         </motion.button>
                       </div>
                     </div>

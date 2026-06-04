@@ -68,13 +68,12 @@ export default function Navbar() {
             STORE
           </li>
         </Link>
-        <Link to="/custom">
-          <li
-            className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/custom" ? "text-accent-teal border-accent-teal" : "text-gray-300 hover:text-white border-transparent hover:border-white/40"}`}
-          >
-            CUSTOM
-          </li>
-        </Link>
+        <li
+          onClick={() => window.dispatchEvent(new Event('openContactPopup'))}
+          className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/custom" ? "text-accent-teal border-accent-teal" : "text-gray-300 hover:text-white border-transparent hover:border-white/40"}`}
+        >
+          CUSTOM
+        </li>
         <Link to="/volume">
           <li
             className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/volume" ? "text-accent-teal border-accent-teal" : "text-gray-300 hover:text-white border-transparent hover:border-white/40"}`}
@@ -186,13 +185,15 @@ export default function Navbar() {
         >
           STORE
         </Link>
-        <Link
-          to="/custom"
-          onClick={() => setIsMobileMenuOpen(false)}
+        <button
+          onClick={() => {
+            setIsMobileMenuOpen(false);
+            window.dispatchEvent(new Event('openContactPopup'));
+          }}
           className={`text-sm font-semibold tracking-widest uppercase transition duration-300 ${location.pathname === "/custom" ? "text-accent-teal" : "text-gray-300 hover:text-white"}`}
         >
           CUSTOM
-        </Link>
+        </button>
         <Link
           to="/volume"
           onClick={() => setIsMobileMenuOpen(false)}
