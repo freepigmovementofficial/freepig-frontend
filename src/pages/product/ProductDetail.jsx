@@ -54,6 +54,7 @@ export default function ProductDetail() {
 
   const categoryName = product.category?.name || 'SURFBOARD';
   const waveLevels = product.waveLevels || [];
+  const isAccessory = product.productType === 'ACCESSORY';
   
   // Format description with paragraphs
   const renderDescription = () => {
@@ -155,13 +156,17 @@ export default function ProductDetail() {
             
             <div className="flex items-center gap-4 flex-wrap mb-8 text-xs font-bold tracking-[0.2em] uppercase text-gray-400">
               <span className="text-white">{categoryName}</span>
-              <span className="text-gray-600">|</span>
-              {waveLevels.map((w, i) => (
-                <React.Fragment key={w}>
-                  <span className="text-white">{w} WAVES</span>
-                  {i < waveLevels.length - 1 && <span className="text-gray-600">|</span>}
-                </React.Fragment>
-              ))}
+              {!isAccessory && waveLevels.length > 0 && (
+                <>
+                  <span className="text-gray-600">|</span>
+                  {waveLevels.map((w, i) => (
+                    <React.Fragment key={w}>
+                      <span className="text-white">{w} WAVES</span>
+                      {i < waveLevels.length - 1 && <span className="text-gray-600">|</span>}
+                    </React.Fragment>
+                  ))}
+                </>
+              )}
             </div>
 
             <div className="prose prose-invert prose-sm max-w-none mb-12">
@@ -171,45 +176,48 @@ export default function ProductDetail() {
             {/* Bottom Section: Graphs & Dimensions */}
             <div className="mt-auto border-t border-[#444] pt-8">
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
-                {/* Ability Level */}
-                <div>
-                  <h3 className="text-center font-bold text-sm tracking-widest mb-3">Ability Level</h3>
-                  <div className="w-full h-4 bg-white border border-gray-500 relative">
-                    <div 
-                      className="absolute top-0 left-0 h-full bg-[#333] transition-all duration-1000"
-                      style={{ width: `${abilityPercentage}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between mt-2 text-[9px] text-gray-400 uppercase tracking-widest">
-                    <span>Beginner</span>
-                    <span>Intermediate</span>
-                    <span>Advanced</span>
-                  </div>
-                </div>
-
-                {/* Wave Height */}
-                <div>
-                  <h3 className="text-center font-bold text-sm tracking-widest mb-3">Wave Height (Feet)</h3>
-                  <div className="w-full h-4 bg-[#333] border border-gray-500 relative">
-                    {waveMax > 0 && (
+              {/* Ability Level & Wave Height — only for Surfboards */}
+              {!isAccessory && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+                  {/* Ability Level */}
+                  <div>
+                    <h3 className="text-center font-bold text-sm tracking-widest mb-3">Ability Level</h3>
+                    <div className="w-full h-4 bg-white border border-gray-500 relative">
                       <div 
-                        className="absolute top-0 h-full bg-white transition-all duration-1000"
-                        style={{ left: `${waveLeftPercent}%`, width: `${waveWidthPercent}%` }}
+                        className="absolute top-0 left-0 h-full bg-[#333] transition-all duration-1000"
+                        style={{ width: `${abilityPercentage}%` }}
                       />
-                    )}
-                    {/* Ruler Marks */}
-                    <div className="absolute top-full left-0 w-full flex justify-between mt-1">
-                      {[0,1,2,3,4,5,6,7,8,9,10].map(n => (
-                        <div key={n} className="flex flex-col items-center">
-                          <div className="w-[1px] h-1.5 bg-gray-500"></div>
-                          <span className="text-[8px] text-gray-500 mt-0.5">{n}</span>
-                        </div>
-                      ))}
+                    </div>
+                    <div className="flex justify-between mt-2 text-[9px] text-gray-400 uppercase tracking-widest">
+                      <span>Beginner</span>
+                      <span>Intermediate</span>
+                      <span>Advanced</span>
+                    </div>
+                  </div>
+
+                  {/* Wave Height */}
+                  <div>
+                    <h3 className="text-center font-bold text-sm tracking-widest mb-3">Wave Height (Feet)</h3>
+                    <div className="w-full h-4 bg-[#333] border border-gray-500 relative">
+                      {waveMax > 0 && (
+                        <div 
+                          className="absolute top-0 h-full bg-white transition-all duration-1000"
+                          style={{ left: `${waveLeftPercent}%`, width: `${waveWidthPercent}%` }}
+                        />
+                      )}
+                      {/* Ruler Marks */}
+                      <div className="absolute top-full left-0 w-full flex justify-between mt-1">
+                        {[0,1,2,3,4,5,6,7,8,9,10].map(n => (
+                          <div key={n} className="flex flex-col items-center">
+                            <div className="w-[1px] h-1.5 bg-gray-500"></div>
+                            <span className="text-[8px] text-gray-500 mt-0.5">{n}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Dimensions Grid */}
               {product.dimensions && product.dimensions.length > 0 && (

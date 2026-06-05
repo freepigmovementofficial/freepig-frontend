@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FiSearch } from 'react-icons/fi';
 import { productService } from '../../api/products';
 import { adminService } from '../../api/admin';
 import { authService } from '../../api/auth';
@@ -16,7 +17,6 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
   const [form, setForm] = useState({
     name: '',
     description: '',
-    categoryId: '',
     skillLevel: 'BEGINNER',
     waveLevels: ['SMALL'],
     videoUrl: '',
@@ -32,13 +32,12 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
       setForm({
         name: product.name || '',
         description: product.description || '',
-        categoryId: product.categoryId || product.category?.id || '',
         skillLevel: product.skillLevel || 'BEGINNER',
         waveLevels: Array.isArray(product.waveLevels) ? product.waveLevels : ['SMALL'],
         videoUrl: product.videoUrl || '',
       });
     } else {
-      setForm({ name: '', description: '', categoryId: '', skillLevel: 'BEGINNER', waveLevels: ['SMALL'], videoUrl: '' });
+      setForm({ name: '', description: '', skillLevel: 'BEGINNER', waveLevels: ['SMALL'], videoUrl: '' });
     }
     setError('');
   }, [product, open]);
@@ -59,31 +58,20 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
+
     const payload = { ...form };
-    const selectedCategory = categories.find((c) => c.id === form.categoryId);
-    const accessorySlugs = ['traction-pad', 'leash', 'fins', 'board-bag', 'sock'];
-    const isAccessory = selectedCategory && accessorySlugs.includes(selectedCategory.slug);
-
-    if (isAccessory) {
-      payload.productType = 'ACCESSORY';
-      delete payload.skillLevel;
-      delete payload.waveLevels;
-    } else {
-      payload.productType = 'SURFBOARD';
-      payload.waveLevels = (payload.waveLevels || []).filter(w => w !== 'WAVE_POOL');
-      if (payload.waveLevels.length === 0) payload.waveLevels = ['SMALL'];
-    }
-
+    const surfboardCategory = (categories || []).find(
+      (c) => !['traction-pad', 'leash', 'fins', 'board-bag', 'sock'].includes(c.slug)
+    );
+    payload.categoryId = surfboardCategory ? surfboardCategory.id : undefined;
+    payload.productType = 'SURFBOARD';
+    payload.waveLevels = (payload.waveLevels || []).filter(w => w !== 'WAVE_POOL');
+    if (payload.waveLevels.length === 0) payload.waveLevels = ['SMALL'];
     if (!payload.description) delete payload.description;
 
     try {
       if (isEdit) {
-        const updatePayload = {
-          ...payload,
-          videoUrl: payload.videoUrl || null,
-        };
-        await productService.update(product.id, updatePayload);
+        await productService.update(product.id, { ...payload, videoUrl: payload.videoUrl || null });
       } else {
         const createPayload = { ...payload };
         delete createPayload.videoUrl;
@@ -103,6 +91,7 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
 
   if (!open) return null;
 
+
   return (
     <AnimatePresence>
       <motion.div
@@ -121,7 +110,7 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
           onClick={(e) => e.stopPropagation()}
         >
           <h2 className="font-oswald text-2xl font-bold tracking-widest text-white mb-6">
-            {isEdit ? 'EDIT PRODUCT' : 'ADD PRODUCT'}
+            {isEdit ? 'EDIT SURFBOARD' : 'ADD SURFBOARD'}
           </h2>
 
           {error && (
@@ -161,20 +150,7 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
               />
             </div>
 
-            <div>
-              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Category *</label>
-              <select
-                required
-                value={form.categoryId}
-                onChange={(e) => setForm((p) => ({ ...p, categoryId: e.target.value }))}
-                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
-              >
-                <option value="">Select category</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
-            </div>
+
 
             <div>
               <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Skill Level *</label>
@@ -476,7 +452,7 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ size: '', width: '', thickness: '', volume: '' });
+  const [forms, setForms] = useState([{ size: '', width: '', thickness: '', volume: '' }]);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -484,7 +460,7 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
       loadProduct();
     } else {
       setProduct(null);
-      setForm({ size: '', width: '', thickness: '', volume: '' });
+      setForms([{ size: '', width: '', thickness: '', volume: '' }]);
       setError('');
     }
   }, [open, productSlug]);
@@ -502,18 +478,34 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
     }
   };
 
+  const handleAddRow = () => {
+    setForms((prev) => [...prev, { size: '', width: '', thickness: '', volume: '' }]);
+  };
+
+  const handleRemoveRow = (idx) => {
+    setForms((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleChange = (idx, field, value) => {
+    setForms((prev) => {
+      const newForms = [...prev];
+      newForms[idx][field] = value;
+      return newForms;
+    });
+  };
+
   const handleAdd = async (e) => {
     e.preventDefault();
-    if (!product) return;
+    if (!product || forms.length === 0) return;
     setSubmitting(true);
     setError('');
     try {
-      await productService.addDimension(product.id, form);
-      setForm({ size: '', width: '', thickness: '', volume: '' });
+      await Promise.all(forms.map(f => productService.addDimension(product.id, f)));
+      setForms([{ size: '', width: '', thickness: '', volume: '' }]);
       await loadProduct();
       onSaved();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to add dimension.');
+      setError(err.response?.data?.message || 'Failed to add dimensions.');
     } finally {
       setSubmitting(false);
     }
@@ -587,32 +579,30 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
 
           {/* Add new dimension */}
           <div className="border border-gray-700 rounded-xl p-5 bg-[#222]">
-            <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-4">Add New Dimension</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase">Add New Dimensions</h3>
+              <button type="button" onClick={handleAddRow} className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-widest text-white hover:bg-white/20 transition">+ ADD ROW</button>
+            </div>
             <form onSubmit={handleAdd} className="flex flex-col gap-4">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div>
-                  <label className="text-[10px] font-bold text-gray-500 tracking-widest uppercase block mb-1">Size *</label>
-                  <input required placeholder="5'8&quot;" value={form.size} onChange={e => setForm(p => ({...p, size: e.target.value}))} className="w-full bg-[#1a1a1a] border border-gray-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
-                </div>
-                <div>
-                  <label className="text-[10px] font-bold text-gray-500 tracking-widest uppercase block mb-1">Width *</label>
-                  <input required placeholder="20 1/2&quot;" value={form.width} onChange={e => setForm(p => ({...p, width: e.target.value}))} className="w-full bg-[#1a1a1a] border border-gray-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
-                </div>
-                <div>
-                  <label className="text-[10px] font-bold text-gray-500 tracking-widest uppercase block mb-1">Thickness *</label>
-                  <input required placeholder="2 3/8&quot;" value={form.thickness} onChange={e => setForm(p => ({...p, thickness: e.target.value}))} className="w-full bg-[#1a1a1a] border border-gray-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
-                </div>
-                <div>
-                  <label className="text-[10px] font-bold text-gray-500 tracking-widest uppercase block mb-1">Volume</label>
-                  <input placeholder="32.00 L" value={form.volume} onChange={e => setForm(p => ({...p, volume: e.target.value}))} className="w-full bg-[#1a1a1a] border border-gray-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
-                </div>
+              <div className="flex flex-col gap-3 max-h-48 overflow-y-auto custom-scrollbar pr-2">
+                {forms.map((f, idx) => (
+                  <div key={idx} className="flex gap-2 items-center bg-[#2a2a2a] p-2 rounded-lg border border-gray-700">
+                    <input required placeholder="Size *" value={f.size} onChange={e => handleChange(idx, 'size', e.target.value)} className="w-1/4 bg-[#1a1a1a] border border-gray-600 rounded px-2 py-1.5 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
+                    <input required placeholder="Width *" value={f.width} onChange={e => handleChange(idx, 'width', e.target.value)} className="w-1/4 bg-[#1a1a1a] border border-gray-600 rounded px-2 py-1.5 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
+                    <input required placeholder="Thickness *" value={f.thickness} onChange={e => handleChange(idx, 'thickness', e.target.value)} className="w-1/4 bg-[#1a1a1a] border border-gray-600 rounded px-2 py-1.5 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
+                    <input placeholder="Volume" value={f.volume} onChange={e => handleChange(idx, 'volume', e.target.value)} className="w-1/4 bg-[#1a1a1a] border border-gray-600 rounded px-2 py-1.5 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
+                    {forms.length > 1 && (
+                      <button type="button" onClick={() => handleRemoveRow(idx)} className="text-red-400 hover:text-red-300 font-bold px-2">✕</button>
+                    )}
+                  </div>
+                ))}
               </div>
               <button
                 type="submit"
-                disabled={submitting || !product}
+                disabled={submitting || !product || forms.length === 0}
                 className="py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50 w-full sm:w-auto self-end mt-2 px-8 flex items-center justify-center"
               >
-                {submitting ? <PigLoader size="mini" text="ADDING..." /> : 'ADD DIMENSION'}
+                {submitting ? <PigLoader size="mini" text="ADDING..." /> : `SAVE ${forms.length > 1 ? forms.length + ' ' : ''}DIMENSIONS`}
               </button>
             </form>
           </div>
@@ -627,6 +617,7 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
 function ProductsTable({ categories }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [imagesModalOpen, setImagesModalOpen] = useState(false);
   const [dimensionsModalOpen, setDimensionsModalOpen] = useState(false);
@@ -634,10 +625,14 @@ function ProductsTable({ categories }) {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
+  const filteredProducts = products.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   const load = async () => {
     setLoading(true);
     try {
-      const res = await productService.getAll({ limit: 100 });
+      const res = await productService.getAll({ limit: 100, productType: 'SURFBOARD' });
       setProducts(res.data?.products || []);
     } catch {
       setProducts([]);
@@ -665,13 +660,28 @@ function ProductsTable({ categories }) {
 
   return (
     <div className="flex flex-col h-full p-8 pb-0">
-      <div className="flex items-center justify-between mb-6 shrink-0">
-        <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">PRODUCTS</h2>
+      <div className="flex items-center gap-4 mb-6 shrink-0">
+        <h2 className="font-oswald text-2xl font-bold tracking-widest text-white shrink-0">SURFBOARDS</h2>
+
+        {/* Search Bar — center */}
+        <div className="flex-1 flex justify-center">
+          <div className="relative w-full max-w-xs">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search surfboards..."
+              className="w-full bg-[#2a2a2a] border border-gray-700 rounded-full pl-9 pr-4 py-2 text-white text-xs tracking-wide placeholder-gray-600 focus:outline-none focus:border-gray-500 transition"
+            />
+          </div>
+        </div>
+
         <button
           onClick={() => { setEditProduct(null); setModalOpen(true); }}
-          className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition"
+          className="shrink-0 px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition"
         >
-          + ADD PRODUCT
+          + ADD SURFBOARD
         </button>
       </div>
 
@@ -708,7 +718,7 @@ function ProductsTable({ categories }) {
               initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
               className="bg-[#1a1a1a] border border-red-500/30 rounded-2xl p-8 max-w-sm w-full text-center"
             >
-              <h3 className="font-oswald text-xl font-bold text-white mb-2">DELETE PRODUCT?</h3>
+              <h3 className="font-oswald text-xl font-bold text-white mb-2">DELETE SURFBOARD?</h3>
               <p className="text-gray-400 text-sm mb-6">This action cannot be undone. All associated images will be deleted from Cloudinary.</p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition">
@@ -732,8 +742,10 @@ function ProductsTable({ categories }) {
           <div className="py-16 flex justify-center">
             <PigLoader size="mini" text="Loading products..." />
           </div>
-        ) : products.length === 0 ? (
-          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No products found.</div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">
+            {search ? `No surfboards match "${search}"` : 'No products found.'}
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="sticky top-0 z-10">
@@ -748,7 +760,7 @@ function ProductsTable({ categories }) {
               </tr>
             </thead>
             <tbody>
-              {products.map((p, idx) => (
+              {filteredProducts.map((p, idx) => (
                 <tr key={p.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? 'bg-[#1c1c1c]' : 'bg-[#1a1a1a]'}`}>
                   <td className="px-4 py-3">
                     <div className="w-12 h-12 bg-[#333] rounded overflow-hidden flex items-center justify-center">
@@ -792,6 +804,325 @@ function ProductsTable({ categories }) {
                       </button>
                       <button
                         onClick={() => { setEditProduct(p); setModalOpen(true); }}
+                        className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition"
+                      >
+                        EDIT
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirm(p.id)}
+                        className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition"
+                      >
+                        DELETE
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Accessory Form Modal ───────────────────────────────────────────────────
+function AccessoryFormModal({ open, onClose, accessory, categories, onSaved }) {
+  const isEdit = !!accessory;
+  const [form, setForm] = useState({
+    name: '',
+    description: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const accessoryCategories = (categories || []).filter((c) =>
+    ['traction-pad', 'leash', 'fins', 'board-bag', 'sock'].includes(c.slug)
+  );
+
+  useEffect(() => {
+    if (accessory) {
+      setForm({
+        name: accessory.name || '',
+        description: accessory.description || '',
+      });
+    } else {
+      setForm({ name: '', description: '' });
+    }
+    setError('');
+  }, [accessory, open, categories]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    const payload = { ...form };
+    payload.productType = 'ACCESSORY';
+    // Auto-assign first accessory category
+    const autoCategory = accessoryCategories[0];
+    if (autoCategory && !accessory) {
+      payload.categoryId = autoCategory.id;
+    } else if (accessory) {
+      payload.categoryId = accessory.categoryId || accessory.category?.id || autoCategory?.id;
+    }
+    if (!payload.description) delete payload.description;
+
+    try {
+      if (isEdit) {
+        await productService.update(accessory.id, payload);
+      } else {
+        await productService.create(payload);
+      }
+      onSaved();
+      onClose();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Validation Error: Check your inputs.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!open) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.92, opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="font-oswald text-2xl font-bold tracking-widest text-white mb-6">
+            {isEdit ? 'EDIT ACCESSORY' : 'ADD ACCESSORY'}
+          </h2>
+
+          {error && (
+            <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Name *</label>
+              <input
+                required
+                value={form.name}
+                onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
+              />
+            </div>
+
+
+
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Description</label>
+              <textarea
+                rows={4}
+                value={form.description}
+                onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none"
+              />
+            </div>
+
+            <div className="flex gap-3 mt-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition"
+              >
+                CANCEL
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {loading ? <PigLoader size="mini" text="SAVING..." /> : isEdit ? 'UPDATE' : 'CREATE'}
+              </button>
+            </div>
+          </form>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+// ─── Accessories Table ──────────────────────────────────────────────────────
+function AccessoriesTable({ categories }) {
+  const [accessories, setAccessories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [imagesModalOpen, setImagesModalOpen] = useState(false);
+  const [editAccessory, setEditAccessory] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const filteredAccessories = accessories.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await productService.getAll({ limit: 100, productType: 'ACCESSORY' });
+      setAccessories(res.data?.products || []);
+    } catch {
+      setAccessories([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const handleDelete = async (id) => {
+    setDeleteLoading(true);
+    try {
+      await productService.delete(id);
+      setDeleteConfirm(null);
+      load();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to delete accessory.');
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const getCategoryName = (p) => p.category?.name || categories.find((c) => c.id === p.categoryId)?.name || '—';
+
+  return (
+    <div className="flex flex-col h-full p-8 pb-0">
+      <div className="flex items-center gap-4 mb-6 shrink-0">
+        <h2 className="font-oswald text-2xl font-bold tracking-widest text-white shrink-0">ACCESSORIES</h2>
+
+        {/* Search Bar — center */}
+        <div className="flex-1 flex justify-center">
+          <div className="relative w-full max-w-xs">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search accessories..."
+              className="w-full bg-[#2a2a2a] border border-gray-700 rounded-full pl-9 pr-4 py-2 text-white text-xs tracking-wide placeholder-gray-600 focus:outline-none focus:border-gray-500 transition"
+            />
+          </div>
+        </div>
+
+        <button
+          onClick={() => { setEditAccessory(null); setModalOpen(true); }}
+          className="shrink-0 px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition"
+        >
+          + ADD ACCESSORY
+        </button>
+      </div>
+
+      <AccessoryFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        accessory={editAccessory}
+        categories={categories}
+        onSaved={load}
+      />
+
+      <ProductImagesModal
+        open={imagesModalOpen}
+        onClose={() => setImagesModalOpen(false)}
+        product={editAccessory}
+        onSaved={load}
+      />
+
+      {/* Delete Confirm */}
+      <AnimatePresence>
+        {deleteConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
+              className="bg-[#1a1a1a] border border-red-500/30 rounded-2xl p-8 max-w-sm w-full text-center"
+            >
+              <h3 className="font-oswald text-xl font-bold text-white mb-2">DELETE ACCESSORY?</h3>
+              <p className="text-gray-400 text-sm mb-6">This action cannot be undone. All associated images will be deleted from Cloudinary.</p>
+              <div className="flex gap-3">
+                <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition">
+                  CANCEL
+                </button>
+                <button
+                  onClick={() => handleDelete(deleteConfirm)}
+                  disabled={deleteLoading}
+                  className="flex-1 py-2.5 bg-red-500 text-white rounded-full text-xs font-bold tracking-widest hover:bg-red-600 transition disabled:opacity-50"
+                >
+                  {deleteLoading ? 'DELETING...' : 'DELETE'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
+        {loading ? (
+          <div className="py-16 flex justify-center">
+            <PigLoader size="mini" text="Loading accessories..." />
+          </div>
+        ) : filteredAccessories.length === 0 ? (
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">
+            {search ? `No accessories match "${search}"` : 'No accessories found.'}
+          </div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase shadow-md">
+                <th className="px-4 py-3 text-left">Image</th>
+                <th className="px-4 py-3 text-left">Name</th>
+                <th className="px-4 py-3 text-left">Category</th>
+                <th className="px-4 py-3 text-left">Status</th>
+                <th className="px-4 py-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredAccessories.map((p, idx) => (
+                <tr key={p.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? 'bg-[#1c1c1c]' : 'bg-[#1a1a1a]'}`}>
+                  <td className="px-4 py-3">
+                    <div className="w-12 h-12 bg-[#333] rounded overflow-hidden flex items-center justify-center">
+                      {p.images?.[0]?.url ? (
+                        <img src={p.images[0].url} alt={p.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-gray-600 text-xs">—</span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 font-bold text-white tracking-wide">{p.name}</td>
+                  <td className="px-4 py-3 text-gray-400">{getCategoryName(p)}</td>
+                  <td className="px-4 py-3">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest ${p.isActive ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}`}>
+                      {p.isActive ? 'ACTIVE' : 'INACTIVE'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => { setEditAccessory(p); setImagesModalOpen(true); }}
+                        className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-widest text-white hover:bg-white/20 transition"
+                      >
+                        IMAGES
+                      </button>
+                      <button
+                        onClick={() => { setEditAccessory(p); setModalOpen(true); }}
                         className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition"
                       >
                         EDIT
@@ -1982,7 +2313,8 @@ function GalleryTable() {
 // ─── Main Admin Dashboard ────────────────────────────────────────────────────
 const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview' },
-  { id: 'products', label: 'Products' },
+  { id: 'surfboards', label: 'Surfboards' },
+  { id: 'accessories', label: 'Accessories' },
   { id: 'new-releases', label: 'New Releases' },
   { id: 'featured', label: 'Featured Sections' },
   { id: 'reviews', label: 'Reviews' },
@@ -2067,7 +2399,8 @@ export default function AdminDashboard() {
             className="absolute inset-0 flex flex-col"
           >
             {active === 'overview' && <DashboardOverview />}
-            {active === 'products' && <ProductsTable categories={categories} />}
+            {active === 'surfboards' && <ProductsTable categories={categories} />}
+            {active === 'accessories' && <AccessoriesTable categories={categories} />}
             {active === 'new-releases' && <NewReleasesTable />}
             {active === 'featured' && <FeaturedSectionsTable />}
             {active === 'reviews' && <ReviewsTable />}
