@@ -98,14 +98,14 @@ export default function ProductDetail() {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/50" />
         </div>
       ) : (
         <div
           className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
         >
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/50" />
         </div>
       )}
 
@@ -119,7 +119,7 @@ export default function ProductDetail() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white rounded-lg overflow-hidden flex items-center justify-center aspect-[3/4] p-8 shadow-2xl"
             >
-              <img 
+              <img loading="lazy" 
                 src={activeImage || '/black_surfboard.png'} 
                 alt={product.name} 
                 className="w-full h-full object-contain drop-shadow-xl"
@@ -137,7 +137,7 @@ export default function ProductDetail() {
                       activeImage === img.url ? 'ring-2 ring-accent-teal shadow-lg scale-105' : 'opacity-70 hover:opacity-100 hover:scale-105'
                     }`}
                   >
-                    <img src={img.url} alt={`${product.name} thumbnail`} className="w-full h-full object-contain" />
+                    <img loading="lazy" src={img.url} alt={`${product.name} thumbnail`} className="w-full h-full object-contain" />
                   </button>
                 ))}
               </div>

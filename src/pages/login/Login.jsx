@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { authService } from '../../api/auth';
+import logotr from '../../assets/logoPutihh.png';
+import videoLandingPage from '../../assets/videoLandingPage.mp4';
+
+const inputClass =
+  'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-white/40 focus:bg-white/8 transition duration-300';
+
+const labelClass = 'block text-[10px] font-bold text-gray-400 tracking-[0.18em] uppercase mb-2';
 
 export default function Login() {
   const [mode, setMode] = useState('LOGIN'); // 'LOGIN' | 'REGISTER' | 'VERIFY_OTP'
@@ -9,6 +16,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
+  const [showPass, setShowPass] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -18,12 +26,8 @@ export default function Login() {
     const { user, token } = res.data;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
-
-    if (user.role === 'ADMIN') {
-      navigate('/admin/dashboard');
-    } else {
-      navigate('/');
-    }
+    if (user.role === 'ADMIN') navigate('/admin/dashboard');
+    else navigate('/');
   };
 
   const handleSubmit = async (e) => {
@@ -31,7 +35,6 @@ export default function Login() {
     setError('');
     setSuccessMsg('');
     setIsLoading(true);
-
     try {
       if (mode === 'LOGIN') {
         const res = await authService.login(email, password);
@@ -45,170 +48,279 @@ export default function Login() {
         handleAuthSuccess(res);
       }
     } catch (err) {
-      const message = err.response?.data?.message || 'Action failed. Please try again.';
-      setError(message);
+      setError(err.response?.data?.message || 'Action failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const toggleMode = () => {
+  const switchMode = (next) => {
     setError('');
     setSuccessMsg('');
-    setMode(mode === 'LOGIN' ? 'REGISTER' : 'LOGIN');
+    setMode(next);
   };
 
+  /* ─── FORM TITLE / SUBTITLE ─── */
+  const title =
+    mode === 'LOGIN' ? 'Welcome Back' : mode === 'REGISTER' ? 'Join The Movement' : 'Verify Email';
+  const subtitle =
+    mode === 'VERIFY_OTP'
+      ? `We sent a 6-digit code to ${email}`
+      : mode === 'LOGIN'
+      ? 'Sign in to your account'
+      : 'Create your free account';
+
   return (
-    <div className="min-h-screen bg-[#111] flex items-center justify-center font-poppins px-4 relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-accent-teal rounded-full blur-[150px]"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-white rounded-full blur-[150px]"></div>
+    <div className="min-h-screen flex font-poppins overflow-hidden bg-[#0d0d0d]">
+
+      {/* ══════════ LEFT PANEL — Brand Visual ══════════ */}
+      <div className="hidden lg:flex relative w-[52%] flex-shrink-0 flex-col items-start justify-end p-16 overflow-hidden">
+
+        {/* Video background */}
+        <video
+          src={videoLandingPage}
+          autoPlay muted loop playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+
+        {/* Logo top-left */}
+        <Link to="/" className="absolute top-10 left-10 z-10 hover:opacity-75 transition">
+          <img loading="lazy" src={logotr} alt="FreePigMovement" className="h-14 w-auto object-contain" />
+        </Link>
+
+        {/* Brand copy bottom-left */}
+        <div className="relative z-10 max-w-md">
+          <p className="text-[11px] font-bold tracking-[0.35em] text-gray-400 uppercase mb-3">
+            FreePigMovement
+          </p>
+          <h1 className="font-oswald text-5xl xl:text-6xl font-black text-white leading-none mb-5">
+            BUILD DIFFERENT,<br />RIDE DIFFERENT
+          </h1>
+          <p className="text-gray-300 text-base leading-relaxed font-light">
+            Handcrafted surfboards shaped for your identity. Quality since 2001.
+          </p>
+
+          {/* Decorative divider */}
+          <div className="flex items-center gap-4 mt-8">
+            <div className="w-12 h-px bg-white/30" />
+            <span className="text-gray-500 text-[10px] tracking-[0.3em] uppercase">Est. 2001</span>
+          </div>
+        </div>
       </div>
 
-      <motion.div 
-        className="w-full max-w-md bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 md:p-10 shadow-2xl relative z-10"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-      >
-        <div className="text-center mb-10">
-          <h2 className="font-oswald text-4xl font-bold tracking-widest text-white mb-2">
-            {mode === 'LOGIN' ? 'LOGIN' : mode === 'REGISTER' ? 'REGISTER' : 'VERIFY EMAIL'}
-          </h2>
-          <p className="text-gray-400 text-sm tracking-widest">
-            {mode === 'VERIFY_OTP' ? `OTP sent to ${email}` : 'ENTER TO THE MOVEMENT'}
-          </p>
+      {/* ══════════ RIGHT PANEL — Form ══════════ */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 relative overflow-y-auto">
+
+        {/* Subtle radial glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-white/3 rounded-full blur-[120px]" />
         </div>
 
-        <AnimatePresence>
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mb-6 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs tracking-wide"
-            >
-              {error}
-            </motion.div>
-          )}
-          {successMsg && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mb-6 px-4 py-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-xs tracking-wide"
-            >
-              {successMsg}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Mobile logo */}
+        <Link to="/" className="lg:hidden mb-10 hover:opacity-75 transition">
+          <img loading="lazy" src={logotr} alt="FreePigMovement" className="h-12 w-auto object-contain" />
+        </Link>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <AnimatePresence mode="popLayout">
-            {mode === 'REGISTER' && (
+        <div className="w-full max-w-[400px] relative z-10">
+
+          {/* ── Tab switcher (LOGIN / REGISTER) ── */}
+          {mode !== 'VERIFY_OTP' && (
+            <div className="flex bg-white/5 rounded-xl p-1 mb-10 border border-white/8">
+              {['LOGIN', 'REGISTER'].map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => switchMode(m)}
+                  className={`flex-1 py-2.5 text-[11px] font-bold tracking-[0.18em] rounded-lg transition-all duration-300 ${
+                    mode === m
+                      ? 'bg-white text-black shadow-lg'
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* ── Heading ── */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={mode}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3 }}
+              className="mb-8"
+            >
+              <h2 className="font-oswald text-3xl font-bold text-white tracking-wide mb-1.5">
+                {title}
+              </h2>
+              <p className="text-gray-500 text-sm tracking-wide">{subtitle}</p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* ── Alert messages ── */}
+          <AnimatePresence>
+            {error && (
               <motion.div
-                key="name"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="flex flex-col gap-2"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-5 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs tracking-wide"
               >
-                <label className="text-xs font-bold text-gray-300 tracking-widest uppercase">Name</label>
-                <input 
-                  type="text" 
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  minLength={2}
-                  placeholder="John Doe"
-                  className="w-full bg-[#222] border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-teal focus:ring-1 focus:ring-accent-teal transition duration-300"
-                />
+                {error}
               </motion.div>
             )}
-
-            {mode !== 'VERIFY_OTP' && (
+            {successMsg && (
               <motion.div
-                key="auth-fields"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="flex flex-col gap-6"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-5 px-4 py-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-xs tracking-wide"
               >
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-gray-300 tracking-widest uppercase">Email</label>
-                  <input 
-                    type="email" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="user@example.com"
-                    className="w-full bg-[#222] border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-teal focus:ring-1 focus:ring-accent-teal transition duration-300"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-gray-300 tracking-widest uppercase">Password</label>
-                  <input 
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={mode === 'REGISTER' ? 8 : 1}
-                    placeholder="••••••••"
-                    className="w-full bg-[#222] border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-teal focus:ring-1 focus:ring-accent-teal transition duration-300"
-                  />
-                  {mode === 'REGISTER' && (
-                    <span className="text-[10px] text-gray-500 tracking-wider">Must be at least 8 characters.</span>
-                  )}
-                </div>
-              </motion.div>
-            )}
-
-            {mode === 'VERIFY_OTP' && (
-              <motion.div
-                key="otp"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="flex flex-col gap-2"
-              >
-                <label className="text-xs font-bold text-gray-300 tracking-widest uppercase">6-Digit OTP</label>
-                <input 
-                  type="text"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  required
-                  maxLength={6}
-                  placeholder="123456"
-                  className="w-full bg-[#222] border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-teal focus:ring-1 focus:ring-accent-teal transition duration-300 tracking-[0.5em] text-center text-lg font-bold"
-                />
+                {successMsg}
               </motion.div>
             )}
           </AnimatePresence>
 
-          <motion.button
-            type="submit"
-            disabled={isLoading}
-            className="mt-4 px-8 py-3.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[12px] font-bold tracking-[0.15em] uppercase w-full disabled:opacity-50 disabled:cursor-not-allowed"
-            whileHover={{ scale: isLoading ? 1 : 1.02 }}
-            whileTap={{ scale: isLoading ? 1 : 0.98 }}
-          >
-            {isLoading ? 'PROCESSING...' : mode === 'LOGIN' ? 'SIGN IN' : mode === 'REGISTER' ? 'SIGN UP' : 'VERIFY'}
-          </motion.button>
-        </form>
+          {/* ── Form ── */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <AnimatePresence mode="popLayout">
 
-        {mode !== 'VERIFY_OTP' && (
-          <div className="mt-8 text-center">
-            <p className="text-xs text-gray-500">
-              {mode === 'LOGIN' ? "Don't have an account? " : "Already have an account? "}
-              <button onClick={toggleMode} type="button" className="text-accent-teal hover:text-white transition duration-300 uppercase font-bold">
-                {mode === 'LOGIN' ? 'Sign Up' : 'Sign In'}
-              </button>
-            </p>
+              {/* Name — register only */}
+              {mode === 'REGISTER' && (
+                <motion.div
+                  key="name"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <label className={labelClass}>Full Name</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required minLength={2}
+                    placeholder="Your name"
+                    className={inputClass}
+                  />
+                </motion.div>
+              )}
+
+              {/* Email + Password */}
+              {mode !== 'VERIFY_OTP' && (
+                <motion.div
+                  key="email-pass"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col gap-5"
+                >
+                  <div>
+                    <label className={labelClass}>Email</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      placeholder="you@example.com"
+                      className={inputClass}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Password</label>
+                    <div className="relative">
+                      <input
+                        type={showPass ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        minLength={mode === 'REGISTER' ? 8 : 1}
+                        placeholder="••••••••"
+                        className={`${inputClass} pr-12`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPass(!showPass)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition text-xs tracking-widest"
+                      >
+                        {showPass ? 'HIDE' : 'SHOW'}
+                      </button>
+                    </div>
+                    {mode === 'REGISTER' && (
+                      <p className="text-[10px] text-gray-600 mt-1.5 tracking-wide">
+                        Minimum 8 characters
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* OTP */}
+              {mode === 'VERIFY_OTP' && (
+                <motion.div
+                  key="otp"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <label className={labelClass}>6-Digit Code</label>
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    required maxLength={6}
+                    placeholder="· · · · · ·"
+                    className={`${inputClass} text-center text-2xl tracking-[0.6em] font-bold`}
+                  />
+                  <p className="text-[10px] text-gray-600 mt-2 text-center tracking-wide">
+                    Didn't receive it? Check your spam folder.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Submit button */}
+            <motion.button
+              type="submit"
+              disabled={isLoading}
+              whileHover={{ scale: isLoading ? 1 : 1.02 }}
+              whileTap={{ scale: isLoading ? 1 : 0.97 }}
+              className="mt-2 w-full py-3.5 bg-white text-black text-[12px] font-black tracking-[0.2em] uppercase rounded-xl hover:bg-gray-200 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin inline-block" />
+                  PROCESSING...
+                </>
+              ) : mode === 'LOGIN' ? 'SIGN IN' : mode === 'REGISTER' ? 'CREATE ACCOUNT' : 'VERIFY'}
+            </motion.button>
+          </form>
+
+          {/* ── Back link for OTP step ── */}
+          {mode === 'VERIFY_OTP' && (
+            <button
+              type="button"
+              onClick={() => switchMode('REGISTER')}
+              className="mt-5 w-full text-center text-xs text-gray-600 hover:text-gray-400 transition tracking-widest"
+            >
+              ← Back to Register
+            </button>
+          )}
+
+          {/* ── Back to home ── */}
+          <div className="mt-8 pt-6 border-t border-white/8 text-center">
+            <Link to="/" className="text-[11px] text-gray-600 hover:text-gray-400 transition tracking-widest uppercase">
+              ← Back to Home
+            </Link>
           </div>
-        )}
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 }

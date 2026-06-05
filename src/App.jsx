@@ -5,30 +5,38 @@ import Store from "./pages/store/Store";
 import Custom from "./pages/custom/Custom";
 import Volume from "./pages/volume/Volume";
 import Contact from "./pages/contact/Contact";
+import About from "./pages/about/About";
 import Login from "./pages/login/Login";
 import Location from "./pages/location/Location";
 import ProductDetail from "./pages/product/ProductDetail";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 import Gallery from "./pages/gallery/Gallery";
+import Customer from "./pages/customer/Customer";
 import ContactPopup from "./components/ContactPopup";
 import CtaPopup from "./components/CTAPopup";
 import ErrorPage from "./pages/error/ErrorPage";
 
+import { Toaster } from 'react-hot-toast';
+
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-center" />
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/store" element={<Store />} />
-        <Route path="/product/:slug" element={<ProductDetail />} />
-        <Route path="/custom" element={<Custom />} />
-        <Route path="/volume" element={<Volume />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/location/:shopId?" element={<Location />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
+        <Route path="/store" element={<PublicRoute><Store /></PublicRoute>} />
+        <Route path="/product/:slug" element={<PublicRoute><ProductDetail /></PublicRoute>} />
+        <Route path="/custom" element={<PublicRoute><Custom /></PublicRoute>} />
+        <Route path="/volume" element={<PublicRoute><Volume /></PublicRoute>} />
+        <Route path="/contact" element={<PublicRoute><Contact /></PublicRoute>} />
+        <Route path="/about" element={<PublicRoute><About /></PublicRoute>} />
+        <Route path="/location/:shopId?" element={<PublicRoute><Location /></PublicRoute>} />
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/gallery" element={<PublicRoute><Gallery /></PublicRoute>} />
+        <Route path="/customer" element={<PublicRoute><Customer /></PublicRoute>} />
         <Route
           path="/admin/dashboard"
           element={

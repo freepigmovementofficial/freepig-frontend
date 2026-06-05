@@ -267,18 +267,15 @@ export default function Volume() {
     >
       {/* ══════════════════ HERO BANNER ══════════════════ */}
       <div
-        className="relative w-full h-[350px] flex items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: `url(${headingImg})` }}
+        className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
+        style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
       >
-        {/* Dark overlay — sama dengan Store */}
-        <div className="absolute inset-0 bg-black/20" />
-
-        {/* Hero title */}
+        <div className="absolute inset-0 bg-black/50" />
         <motion.h1
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 font-oswald text-6xl md:text-7xl font-bold tracking-widest uppercase drop-shadow-2xl text-white text-center"
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="relative z-10 font-oswald text-5xl sm:text-6xl md:text-7xl lg:text-[96px] font-black tracking-[0.1em] text-center uppercase text-white drop-shadow-2xl px-4"
         >
           VOLUME CALCULATE
         </motion.h1>

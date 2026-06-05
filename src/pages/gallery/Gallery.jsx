@@ -70,8 +70,21 @@ export default function Gallery() {
         ) : (
           <AnimatePresence mode="wait">
             {loading ? (
-              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-center items-center py-20 w-full">
-                <PigLoader text="Fetching moments..." />
+              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full">
+                <div className="flex justify-center items-center py-8">
+                  <PigLoader text="Fetching moments..." />
+                </div>
+                <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+                  {Array.from({ length: 12 }).map((_, idx) => (
+                    <div 
+                      key={idx} 
+                      className="break-inside-avoid relative bg-[#2a2a2a] animate-pulse rounded-xl overflow-hidden" 
+                      style={{ height: idx % 3 === 0 ? '300px' : idx % 2 === 0 ? '400px' : '250px' }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#333] to-[#222] opacity-50"></div>
+                    </div>
+                  ))}
+                </div>
               </motion.div>
             ) : galleries.length === 0 ? (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 text-gray-500 tracking-widest text-sm uppercase">
@@ -150,7 +163,7 @@ export default function Gallery() {
               onClick={(e) => e.stopPropagation()}
               className="relative max-w-5xl w-full max-h-full flex flex-col items-center"
             >
-              <img
+              <img loading="lazy"
                 src={selectedImage.url}
                 alt={selectedImage.caption || 'Preview'}
                 className="max-w-full max-h-[80vh] object-contain shadow-2xl rounded-sm"

@@ -235,6 +235,10 @@ export default function Home() {
 
   const faqs = [
     {
+      q: "How do I know which board suits me best?",
+      a: "Don't worry if you're not sure which shape or volume to choose. We can help recommend the right board based on your height, weight, skill level, and surfing style. Whether you're a beginner looking for stability or an experienced surfer chasing performance, we'll guide you toward the setup that fits you best.",
+    },
+    {
       q: "How long does a custom board take?",
       a: "Usually around 2-6 weeks depending on the queue, board type, and design complexity. Every board is shaped and finished carefully by hand, so production time may vary during busy periods. We'll keep you updated throughout the process so you always know the progress of your board.",
     },
@@ -243,8 +247,8 @@ export default function Home() {
       a: "Yes. You can fully customize your board based on your preferences, including dimensions, artwork, resin tint, logo placement, fin setup, and overall style. If you already have references or ideas, you can send them to us and we'll work together to bring the concept into a real board that matches your riding style and personality.",
     },
     {
-      q: "How do I know which board suits me best?",
-      a: "Don't worry if you're not sure which shape or volume to choose. We can help recommend the right board based on your height, weight, skill level, and surfing style. Whether you're a beginner looking for stability or an experienced surfer chasing performance, we'll guide you toward the setup that fits you best.",
+      q: "What payment methods do you accept?",
+      a: "We accept payments via cash, bank transfer, and card for your convenience. Once your order is confirmed, our team will provide the necessary payment details and guide you through the process. If you have any questions regarding payment options, feel free to contact us for assistance.",
     },
   ];
 
@@ -326,7 +330,7 @@ export default function Home() {
             Custom surfboards made for your identity.
           </p>
           <motion.button
-            onClick={() => window.dispatchEvent(new Event('openContactPopup'))}
+            onClick={() => window.dispatchEvent(new Event("openContactPopup"))}
             className="px-8 py-3.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[12px] font-bold tracking-[0.15em] uppercase"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
@@ -379,6 +383,7 @@ export default function Home() {
             >
               {/* Background Image */}
               <img
+                loading="lazy"
                 src={item.img}
                 alt={item.label}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
@@ -464,6 +469,7 @@ export default function Home() {
               /* Single image — full height, no crop */
               <div className="absolute inset-0 flex items-center justify-end overflow-hidden">
                 <img
+                  loading="lazy"
                   src={newRelease.images[0].url}
                   alt={newRelease.title}
                   className="h-full w-auto object-contain"
@@ -474,6 +480,7 @@ export default function Home() {
               <div className="absolute inset-0 flex">
                 {newRelease.images.slice(0, 2).map((img) => (
                   <img
+                    loading="lazy"
                     key={img.id}
                     src={img.url}
                     alt={newRelease.title}
@@ -513,6 +520,7 @@ export default function Home() {
                 >
                   <div className="h-72 w-full overflow-hidden">
                     <img
+                      loading="lazy"
                       src={level.img}
                       alt={level.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out"
@@ -570,6 +578,7 @@ export default function Home() {
                   className="flex flex-col items-center gap-4 group cursor-pointer"
                 >
                   <img
+                    loading="lazy"
                     src={wave.img}
                     alt={wave.title}
                     className={`${wave.imgClass} object-contain opacity-80 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-300 drop-shadow-xl`}
@@ -638,6 +647,7 @@ export default function Home() {
                       {/* Image — full-frame, no padding, white bg */}
                       <div className="bg-white overflow-hidden aspect-[3/4]">
                         <img
+                          loading="lazy"
                           src={firstImage}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -686,6 +696,7 @@ export default function Home() {
               topTitle: "LOVED BY",
               bottomTitle: "SURFERS WORLDWIDE",
               img: ourCustomer,
+              link: "/customer",
             },
             {
               bottomTitle: "GALERY",
@@ -699,6 +710,7 @@ export default function Home() {
               className="relative group overflow-hidden cursor-pointer h-full"
             >
               <img
+                loading="lazy"
                 src={item.img}
                 alt={item.bottomTitle}
                 className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:grayscale"

@@ -124,7 +124,7 @@ export default function Store() {
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="relative z-10 font-oswald text-7xl md:text-[96px] font-black tracking-[0.1em] uppercase text-white drop-shadow-2xl"
+          className="relative z-10 font-oswald text-5xl sm:text-6xl md:text-7xl lg:text-[96px] font-black tracking-[0.1em] text-center uppercase text-white drop-shadow-2xl px-4"
         >
           {activeTab}
         </motion.h1>
@@ -244,8 +244,21 @@ export default function Store() {
         {/* Product Grid */}
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-center items-center py-20 w-full">
-              <PigLoader />
+            <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full">
+              <div className="flex justify-center items-center py-8">
+                <PigLoader />
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                {Array.from({ length: 8 }).map((_, idx) => (
+                  <div key={idx} className="flex flex-col cursor-wait">
+                    <div className="bg-[#2a2a2a] animate-pulse aspect-[3/4] w-full"></div>
+                    <div className="bg-[#3a3a3a] px-4 py-4 flex flex-col gap-2">
+                      <div className="bg-[#555] animate-pulse h-2 w-1/3 rounded"></div>
+                      <div className="bg-[#666] animate-pulse h-4 w-2/3 rounded mt-1"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -270,7 +283,7 @@ export default function Store() {
                       className="flex flex-col cursor-pointer group"
                     >
                       <div className="bg-white overflow-hidden aspect-[3/4]">
-                        <img
+                        <img loading="lazy"
                           src={getProductImage(product)}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
