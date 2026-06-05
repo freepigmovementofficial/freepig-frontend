@@ -537,7 +537,7 @@ export default function Home() {
             <h3 className="font-oswald text-3xl font-bold tracking-[0.3em] text-gray-400 uppercase text-center mb-12">
               find your wave
             </h3>
-            <div className="flex flex-col md:flex-row justify-center items-end gap-12 md:gap-24 text-center mt-12">
+            <div className="flex flex-col md:flex-row justify-center items-center md:items-end gap-12 md:gap-24 text-center mt-12">
               {[
                 {
                   title: "SMALL WAVES",
