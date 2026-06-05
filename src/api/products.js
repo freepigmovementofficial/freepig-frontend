@@ -58,4 +58,12 @@ export const productService = {
     const response = await api.patch(`/products/${id}/images/${imageId}/primary`);
     return response.data;
   },
+  addDimension: async (id, data) => {
+    const response = await api.post(`/products/${id}/dimensions`, data);
+    return response.data;
+  },
+  deleteDimension: async (id, dimensionId) => {
+    const response = await api.delete(`/products/${id}/dimensions/${dimensionId}`);
+    return response.data;
+  },
 };

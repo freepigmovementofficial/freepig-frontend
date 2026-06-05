@@ -471,12 +471,165 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
 }
 
 
+// ─── Product Dimensions Modal ───────────────────────────────────────────────
+function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [form, setForm] = useState({ size: '', width: '', thickness: '', volume: '' });
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (open && productSlug) {
+      loadProduct();
+    } else {
+      setProduct(null);
+      setForm({ size: '', width: '', thickness: '', volume: '' });
+      setError('');
+    }
+  }, [open, productSlug]);
+
+  const loadProduct = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await productService.getBySlug(productSlug);
+      setProduct(res.data);
+    } catch (err) {
+      setError('Failed to load product details.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!product) return;
+    setSubmitting(true);
+    setError('');
+    try {
+      await productService.addDimension(product.id, form);
+      setForm({ size: '', width: '', thickness: '', volume: '' });
+      await loadProduct();
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to add dimension.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (dimensionId) => {
+    if (!window.confirm('Delete this dimension?')) return;
+    setLoading(true);
+    setError('');
+    try {
+      await productService.deleteDimension(product.id, dimensionId);
+      await loadProduct();
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete dimension.');
+      setLoading(false);
+    }
+  };
+
+  if (!open) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
+          className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-2xl shadow-2xl my-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">MANAGE DIMENSIONS</h2>
+              <p className="text-gray-500 text-xs tracking-widest mt-0.5">{product?.name || 'Loading...'}</p>
+            </div>
+            <button type="button" onClick={onClose} className="text-gray-400 hover:text-white text-lg font-bold w-8 h-8 flex items-center justify-center">✕</button>
+          </div>
+
+          {error && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{error}</div>}
+
+          {/* Current dimensions */}
+          <div className="mb-6">
+            <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-3">
+              Existing Dimensions ({product?.dimensions?.length || 0})
+            </h3>
+            {loading && !product ? (
+              <div className="text-center py-4"><PigLoader size="mini" text="Loading..." /></div>
+            ) : product?.dimensions?.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {product.dimensions.map((dim) => (
+                  <div key={dim.id} className="flex justify-between items-center bg-[#222] border border-gray-700 rounded-lg px-4 py-2 text-sm text-gray-300">
+                    <span>{dim.size} x {dim.width} x {dim.thickness} {dim.volume ? `${dim.volume}` : ''}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(dim.id)}
+                      disabled={loading}
+                      className="text-red-400 hover:text-red-300 transition text-xs font-bold ml-2 shrink-0 disabled:opacity-50"
+                    >
+                      DELETE
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-600 text-xs">Belum ada dimensi.</p>
+            )}
+          </div>
+
+          {/* Add new dimension */}
+          <div className="border border-gray-700 rounded-xl p-5 bg-[#222]">
+            <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-4">Add New Dimension</h3>
+            <form onSubmit={handleAdd} className="flex flex-col gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div>
+                  <label className="text-[10px] font-bold text-gray-500 tracking-widest uppercase block mb-1">Size *</label>
+                  <input required placeholder="5'8&quot;" value={form.size} onChange={e => setForm(p => ({...p, size: e.target.value}))} className="w-full bg-[#1a1a1a] border border-gray-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-gray-500 tracking-widest uppercase block mb-1">Width *</label>
+                  <input required placeholder="20 1/2&quot;" value={form.width} onChange={e => setForm(p => ({...p, width: e.target.value}))} className="w-full bg-[#1a1a1a] border border-gray-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-gray-500 tracking-widest uppercase block mb-1">Thickness *</label>
+                  <input required placeholder="2 3/8&quot;" value={form.thickness} onChange={e => setForm(p => ({...p, thickness: e.target.value}))} className="w-full bg-[#1a1a1a] border border-gray-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-gray-500 tracking-widest uppercase block mb-1">Volume</label>
+                  <input placeholder="32.00 L" value={form.volume} onChange={e => setForm(p => ({...p, volume: e.target.value}))} className="w-full bg-[#1a1a1a] border border-gray-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-accent-teal transition" />
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={submitting || !product}
+                className="py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50 w-full sm:w-auto self-end mt-2 px-8 flex items-center justify-center"
+              >
+                {submitting ? <PigLoader size="mini" text="ADDING..." /> : 'ADD DIMENSION'}
+              </button>
+            </form>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+
 // ─── Products Table ──────────────────────────────────────────────────────────
 function ProductsTable({ categories }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [imagesModalOpen, setImagesModalOpen] = useState(false);
+  const [dimensionsModalOpen, setDimensionsModalOpen] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -534,6 +687,13 @@ function ProductsTable({ categories }) {
         open={imagesModalOpen}
         onClose={() => setImagesModalOpen(false)}
         product={editProduct}
+        onSaved={load}
+      />
+
+      <ProductDimensionsModal
+        open={dimensionsModalOpen}
+        onClose={() => setDimensionsModalOpen(false)}
+        productSlug={editProduct?.slug}
         onSaved={load}
       />
 
@@ -623,6 +783,12 @@ function ProductsTable({ categories }) {
                         className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-widest text-white hover:bg-white/20 transition"
                       >
                         IMAGES
+                      </button>
+                      <button
+                        onClick={() => { setEditProduct(p); setDimensionsModalOpen(true); }}
+                        className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-widest text-white hover:bg-white/20 transition"
+                      >
+                        DIMENSIONS
                       </button>
                       <button
                         onClick={() => { setEditProduct(p); setModalOpen(true); }}
