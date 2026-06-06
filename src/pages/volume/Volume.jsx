@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import headingImg from "../../assets/Heading.png";
+import volumeImg from "../../assets/volumeCalculate.png";
 
 // ── Shape factors ──────────────────────────────────────────────────────────────
 const SHAPE_FACTORS = {
@@ -283,10 +284,10 @@ export default function Volume() {
 
       {/* ══════════════════ CALCULATOR SECTION ══════════════════ */}
       <div
-        className="w-full px-6 md:px-12 py-10"
+        className="w-full px-4 sm:px-6 md:px-12 py-8 md:py-10"
         style={{ backgroundColor: "#1e1e1e" }}
       >
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+        <div className="max-w-6xl mx-auto flex flex-col lg:grid lg:grid-cols-3 gap-8 md:gap-10 items-start">
           {/* ─── LEFT: Controls ─── */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -327,14 +328,14 @@ export default function Volume() {
               display={`${thickness}"`}
             />
 
-            {/* Radio buttons */}
-            <div className="grid grid-cols-3 gap-x-4 gap-y-3 mb-6 mt-2">
+            {/* Radio buttons — bigger tap targets on mobile */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 mb-6 mt-2">
               {BOARD_TYPES.map((bt) => (
                 <label
-                  key={bt.id}
-                  className="flex items-center gap-1.5 cursor-pointer"
-                  onClick={() => setBoardType(bt.id)}
-                >
+                    key={bt.id}
+                    className="flex items-center gap-2 cursor-pointer py-1"
+                    onClick={() => setBoardType(bt.id)}
+                  >
                   {/* Custom radio */}
                   <div
                     className="w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 transition-all"
@@ -423,12 +424,12 @@ export default function Volume() {
             </div>
           </motion.div>
 
-          {/* ─── CENTER: Explanation ─── */}
+          {/* ─── CENTER: Explanation — hidden on mobile, shown on lg ─── */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="flex flex-col items-center text-center pt-0 lg:pt-8"
+            className="hidden lg:flex flex-col items-center text-center pt-0 lg:pt-8"
           >
             <p className="text-xs tracking-[0.3em] uppercase text-white mb-1">
               How To Calculate
@@ -460,23 +461,24 @@ export default function Volume() {
             </p>
           </motion.div>
 
-          {/* ─── RIGHT: SVG Illustration ─── */}
+          {/* ─── RIGHT: Image ─── */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="flex items-center justify-center gap-3"
+            className="flex items-center justify-center gap-4 sm:gap-6 order-first lg:order-last"
           >
-            {/* Board */}
-            <div
-              className="w-[120px] md:w-[140px] flex-shrink-0"
-              style={{ filter: "drop-shadow(0 0 24px rgba(0,207,255,0.18))" }}
-            >
-              <SurfboardSVG />
+            {/* Board image */}
+            <div className="w-[120px] sm:w-[160px] md:w-[180px] lg:w-[200px] flex-shrink-0">
+              <img
+                src={volumeImg}
+                alt="Surfboard volume reference"
+                className="w-full h-auto object-contain drop-shadow-2xl"
+              />
             </div>
 
-            {/* Labels — vertically spaced to align with dim lines */}
-            <div className="flex flex-col gap-8 pt-4">
+            {/* Labels */}
+            <div className="flex flex-col gap-5 sm:gap-8 pt-4">
               <DimLabel color="#FFD700" label="Width" delay={0.5} />
               <DimLabel color="#FF3333" label="Length" delay={0.6} />
               <DimLabel color="#22C55E" label="Thickness" delay={0.7} />

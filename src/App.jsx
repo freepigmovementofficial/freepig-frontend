@@ -14,6 +14,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Gallery from "./pages/gallery/Gallery";
 import Customer from "./pages/customer/Customer";
+import Riders from "./pages/riders/Riders";
+import RiderDetail from "./pages/riders/RiderDetail";
 import ContactPopup from "./components/ContactPopup";
 import CtaPopup from "./components/CTAPopup";
 import ErrorPage from "./pages/error/ErrorPage";
@@ -37,6 +39,8 @@ function App() {
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/gallery" element={<PublicRoute><Gallery /></PublicRoute>} />
         <Route path="/customer" element={<PublicRoute><Customer /></PublicRoute>} />
+        <Route path="/riders" element={<PublicRoute><Riders /></PublicRoute>} />
+        <Route path="/riders/:id" element={<PublicRoute><RiderDetail /></PublicRoute>} />
         <Route
           path="/admin/dashboard"
           element={

@@ -691,6 +691,7 @@ export default function Home() {
               topTitle: "RIDERS",
               bottomTitle: "SPOTLIGHT",
               img: meetTheRiders,
+              link: "/riders",
             },
             {
               topTitle: "LOVED BY",

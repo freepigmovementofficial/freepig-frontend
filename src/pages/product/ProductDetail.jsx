@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { productService } from '../../api/products';
 import headingImg from '../../assets/Heading.png';
 import PigLoader from '../../components/PigLoader';
@@ -10,7 +11,7 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeImage, setActiveImage] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -21,9 +22,9 @@ export default function ProductDetail() {
         if (res.data?.images?.length > 0) {
           const imgs = res.data.images;
           // Prefer full-body DECK photo (not logo) as the default displayed image
-          const deckFull = imgs.find(img => img.type === 'DECK' && !img.url.toLowerCase().includes('logo'));
-          const anyFull = imgs.find(img => !img.url.toLowerCase().includes('logo'));
-          setActiveImage((deckFull || anyFull || imgs[0]).url);
+          const deckFull = imgs.findIndex(img => img.type === 'DECK' && !img.url.toLowerCase().includes('logo'));
+          const anyFull = imgs.findIndex(img => !img.url.toLowerCase().includes('logo'));
+          setActiveIndex(deckFull >= 0 ? deckFull : anyFull >= 0 ? anyFull : 0);
         }
       } catch (err) {
         setError('Product not found.');
@@ -34,6 +35,11 @@ export default function ProductDetail() {
     fetchProduct();
     window.scrollTo(0, 0);
   }, [slug]);
+
+  const images = product?.images || [];
+  const totalImages = images.length;
+  const goNext = useCallback(() => setActiveIndex(i => (i + 1) % totalImages), [totalImages]);
+  const goPrev = useCallback(() => setActiveIndex(i => (i - 1 + totalImages) % totalImages), [totalImages]);
 
   if (loading) {
     return (
@@ -109,32 +115,73 @@ export default function ProductDetail() {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-6 md:px-10 mt-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 mt-8 sm:mt-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           
           {/* Left Column: Images */}
-          <div className="flex flex-col gap-4">
-            <motion.div 
+          <div className="flex flex-col gap-3 sm:gap-4">
+            {/* Main image with arrow buttons */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-lg overflow-hidden flex items-center justify-center aspect-[3/4] p-8 shadow-2xl"
+              className="relative bg-white rounded-lg overflow-hidden flex items-center justify-center aspect-[3/4] p-4 sm:p-8 shadow-2xl group"
             >
-              <img loading="lazy" 
-                src={activeImage || '/black_surfboard.png'} 
-                alt={product.name} 
-                className="w-full h-full object-contain drop-shadow-xl"
-              />
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={activeIndex}
+                  loading="lazy"
+                  src={images[activeIndex]?.url || '/black_surfboard.png'}
+                  alt={product.name}
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                  className="w-full h-full object-contain drop-shadow-xl"
+                />
+              </AnimatePresence>
+
+              {/* Arrow Buttons — only shown when multiple images exist */}
+              {totalImages > 1 && (
+                <>
+                  <button
+                    onClick={goPrev}
+                    className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-black/50 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black/80 transition-all duration-200 z-10"
+                    aria-label="Previous image"
+                  >
+                    <FiChevronLeft size={20} />
+                  </button>
+                  <button
+                    onClick={goNext}
+                    className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-black/50 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black/80 transition-all duration-200 z-10"
+                    aria-label="Next image"
+                  >
+                    <FiChevronRight size={20} />
+                  </button>
+                  {/* Dot indicators */}
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    {images.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setActiveIndex(i)}
+                        className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${
+                          i === activeIndex ? 'bg-black w-3' : 'bg-black/30'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </motion.div>
 
             {/* Thumbnails */}
-            {product.images && product.images.length > 1 && (
+            {totalImages > 1 && (
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
-                {product.images.map((img) => (
+                {images.map((img, i) => (
                   <button
                     key={img.id}
-                    onClick={() => setActiveImage(img.url)}
+                    onClick={() => setActiveIndex(i)}
                     className={`bg-white rounded-lg overflow-hidden flex items-center justify-center aspect-[3/4] p-2 transition-all duration-300 ${
-                      activeImage === img.url ? 'ring-2 ring-accent-teal shadow-lg scale-105' : 'opacity-70 hover:opacity-100 hover:scale-105'
+                      i === activeIndex ? 'ring-2 ring-accent-teal shadow-lg scale-105' : 'opacity-70 hover:opacity-100 hover:scale-105'
                     }`}
                   >
                     <img loading="lazy" src={img.url} alt={`${product.name} thumbnail`} className="w-full h-full object-contain" />
@@ -150,7 +197,7 @@ export default function ProductDetail() {
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col"
           >
-            <h1 className="font-oswald text-5xl md:text-6xl font-bold uppercase tracking-wider mb-2">
+            <h1 className="font-oswald text-4xl sm:text-5xl md:text-6xl font-bold uppercase tracking-wider mb-2">
               {product.name}
             </h1>
             

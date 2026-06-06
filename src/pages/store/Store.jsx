@@ -117,7 +117,7 @@ export default function Store() {
       {/* ── HERO BANNER ── */}
       <div
         className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
-        style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
+        style={{ backgroundImage: `url(${headingImg})`, height: '260px' }}
       >
         <div className="absolute inset-0 bg-black/50" />
         <motion.h1
@@ -131,19 +131,19 @@ export default function Store() {
       </div>
 
       {/* ── FILTER + TOGGLE BAR ── */}
-      <div className="max-w-7xl mx-auto px-6 md:px-10 mt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 mt-6 sm:mt-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.1 }}
-          className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-[#333]"
+          className="flex flex-col gap-4 pb-5 border-b border-[#333]"
         >
           {/* Surfboard filters */}
           {activeTab === 'SURFBOARD' && (
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3 flex-wrap">
-                <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase w-24 shrink-0">SKILL LEVEL</span>
-                <div className="flex gap-2 flex-wrap">
+            <div className="flex flex-col gap-3 w-full">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">SKILL LEVEL</span>
+                <div className="flex gap-2 flex-wrap overflow-x-auto pb-1">
                   {skillLevels.map((skill) => (
                     <button
                       key={skill}
@@ -160,9 +160,9 @@ export default function Store() {
                   ))}
                 </div>
               </div>
-              <div className="flex items-center gap-3 flex-wrap">
-                <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase w-24 shrink-0">WAVES</span>
-                <div className="flex gap-2 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">WAVES</span>
+                <div className="flex gap-2 flex-wrap overflow-x-auto pb-1">
                   {waveTypes.map((wave) => (
                     <button
                       key={wave}
@@ -207,7 +207,7 @@ export default function Store() {
           )}
 
           {/* Tab toggle */}
-          <div className="flex gap-2 shrink-0">
+          <div className="flex gap-2 shrink-0 self-start md:self-auto">
             {['SURFBOARD', 'ACCESSORIES'].map((tab) => (
               <button
                 key={tab}

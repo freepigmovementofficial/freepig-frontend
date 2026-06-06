@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from "react";
+import {
+  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend,
+  RadialBarChart, RadialBar,
+} from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiSearch,
@@ -10,6 +15,7 @@ import {
   FiMessageSquare,
   FiImage,
   FiHeart,
+  FiUsers,
 } from "react-icons/fi";
 import { productService } from "../../api/products";
 import { adminService } from "../../api/admin";
@@ -19,6 +25,7 @@ import { featuredService } from "../../api/featured";
 import { storeReviewService } from "../../api/storeReviews";
 import { galleryService } from "../../api/gallery";
 import { testimonialsService } from "../../api/testimonials";
+import { riderService } from "../../api/riders";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import PigLoader from "../../components/PigLoader";
@@ -506,7 +513,8 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
   const handleFileChange = (e) => {
     const selected = Array.from(e.target.files);
     setFiles(selected);
-    setTypes(selected.map(() => "DECK"));
+    const defaultType = product.productType === "ACCESSORY" ? "GENERAL" : "DECK";
+    setTypes(selected.map(() => defaultType));
   };
 
   const handleTypeChange = (idx, val) => {
@@ -685,17 +693,19 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
                       <span className="text-xs text-gray-300 flex-1 truncate">
                         {file.name}
                       </span>
-                      <select
-                        value={types[idx] || "DECK"}
-                        onChange={(e) => handleTypeChange(idx, e.target.value)}
-                        className="bg-[#333] border border-gray-600 rounded px-2 py-1 text-xs text-white focus:border-accent-teal transition"
-                      >
-                        {IMAGE_TYPES.map((t) => (
-                          <option key={t} value={t}>
-                            {t}
-                          </option>
-                        ))}
-                      </select>
+                      {product.productType !== "ACCESSORY" && (
+                        <select
+                          value={types[idx] || "DECK"}
+                          onChange={(e) => handleTypeChange(idx, e.target.value)}
+                          className="bg-[#333] border border-gray-600 rounded px-2 py-1 text-xs text-white focus:border-accent-teal transition"
+                        >
+                          {IMAGE_TYPES.map((t) => (
+                            <option key={t} value={t}>
+                              {t}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -1139,7 +1149,6 @@ function ProductsTable({ categories }) {
               <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase shadow-md">
                 <th className="px-4 py-3 text-left">Image</th>
                 <th className="px-4 py-3 text-left">Name</th>
-                <th className="px-4 py-3 text-left">Category</th>
                 <th className="px-4 py-3 text-left">Skill</th>
                 <th className="px-4 py-3 text-left">Waves</th>
                 <th className="px-4 py-3 text-left">Status</th>
@@ -1167,9 +1176,6 @@ function ProductsTable({ categories }) {
                   </td>
                   <td className="px-4 py-3 font-bold text-white tracking-wide">
                     {p.name}
-                  </td>
-                  <td className="px-4 py-3 text-gray-400">
-                    {getCategoryName(p)}
                   </td>
                   <td className="px-4 py-3">
                     <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-bold tracking-widest text-gray-300">
@@ -1272,25 +1278,31 @@ function ProductsTable({ categories }) {
 // ─── Accessory Form Modal ───────────────────────────────────────────────────
 function AccessoryFormModal({ open, onClose, accessory, categories, onSaved }) {
   const isEdit = !!accessory;
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
   const accessoryCategories = (categories || []).filter((c) =>
     ["traction-pad", "leash", "fins", "board-bag", "sock"].includes(c.slug),
   );
+
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    categoryId: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (accessory) {
       setForm({
         name: accessory.name || "",
         description: accessory.description || "",
+        categoryId: accessory.categoryId || accessory.category?.id || (accessoryCategories[0]?.id || ""),
       });
     } else {
-      setForm({ name: "", description: "" });
+      setForm({ 
+        name: "", 
+        description: "", 
+        categoryId: accessoryCategories[0]?.id || "" 
+      });
     }
     setError("");
   }, [accessory, open, categories]);
@@ -1300,16 +1312,14 @@ function AccessoryFormModal({ open, onClose, accessory, categories, onSaved }) {
     setLoading(true);
     setError("");
 
+    if (!form.categoryId) {
+      setError("Please select a category.");
+      setLoading(false);
+      return;
+    }
+
     const payload = { ...form };
     payload.productType = "ACCESSORY";
-    // Auto-assign first accessory category
-    const autoCategory = accessoryCategories[0];
-    if (autoCategory && !accessory) {
-      payload.categoryId = autoCategory.id;
-    } else if (accessory) {
-      payload.categoryId =
-        accessory.categoryId || accessory.category?.id || autoCategory?.id;
-    }
     if (!payload.description) delete payload.description;
 
     try {
@@ -1371,6 +1381,27 @@ function AccessoryFormModal({ open, onClose, accessory, categories, onSaved }) {
                 }
                 className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
               />
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                Category *
+              </label>
+              <select
+                required
+                value={form.categoryId}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, categoryId: e.target.value }))
+                }
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition appearance-none"
+              >
+                <option value="" disabled>Select a category</option>
+                {accessoryCategories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name.toUpperCase()}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -2535,7 +2566,6 @@ function FeaturedSectionsTable() {
                         <th className="px-4 py-3 text-left w-10">✓</th>
                         <th className="px-4 py-3 text-left">Image</th>
                         <th className="px-4 py-3 text-left">Name</th>
-                        <th className="px-4 py-3 text-left">Category</th>
                         <th className="px-4 py-3 text-left">Skill</th>
                       </tr>
                     </thead>
@@ -2583,9 +2613,6 @@ function FeaturedSectionsTable() {
                             </td>
                             <td className="px-4 py-3 font-bold text-white tracking-wide">
                               {p.name}
-                            </td>
-                            <td className="px-4 py-3 text-gray-400 text-xs">
-                              {p.category?.name || "—"}
                             </td>
                             <td className="px-4 py-3">
                               <span className="px-2 py-0.5 rounded-full bg-white/10 text-[9px] font-bold tracking-widest text-gray-300">
@@ -2769,6 +2796,21 @@ function FeaturedSectionsTable() {
 }
 
 // ─── Dashboard Stats ─────────────────────────────────────────────────────────
+// ─── Custom Tooltip for recharts ─────────────────────────────────────────────
+const ChartTooltip = ({ active, payload, label }) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-[#1a1a1a] border border-white/10 rounded-lg px-3 py-2 text-xs text-white shadow-xl">
+      {label && <p className="text-gray-400 mb-1 font-bold tracking-widest uppercase">{label}</p>}
+      {payload.map((p, i) => (
+        <p key={i} style={{ color: p.color || p.fill }}>
+          {p.name}: <span className="font-bold">{p.value}</span>
+        </p>
+      ))}
+    </div>
+  );
+};
+
 function DashboardOverview() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -2787,75 +2829,98 @@ function DashboardOverview() {
     load();
   }, []);
 
-  const statCards = stats
-    ? [
-        {
-          label: "Total Products",
-          value: stats.totalProducts,
-          color: "text-accent-teal",
-        },
-        {
-          label: "Total Users",
-          value: stats.totalUsers,
-          color: "text-blue-400",
-        },
-        {
-          label: "Total Riders",
-          value: stats.totalRiders,
-          color: "text-pink-400",
-        },
-        {
-          label: "Total Reviews",
-          value: stats.totalReviews,
-          color: "text-green-400",
-        },
-        {
-          label: "Avg Rating",
-          value: stats.averageRating?.toFixed(1),
-          color: "text-orange-400",
-        },
-      ]
-    : [];
-
-  return (
-    <div className="flex flex-col h-full p-8 pb-0 overflow-y-auto">
-      <h2 className="font-oswald text-2xl font-bold tracking-widest text-white mb-6">
-        DASHBOARD OVERVIEW
-      </h2>
-      {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {Array(7)
-            .fill(null)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="bg-[#222] rounded-xl p-6 animate-pulse h-28"
-              />
-            ))}
-        </div>
-      ) : !stats ? (
-        <p className="text-gray-500 tracking-widest text-sm">
-          Failed to load stats.
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {statCards.map((card) => (
-            <motion.div
-              key={card.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-[#222] rounded-xl p-6 border border-white/5 hover:border-white/10 transition"
-            >
-              <p className="text-gray-500 text-[10px] tracking-widest uppercase mb-2">
-                {card.label}
-              </p>
-              <p className={`font-oswald text-4xl font-bold ${card.color}`}>
-                {card.value ?? "—"}
-              </p>
-            </motion.div>
+  if (loading) {
+    return (
+      <div className="flex flex-col h-full p-8 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {Array(5).fill(null).map((_, i) => (
+            <div key={i} className="bg-[#222] rounded-xl p-6 animate-pulse h-24" />
           ))}
         </div>
-      )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+          {Array(4).fill(null).map((_, i) => (
+            <div key={i} className="bg-[#222] rounded-xl animate-pulse" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return (
+      <div className="flex flex-col h-full p-8">
+        <p className="text-gray-500 tracking-widest text-sm">Failed to load stats.</p>
+      </div>
+    );
+  }
+
+  // ── Data for charts ──
+  const contentDonut = [
+    { name: 'Products', value: stats.totalProducts, color: '#2dd4bf' },
+    { name: 'Riders', value: stats.totalRiders, color: '#f472b6' },
+    { name: 'Testimonials', value: stats.totalTestimonials, color: '#a78bfa' },
+    { name: 'Users', value: stats.totalUsers, color: '#60a5fa' },
+  ];
+
+  const statCards = [
+    { label: 'Products', value: stats.totalProducts, color: 'text-accent-teal', bg: 'border-accent-teal/20' },
+    { label: 'Users', value: stats.totalUsers, color: 'text-blue-400', bg: 'border-blue-400/20' },
+    { label: 'Riders', value: stats.totalRiders, color: 'text-pink-400', bg: 'border-pink-400/20' },
+    { label: 'Testimonials', value: stats.totalTestimonials, color: 'text-purple-400', bg: 'border-purple-400/20' },
+  ];
+
+  return (
+    <div className="flex flex-col h-full p-8 overflow-y-auto gap-6 custom-scrollbar">
+      <h2 className="font-oswald text-2xl font-bold tracking-widest text-white shrink-0">DASHBOARD OVERVIEW</h2>
+
+      {/* ── Stat Cards ── */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 shrink-0">
+        {statCards.map((card, i) => (
+          <motion.div
+            key={card.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05 }}
+            className={`bg-[#1c1c1c] rounded-xl p-5 border ${card.bg} hover:border-white/20 transition`}
+          >
+            <p className="text-gray-500 text-[9px] tracking-widest uppercase mb-2">{card.label}</p>
+            <p className={`font-oswald text-4xl font-bold ${card.color}`}>{card.value ?? '—'}</p>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* ── Charts Grid ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        {/* 1. Content Distribution – Donut */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+          className="bg-[#1c1c1c] border border-white/5 rounded-2xl p-6"
+        >
+          <p className="text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-4">Content Distribution</p>
+          <div className="flex items-center gap-4">
+            <ResponsiveContainer width={160} height={160}>
+              <PieChart>
+                <Pie data={contentDonut} cx="50%" cy="50%" innerRadius={50} outerRadius={75} dataKey="value" paddingAngle={3}>
+                  {contentDonut.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                </Pie>
+                <Tooltip content={<ChartTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="flex flex-col gap-2 flex-1">
+              {contentDonut.map((item) => (
+                <div key={item.name} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                    <span className="text-xs text-gray-400">{item.name}</span>
+                  </div>
+                  <span className="text-xs font-bold text-white">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }
@@ -3839,6 +3904,323 @@ function TestimonialsTable() {
   );
 }
 
+// ─── Rider Form Modal ────────────────────────────────────────────────────────
+function RiderFormModal({ open, onClose, rider, onSaved }) {
+  const isEdit = !!rider;
+  const [form, setForm] = useState({ name: "", location: "", bio: "", boardModel: "", instagram: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (rider) {
+      setForm({
+        name: rider.name || "",
+        location: rider.location || "",
+        bio: rider.bio || "",
+        boardModel: rider.boardModel || "",
+        instagram: rider.instagram || "",
+      });
+    } else {
+      setForm({ name: "", location: "", bio: "", boardModel: "", instagram: "" });
+    }
+    setError("");
+  }, [rider, open]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      if (isEdit) {
+        await riderService.update(rider.id, form);
+      } else {
+        await riderService.create(form);
+      }
+      onSaved();
+      onClose();
+    } catch (err) {
+      setError(err.response?.data?.message || "Error saving rider.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!open) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4" onClick={onClose}>
+        <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }} className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
+          <h2 className="font-oswald text-2xl font-bold tracking-widest text-white mb-6">
+            {isEdit ? "EDIT RIDER" : "ADD RIDER"}
+          </h2>
+          {error && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{error}</div>}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Name *</label>
+              <input required value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Location *</label>
+              <input required value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Bio *</label>
+              <textarea required minLength={10} rows={4} value={form.bio} onChange={e => setForm(p => ({ ...p, bio: e.target.value }))} className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none" placeholder="Minimal 10 karakter..." />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">🏄 Surfboard (Board Model)</label>
+              <input value={form.boardModel} onChange={e => setForm(p => ({ ...p, boardModel: e.target.value }))} placeholder="e.g. FreePig Custom 6'2" className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Instagram Handle</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">@</span>
+                <input value={form.instagram} onChange={e => setForm(p => ({ ...p, instagram: e.target.value }))} placeholder="rider_handle" className="w-full bg-[#222] border border-gray-700 rounded-lg pl-7 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+              </div>
+            </div>
+            <div className="flex gap-3 mt-2">
+              <button type="button" onClick={onClose} disabled={loading} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50">CANCEL</button>
+              <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">{loading ? <PigLoader size="mini" text="SAVING..." /> : isEdit ? "UPDATE" : "CREATE"}</button>
+            </div>
+          </form>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+// ─── Rider Media Modal ───────────────────────────────────────────────────────
+function RiderMediaModal({ open, onClose, rider, onSaved }) {
+  const [files, setFiles] = useState([]);
+  const [videoFile, setVideoFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  if (!open || !rider) return null;
+
+  const handleUploadImages = async (e) => {
+    e.preventDefault();
+    if (files.length === 0) return;
+    setLoading(true);
+    setError("");
+    const formData = new FormData();
+    files.forEach((file) => formData.append("images", file));
+    try {
+      await riderService.uploadImages(rider.id, formData);
+      setFiles([]);
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to upload images.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUploadVideo = async (e) => {
+    e.preventDefault();
+    if (!videoFile) return;
+    setLoading(true);
+    setError("");
+    const formData = new FormData();
+    formData.append("video", videoFile);
+    try {
+      await riderService.uploadVideo(rider.id, formData);
+      setVideoFile(null);
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to upload video.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteImage = async (imageId) => {
+    if (!window.confirm("Delete this image?")) return;
+    setLoading(true);
+    setError("");
+    try {
+      await riderService.deleteImage(rider.id, imageId);
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to delete image.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteVideo = async () => {
+    if (!window.confirm("Delete the hero video?")) return;
+    setLoading(true);
+    setError("");
+    try {
+      await riderService.deleteVideo(rider.id);
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to delete video.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10" onClick={onClose}>
+        <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }} className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-2xl shadow-2xl my-auto" onClick={e => e.stopPropagation()}>
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">MANAGE RIDER MEDIA</h2>
+              <p className="text-gray-500 text-xs tracking-widest mt-0.5">{rider.name}</p>
+            </div>
+            <button onClick={onClose} className="text-gray-400 hover:text-white text-lg font-bold w-8 h-8">✕</button>
+          </div>
+          {error && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{error}</div>}
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Video Section */}
+            <div>
+              <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-3">Hero Video</h3>
+              <div className="bg-[#222] border border-gray-700 rounded-xl p-4">
+                {rider.videoUrl ? (
+                  <div className="relative group w-full h-32 rounded-lg overflow-hidden bg-black mb-4">
+                    <video src={rider.videoUrl} className="w-full h-full object-cover opacity-50" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <button onClick={handleDeleteVideo} disabled={loading} className="px-3 py-1 bg-red-500/80 text-white rounded-full text-[9px] font-bold tracking-widest hover:bg-red-600 transition disabled:opacity-50">DELETE VIDEO</button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-gray-600 text-xs mb-4">Belum ada video.</p>
+                )}
+                <form onSubmit={handleUploadVideo} className="flex flex-col gap-3">
+                  <input type="file" accept="video/mp4,video/webm,video/quicktime" onChange={(e) => setVideoFile(e.target.files[0])} className="text-[10px] text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-white/10 file:text-white" />
+                  <button type="submit" disabled={!videoFile || loading} className="w-full py-2 bg-white text-black rounded-full text-[10px] font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">UPLOAD VIDEO</button>
+                </form>
+              </div>
+            </div>
+
+            {/* Images Section */}
+            <div>
+              <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-3">Photos ({rider.images?.length || 0})</h3>
+              <div className="bg-[#222] border border-gray-700 rounded-xl p-4">
+                {rider.images?.length > 0 ? (
+                  <div className="flex flex-wrap gap-2 mb-4 max-h-40 overflow-y-auto custom-scrollbar pr-2">
+                    {rider.images.map(img => (
+                      <div key={img.id} className="relative group w-16 h-16 rounded-lg overflow-hidden bg-[#111] border border-gray-700">
+                        <img src={img.url} className="w-full h-full object-cover group-hover:opacity-50 transition" />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                          <button onClick={() => handleDeleteImage(img.id)} disabled={loading} className="p-1 bg-red-500/80 text-white rounded text-[8px] hover:bg-red-600">✕</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-600 text-xs mb-4">Belum ada foto.</p>
+                )}
+                <form onSubmit={handleUploadImages} className="flex flex-col gap-3">
+                  <input type="file" accept="image/*" multiple onChange={(e) => setFiles(Array.from(e.target.files))} className="text-[10px] text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-white/10 file:text-white" />
+                  <button type="submit" disabled={files.length === 0 || loading} className="w-full py-2 bg-white text-black rounded-full text-[10px] font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">UPLOAD IMAGES</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+// ─── Riders Table ────────────────────────────────────────────────────────────
+function RidersTable() {
+  const [riders, setRiders] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [mediaModalOpen, setMediaModalOpen] = useState(false);
+  const [editRider, setEditRider] = useState(null);
+
+  const fetchRiders = async () => {
+    setLoading(true);
+    try {
+      const res = await riderService.getAll({ limit: 100 });
+      setRiders(res.data?.riders || []);
+    } catch (err) {
+      toast.error("Failed to fetch riders");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchRiders(); }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this rider?")) return;
+    try {
+      await riderService.delete(id);
+      toast.success("Rider deleted");
+      fetchRiders();
+    } catch (err) {
+      toast.error("Failed to delete rider");
+    }
+  };
+
+  return (
+    <div className="flex-1 flex flex-col h-full bg-[#111]">
+      <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-[#161616]">
+        <h1 className="font-oswald text-3xl font-bold tracking-widest text-white uppercase">RIDERS SPOTLIGHT</h1>
+        <button onClick={() => { setEditRider(null); setModalOpen(true); }} className="px-5 py-2.5 bg-white text-black rounded-full text-[10px] font-bold tracking-[0.2em] hover:bg-gray-200 transition">
+          + ADD RIDER
+        </button>
+      </div>
+      <div className="flex-1 overflow-auto p-8">
+        {loading ? (
+          <div className="flex justify-center items-center h-full">
+            <PigLoader size="mini" text="Loading riders..." />
+          </div>
+        ) : riders.length === 0 ? (
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No riders found.</div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase shadow-md">
+                <th className="px-4 py-3 text-left">Main Image</th>
+                <th className="px-4 py-3 text-left">Name</th>
+                <th className="px-4 py-3 text-left">Location</th>
+                <th className="px-4 py-3 text-center">Media</th>
+                <th className="px-4 py-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {riders.map((r, idx) => (
+                <tr key={r.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? "bg-[#1c1c1c]" : "bg-[#1a1a1a]"}`}>
+                  <td className="px-4 py-3">
+                    <div className="w-12 h-12 bg-[#333] rounded overflow-hidden flex items-center justify-center">
+                      {r.images?.[0]?.url ? <img src={r.images[0].url} alt={r.name} className="w-full h-full object-cover" /> : <span className="text-gray-600 text-xs">—</span>}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 font-bold text-white tracking-wide">{r.name}</td>
+                  <td className="px-4 py-3 text-gray-400">{r.location || "—"}</td>
+                  <td className="px-4 py-3 text-center">
+                    <button onClick={() => { setEditRider(r); setMediaModalOpen(true); }} className="px-3 py-1 bg-white/10 text-white rounded-full text-[10px] font-bold tracking-widest hover:bg-accent-teal hover:text-black transition">
+                      MANAGE ({r.images?.length || 0} PICS, {r.videoUrl ? '1 VIDEO' : 'NO VIDEO'})
+                    </button>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <div className="flex items-center justify-center gap-2">
+                      <button onClick={() => { setEditRider(r); setModalOpen(true); }} className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition">EDIT</button>
+                      <button onClick={() => handleDelete(r.id)} className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition">DELETE</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+      <RiderFormModal open={modalOpen} onClose={() => setModalOpen(false)} rider={editRider} onSaved={fetchRiders} />
+      <RiderMediaModal open={mediaModalOpen} onClose={() => setMediaModalOpen(false)} rider={editRider} onSaved={fetchRiders} />
+    </div>
+  );
+}
+
 // ─── Main Admin Dashboard ────────────────────────────────────────────────────
 const SIDEBAR_ITEMS = [
   { id: "overview", label: "Overview", icon: FiPieChart },
@@ -3849,6 +4231,7 @@ const SIDEBAR_ITEMS = [
   { id: "reviews", label: "Reviews", icon: FiMessageSquare },
   { id: "gallery", label: "Gallery", icon: FiImage },
   { id: "testimonials", label: "Testimonials", icon: FiHeart },
+  { id: "riders", label: "Riders", icon: FiUsers },
 ];
 
 export default function AdminDashboard() {
@@ -3907,6 +4290,7 @@ export default function AdminDashboard() {
             {active === "reviews" && <ReviewsTable />}
             {active === "gallery" && <GalleryTable />}
             {active === "testimonials" && <TestimonialsTable />}
+            {active === "riders" && <RidersTable />}
           </motion.div>
         </AnimatePresence>
       </main>
