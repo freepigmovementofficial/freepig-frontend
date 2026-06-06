@@ -1,7 +1,8 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { useParams, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiMapPin, FiClock, FiPhone, FiGlobe } from "react-icons/fi";
-import headingImg from "../../assets/Heading.png";
+import headingImg from '../../assets/Heading.webp';
 
 const shopsData = {
   rpm: {
@@ -38,6 +39,7 @@ const shopsData = {
 };
 
 export default function Location() {
+  useDocumentTitle('Location | FreePigMovement');
   const { shopId } = useParams();
 
   const shop = shopsData[shopId];

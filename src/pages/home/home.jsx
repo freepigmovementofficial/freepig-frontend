@@ -1,7 +1,8 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { getDisplayImage } from "../../utils/productImage";
-import Rectangle94 from "../../assets/Rectangle94.png";
+import Rectangle94 from '../../assets/Rectangle94.webp';
 import {
   motion,
   useScroll,
@@ -9,16 +10,17 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import videoLandingPage from "../../assets/videoLandingPage.mp4";
-import meetTheRiders from "../../assets/meetTheRiders.png";
-import ourCustomer from "../../assets/ourCustomer.png";
-import customresinTint from "../../assets/customresinTint.png";
-import smallWavesImg from "../../assets/small.png";
-import mediumWavesImg from "../../assets/medium.png";
-import bigWavesImg from "../../assets/big.png";
-import categoryAdvance from "../../assets/CategoryAdvance.jpg";
-import categoryIntermediate from "../../assets/CategoryIntermediate.jpg";
-import categoryBeginner from "../../assets/CategoryBeginner.png";
-import categoryGroms from "../../assets/CategoryGroms.jpg";
+import meetTheRiders from '../../assets/meetTheRiders.webp';
+import lovedCustomer from '../../assets/LovedHome.webp';
+import customresinTint from '../../assets/customresinTint.webp';
+import smallWavesImg from '../../assets/small.webp';
+import mediumWavesImg from '../../assets/medium.webp';
+import bigWavesImg from '../../assets/big.webp';
+import categoryAdvance from '../../assets/CategoryAdvance.webp';
+import categoryIntermediate from '../../assets/CategoryIntermediate.webp';
+import categoryBeginner from '../../assets/CategoryBeginner.webp';
+import categoryGroms from '../../assets/CategoryGroms.webp';
+import aboutUsImg from '../../assets/aboutUs.webp';
 import CTAPopup from "../../components/CTAPopup";
 import { newReleaseService } from "../../api/newReleases";
 import { productService } from "../../api/products";
@@ -45,6 +47,7 @@ const Container = ({ children, className = "" }) => (
 );
 
 export default function Home() {
+  useDocumentTitle('Home | FreePigMovement');
   const newReleaseRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: newReleaseRef,
@@ -82,9 +85,15 @@ export default function Home() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    const hasSeenPopup = localStorage.getItem("hasSeenCTAPopup");
     if (!token || !user) {
-      const timer = setTimeout(() => setShowPopup(true), 1500);
-      return () => clearTimeout(timer);
+      if (!hasSeenPopup) {
+        const timer = setTimeout(() => {
+          setShowPopup(true);
+          localStorage.setItem("hasSeenCTAPopup", "true");
+        }, 1500);
+        return () => clearTimeout(timer);
+      }
     }
   }, [token, user]);
 
@@ -601,15 +610,15 @@ export default function Home() {
       {/* SURFBOARDS PRODUCTS */}
       <section className="w-full bg-[#151515] py-24">
         <Container>
-          <FadeUp className="flex items-center justify-between mb-12">
-            <h3 className="font-oswald text-4xl font-bold tracking-widest">
+          <FadeUp className="flex flex-wrap items-center justify-between gap-3 mb-12">
+            <h3 className="font-oswald text-3xl sm:text-4xl font-bold tracking-widest">
               SURFBOARDS
             </h3>
             <p
-              className="text-sm font-bold tracking-widest text-gray-400 hover:text-accent-teal transition cursor-pointer flex items-center gap-2"
+              className="text-xs sm:text-sm font-bold tracking-widest text-gray-400 hover:text-accent-teal transition cursor-pointer flex items-center gap-2 shrink-0"
               onClick={() => navigate("/store?tab=surfboard")}
             >
-              VIEW ALL <span className="text-lg">&rarr;</span>
+              VIEW ALL <span className="text-base sm:text-lg">&rarr;</span>
             </p>
           </FadeUp>
 
@@ -696,11 +705,11 @@ export default function Home() {
             {
               topTitle: "LOVED BY",
               bottomTitle: "SURFERS WORLDWIDE",
-              img: ourCustomer,
+              img: lovedCustomer,
               link: "/customer",
             },
             {
-              bottomTitle: "GALERY",
+              bottomTitle: "GALLERY",
               img: customresinTint,
               link: "/gallery",
             },
@@ -777,6 +786,53 @@ export default function Home() {
             </div>
           </div>
         </Container>
+      </section>
+
+      {/* ABOUT US PREVIEW */}
+      <section className="w-full bg-[#111]">
+        <div className="flex flex-col md:flex-row w-full h-auto md:h-[600px]">
+          {/* TEXT SIDE */}
+          <div className="w-full md:w-1/2 flex flex-col justify-center px-10 md:px-20 lg:px-32 py-20 bg-[#1c1c1c]">
+            <FadeUp>
+              <p className="text-accent-teal text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-4">
+                Since 2001
+              </p>
+              <h2 className="font-oswald text-4xl md:text-5xl font-bold tracking-widest text-white mb-6 leading-tight">
+                MORE THAN JUST <br />A SURFBOARD
+              </h2>
+              <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
+                At Freepigmovement, we believe that every wave is unique, and
+                every surfer deserves a board built specifically for them. We
+                pour our passion and craftsmanship into every shape, combining
+                traditional techniques with modern innovations.
+                <br />
+                <br />
+                Whether you're a beginner catching your first whitewash or a
+                seasoned pro chasing barrels, we don't just shape boards—we
+                craft experiences.
+              </p>
+              <motion.button
+                onClick={() => navigate("/about")}
+                className="px-8 py-3.5 border border-white text-white text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-black transition duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                OUR STORY
+              </motion.button>
+            </FadeUp>
+          </div>
+
+          {/* IMAGE SIDE */}
+          <div className="w-full md:w-1/2 h-[400px] md:h-full relative overflow-hidden group">
+            <img
+              loading="lazy"
+              src={aboutUsImg}
+              alt="About Freepigmovement"
+              className="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-[1.5s] ease-out group-hover:scale-105 group-hover:grayscale-0"
+            />
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-500"></div>
+          </div>
+        </div>
       </section>
 
       {/* CUSTOMER REVIEWS SECTION */}
@@ -1046,17 +1102,7 @@ export default function Home() {
           </FadeUp>
         </Container>
       </section>
-
-      {/* FOOTER BOTTOM */}
-      <footer className="w-full bg-black py-10 text-center text-gray-600 text-xs tracking-widest">
-        <p className="font-oswald text-lg text-gray-500 mb-1">
-          FREEPIGMOVEMENT
-        </p>
-        <p>
-          &copy; {new Date().getFullYear()} Freepigmovement. All rights
-          reserved.
-        </p>
-      </footer>
     </div>
   );
+
 }

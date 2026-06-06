@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Home from "./pages/home/home";
 import Store from "./pages/store/Store";
 import Custom from "./pages/custom/Custom";
@@ -51,6 +52,7 @@ function App() {
         />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
+      <Footer />
       <ContactPopup />
       <CtaPopup />
     </BrowserRouter>

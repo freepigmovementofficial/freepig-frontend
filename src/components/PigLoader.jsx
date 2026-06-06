@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 /**
@@ -11,6 +11,15 @@ import { motion } from 'framer-motion';
  */
 export default function PigLoader({ fullScreen = false, size = 'normal', text = 'Loading...' }) {
   const isMini = size === 'mini';
+  const [displayText, setDisplayText] = useState(text);
+
+  useEffect(() => {
+    setDisplayText(text);
+    const timer = setTimeout(() => {
+      setDisplayText("Network is unstable. Please check connection or refresh.");
+    }, 15000);
+    return () => clearTimeout(timer);
+  }, [text]);
 
   // ── Wave animations ────────────────────────────────────────────────
   const waveLeft = {
@@ -135,7 +144,7 @@ export default function PigLoader({ fullScreen = false, size = 'normal', text = 
             </motion.g>
           </svg>
         </div>
-        <span className="text-[10px] text-gray-400 tracking-widest uppercase font-semibold">{text}</span>
+        <span className="text-[10px] text-gray-400 tracking-widest uppercase font-semibold">{displayText}</span>
       </div>
     );
   }
@@ -240,7 +249,7 @@ export default function PigLoader({ fullScreen = false, size = 'normal', text = 
         transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
         className="text-[10px] text-accent-teal font-semibold tracking-[0.2em] mt-2 uppercase"
       >
-        {text}
+        {displayText}
       </motion.p>
     </div>
   );

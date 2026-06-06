@@ -1,8 +1,9 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { riderService } from '../../api/riders';
-import headingImg from '../../assets/Heading.png';
+import headingImg from '../../assets/Heading.webp';
 import PigLoader from '../../components/PigLoader';
 
 const FadeUp = ({ children, delay = 0, className = '' }) => (
@@ -17,6 +18,7 @@ const FadeUp = ({ children, delay = 0, className = '' }) => (
 );
 
 export default function Riders() {
+  useDocumentTitle('Riders | FreePigMovement');
   const [riders, setRiders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,7 +43,7 @@ export default function Riders() {
       {/* ── HERO BANNER ── */}
       <div
         className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
-        style={{ backgroundImage: `url(${headingImg})`, height: '220px' }}
+        style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
       >
         <div className="absolute inset-0 bg-black/50" />
         <motion.h1

@@ -30,6 +30,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import PigLoader from "../../components/PigLoader";
 import AdminSidebar from "../../components/AdminSidebar";
+import DashboardOverview from "./components/DashboardOverview";
 
 // ─── Product Form Modal ──────────────────────────────────────────────────────
 function ProductFormModal({ open, onClose, product, categories, onSaved }) {
@@ -594,9 +595,9 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
 
           {/* Info banner */}
           <div className="mb-5 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] text-gray-400 tracking-wide">
-            ★ = foto yang tampil di kartu produk. Klik{" "}
-            <span className="text-accent-teal font-bold">JADIKAN UTAMA</span>{" "}
-            untuk menggantinya.
+            ★ = the image shown on the product card. Click{" "}
+            <span className="text-accent-teal font-bold">SET AS MAIN</span>{" "}
+            to change it.
           </div>
 
           {error && (
@@ -608,7 +609,7 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
           {/* Current images */}
           <div className="mb-6">
             <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-3">
-              Foto Produk ({product.images?.length || 0})
+              Product Images ({product.images?.length || 0})
             </h3>
             {product.images?.length > 0 ? (
               <div className="flex flex-wrap gap-3">
@@ -636,7 +637,7 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
                         </span>
                         {isMain && (
                           <span className="text-[9px] font-bold bg-accent-teal text-black px-1.5 py-0.5 rounded tracking-wider">
-                            ★ UTAMA
+                            ★ MAIN
                           </span>
                         )}
                       </div>
@@ -649,7 +650,7 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
                             onClick={() => handleSetMain(img.id)}
                             className="px-2 py-1 bg-accent-teal text-black rounded-full text-[9px] font-black tracking-widest hover:bg-accent-teal/80 transition"
                           >
-                            JADIKAN UTAMA
+                            SET AS MAIN
                           </button>
                         )}
                         <button
@@ -666,14 +667,14 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
                 })}
               </div>
             ) : (
-              <p className="text-gray-600 text-xs">Belum ada foto.</p>
+              <p className="text-gray-600 text-xs">No images yet.</p>
             )}
           </div>
 
           {/* Upload new images */}
           <div className="border border-gray-700 rounded-xl p-5 bg-[#222]">
             <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-4">
-              Upload Foto Baru
+              Upload New Images
             </h3>
             <form onSubmit={handleUpload} className="flex flex-col gap-4">
               <input
@@ -888,7 +889,7 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-600 text-xs">Belum ada dimensi.</p>
+              <p className="text-gray-600 text-xs">No dimensions yet.</p>
             )}
           </div>
 
@@ -980,6 +981,65 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
 }
 
 // ─── Products Table ──────────────────────────────────────────────────────────
+// ─── Table Pagination ────────────────────────────────────────────────────────
+function TablePagination({ currentPage, totalPages, totalItems, itemsPerPage, onPageChange }) {
+  if (totalItems === 0) return null;
+  const startItem = (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+  return (
+    <div className="flex items-center justify-between mt-4 shrink-0 border-t border-white/5 pt-4">
+      <div className="text-[10px] text-gray-500 tracking-widest uppercase hidden sm:block">
+        Showing <span className="text-white font-bold">{startItem}</span> to <span className="text-white font-bold">{endItem}</span> of <span className="text-white font-bold">{totalItems}</span> entries
+      </div>
+      <div className="flex gap-1 overflow-x-auto custom-scrollbar pb-1 w-full sm:w-auto justify-between sm:justify-end">
+        <button
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+          className="px-3 py-1.5 rounded-md bg-[#1a1a1a] border border-white/5 text-gray-400 text-[10px] font-bold tracking-widest hover:bg-white/10 hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          PREV
+        </button>
+        <div className="flex gap-1">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+            if (
+              totalPages > 7 &&
+              page !== 1 &&
+              page !== totalPages &&
+              Math.abs(currentPage - page) > 1
+            ) {
+              if (page === 2 || page === totalPages - 1) {
+                return <span key={page} className="px-1 py-1.5 text-gray-500 text-[10px]">...</span>;
+              }
+              return null;
+            }
+            return (
+              <button
+                key={page}
+                onClick={() => onPageChange(page)}
+                className={`w-7 h-7 shrink-0 flex items-center justify-center rounded-md text-[10px] font-bold transition border ${
+                  currentPage === page
+                    ? "bg-accent-teal/20 text-accent-teal border-accent-teal/30"
+                    : "bg-[#1a1a1a] text-gray-400 border-white/5 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {page}
+              </button>
+            );
+          })}
+        </div>
+        <button
+          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages || totalPages === 0}
+          className="px-3 py-1.5 rounded-md bg-[#1a1a1a] border border-white/5 text-gray-400 text-[10px] font-bold tracking-widest hover:bg-white/10 hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          NEXT
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function ProductsTable({ categories }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -991,9 +1051,21 @@ function ProductsTable({ categories }) {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   const filteredProducts = products.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const currentProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const load = async () => {
@@ -1134,7 +1206,7 @@ function ProductsTable({ categories }) {
         )}
       </AnimatePresence>
 
-      <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto min-h-0 mb-2 rounded-xl border border-white/5 custom-scrollbar">
         {loading ? (
           <div className="py-16 flex justify-center">
             <PigLoader size="mini" text="Loading products..." />
@@ -1156,7 +1228,7 @@ function ProductsTable({ categories }) {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((p, idx) => (
+              {currentProducts.map((p, idx) => (
                 <tr
                   key={p.id}
                   className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? "bg-[#1c1c1c]" : "bg-[#1a1a1a]"}`}
@@ -1271,6 +1343,13 @@ function ProductsTable({ categories }) {
           </table>
         )}
       </div>
+      <TablePagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={filteredProducts.length}
+        itemsPerPage={itemsPerPage}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }
@@ -1459,9 +1538,21 @@ function AccessoriesTable({ categories }) {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   const filteredAccessories = accessories.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  const totalPages = Math.ceil(filteredAccessories.length / itemsPerPage);
+  const currentAccessories = filteredAccessories.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const load = async () => {
@@ -1595,7 +1686,7 @@ function AccessoriesTable({ categories }) {
         )}
       </AnimatePresence>
 
-      <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto min-h-0 mb-2 rounded-xl border border-white/5 custom-scrollbar">
         {loading ? (
           <div className="py-16 flex justify-center">
             <PigLoader size="mini" text="Loading accessories..." />
@@ -1618,7 +1709,7 @@ function AccessoriesTable({ categories }) {
               </tr>
             </thead>
             <tbody>
-              {filteredAccessories.map((p, idx) => (
+              {currentAccessories.map((p, idx) => (
                 <tr
                   key={p.id}
                   className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? "bg-[#1c1c1c]" : "bg-[#1a1a1a]"}`}
@@ -1709,6 +1800,13 @@ function AccessoriesTable({ categories }) {
           </table>
         )}
       </div>
+      <TablePagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={filteredAccessories.length}
+        itemsPerPage={itemsPerPage}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }
@@ -2429,7 +2527,7 @@ function FeaturedSectionsTable() {
             FEATURED SECTIONS
           </h2>
           <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">
-            Pilih produk yang tampil di halaman Home
+            Select products to display on the Home page
           </p>
         </div>
         <button
@@ -2544,8 +2642,8 @@ function FeaturedSectionsTable() {
               </div>
 
               <div className="mb-4 px-3 py-2 bg-accent-teal/5 border border-accent-teal/20 rounded-lg text-[10px] text-gray-400 tracking-wide">
-                ✓ Centang produk yang ingin ditampilkan di halaman Home. Urutan
-                pilihan menentukan urutan tampilan.
+                ✓ Check the products you want to display on the Home page. The
+                order of selection determines the display order.
               </div>
 
               {editError && (
@@ -2629,7 +2727,7 @@ function FeaturedSectionsTable() {
 
               <div className="flex items-center justify-between">
                 <p className="text-xs text-gray-500 tracking-widest">
-                  {selectedProductIds.length} produk dipilih
+                  {selectedProductIds.length} product(s) selected
                 </p>
                 <div className="flex gap-3">
                   <button
@@ -2795,134 +2893,27 @@ function FeaturedSectionsTable() {
   );
 }
 
-// ─── Dashboard Stats ─────────────────────────────────────────────────────────
-// ─── Custom Tooltip for recharts ─────────────────────────────────────────────
-const ChartTooltip = ({ active, payload, label }) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="bg-[#1a1a1a] border border-white/10 rounded-lg px-3 py-2 text-xs text-white shadow-xl">
-      {label && <p className="text-gray-400 mb-1 font-bold tracking-widest uppercase">{label}</p>}
-      {payload.map((p, i) => (
-        <p key={i} style={{ color: p.color || p.fill }}>
-          {p.name}: <span className="font-bold">{p.value}</span>
-        </p>
-      ))}
-    </div>
-  );
-};
-
-function DashboardOverview() {
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+// ─── Dashboard Overview Wrapper ─────────────────────────────────────────────
+function DashboardOverviewWrapper() {
+  const [dashboardData, setDashboardData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const load = async () => {
       try {
         const res = await adminService.getDashboard();
-        setStats(res.data);
-      } catch {
-        setStats(null);
+        setDashboardData(res.data);
+      } catch (err) {
+        setError(err.message || "Failed to load dashboard data");
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
     load();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col h-full p-8 gap-4">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {Array(5).fill(null).map((_, i) => (
-            <div key={i} className="bg-[#222] rounded-xl p-6 animate-pulse h-24" />
-          ))}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
-          {Array(4).fill(null).map((_, i) => (
-            <div key={i} className="bg-[#222] rounded-xl animate-pulse" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (!stats) {
-    return (
-      <div className="flex flex-col h-full p-8">
-        <p className="text-gray-500 tracking-widest text-sm">Failed to load stats.</p>
-      </div>
-    );
-  }
-
-  // ── Data for charts ──
-  const contentDonut = [
-    { name: 'Products', value: stats.totalProducts, color: '#2dd4bf' },
-    { name: 'Riders', value: stats.totalRiders, color: '#f472b6' },
-    { name: 'Testimonials', value: stats.totalTestimonials, color: '#a78bfa' },
-    { name: 'Users', value: stats.totalUsers, color: '#60a5fa' },
-  ];
-
-  const statCards = [
-    { label: 'Products', value: stats.totalProducts, color: 'text-accent-teal', bg: 'border-accent-teal/20' },
-    { label: 'Users', value: stats.totalUsers, color: 'text-blue-400', bg: 'border-blue-400/20' },
-    { label: 'Riders', value: stats.totalRiders, color: 'text-pink-400', bg: 'border-pink-400/20' },
-    { label: 'Testimonials', value: stats.totalTestimonials, color: 'text-purple-400', bg: 'border-purple-400/20' },
-  ];
-
-  return (
-    <div className="flex flex-col h-full p-8 overflow-y-auto gap-6 custom-scrollbar">
-      <h2 className="font-oswald text-2xl font-bold tracking-widest text-white shrink-0">DASHBOARD OVERVIEW</h2>
-
-      {/* ── Stat Cards ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 shrink-0">
-        {statCards.map((card, i) => (
-          <motion.div
-            key={card.label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className={`bg-[#1c1c1c] rounded-xl p-5 border ${card.bg} hover:border-white/20 transition`}
-          >
-            <p className="text-gray-500 text-[9px] tracking-widest uppercase mb-2">{card.label}</p>
-            <p className={`font-oswald text-4xl font-bold ${card.color}`}>{card.value ?? '—'}</p>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* ── Charts Grid ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        {/* 1. Content Distribution – Donut */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="bg-[#1c1c1c] border border-white/5 rounded-2xl p-6"
-        >
-          <p className="text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-4">Content Distribution</p>
-          <div className="flex items-center gap-4">
-            <ResponsiveContainer width={160} height={160}>
-              <PieChart>
-                <Pie data={contentDonut} cx="50%" cy="50%" innerRadius={50} outerRadius={75} dataKey="value" paddingAngle={3}>
-                  {contentDonut.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-                </Pie>
-                <Tooltip content={<ChartTooltip />} />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="flex flex-col gap-2 flex-1">
-              {contentDonut.map((item) => (
-                <div key={item.name} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                    <span className="text-xs text-gray-400">{item.name}</span>
-                  </div>
-                  <span className="text-xs font-bold text-white">{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  );
+  return <DashboardOverview data={dashboardData} loading={isLoading} error={error} />;
 }
 
 // ─── Store Reviews Table ──────────────────────────────────────────────────
@@ -4114,7 +4105,7 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-gray-600 text-xs mb-4">Belum ada foto.</p>
+                  <p className="text-gray-600 text-xs mb-4">No images yet.</p>
                 )}
                 <form onSubmit={handleUploadImages} className="flex flex-col gap-3">
                   <input type="file" accept="image/*" multiple onChange={(e) => setFiles(Array.from(e.target.files))} className="text-[10px] text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-white/10 file:text-white" />
@@ -4278,7 +4269,7 @@ export default function AdminDashboard() {
             transition={{ duration: 0.3 }}
             className="absolute inset-0 flex flex-col"
           >
-            {active === "overview" && <DashboardOverview />}
+            {active === "overview" && <DashboardOverviewWrapper />}
             {active === "surfboards" && (
               <ProductsTable categories={categories} />
             )}

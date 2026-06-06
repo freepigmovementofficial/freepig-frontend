@@ -1,7 +1,8 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, Link } from 'react-router-dom';
-import headingImg from '../../assets/Heading.png';
+import headingImg from '../../assets/Heading.webp';
 import { productService } from '../../api/products';
 import { getDisplayImage } from '../../utils/productImage';
 
@@ -12,6 +13,7 @@ const waveLabelMap = { SMALL: 'SMALL WAVES', MEDIUM: 'MEDIUM WAVES', BIG: 'BIG W
 import PigLoader from '../../components/PigLoader';
 
 export default function Store() {
+  useDocumentTitle('Store | FreePigMovement');
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(() => {
     const tab = searchParams.get('tab');
@@ -117,7 +119,7 @@ export default function Store() {
       {/* ── HERO BANNER ── */}
       <div
         className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
-        style={{ backgroundImage: `url(${headingImg})`, height: '260px' }}
+        style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
       >
         <div className="absolute inset-0 bg-black/50" />
         <motion.h1
@@ -149,7 +151,7 @@ export default function Store() {
                       key={skill}
                       id={`filter-skill-${skill.toLowerCase()}`}
                       onClick={() => handleSkillClick(skill)}
-                      className={`px-4 py-1.5 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
+                      className={`min-h-[44px] flex items-center justify-center px-5 py-2 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
                         activeSkill === skill
                           ? 'bg-white text-black border-white shadow-lg'
                           : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
@@ -168,7 +170,7 @@ export default function Store() {
                       key={wave}
                       id={`filter-wave-${wave.toLowerCase()}`}
                       onClick={() => handleWaveClick(wave)}
-                      className={`px-4 py-1.5 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
+                      className={`min-h-[44px] flex items-center justify-center px-5 py-2 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
                         activeWave === wave
                           ? 'bg-white text-black border-white shadow-lg'
                           : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
@@ -193,7 +195,7 @@ export default function Store() {
                       key={cat.id}
                       id={`filter-cat-${cat.slug}`}
                       onClick={() => setActiveCategory((prev) => (prev === cat.id ? null : cat.id))}
-                      className={`px-4 py-1.5 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
+                      className={`min-h-[44px] flex items-center justify-center px-5 py-2 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
                         activeCategory === cat.id
                           ? 'bg-white text-black border-white shadow-lg'
                           : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
@@ -213,7 +215,7 @@ export default function Store() {
                 key={tab}
                 id={`tab-${tab.toLowerCase()}`}
                 onClick={() => handleTabChange(tab)}
-                className={`px-6 py-2.5 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
+                className={`min-h-[44px] flex items-center justify-center px-6 py-2.5 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
                   activeTab === tab
                     ? 'bg-white text-black border-white shadow-lg'
                     : 'border-[#555] text-gray-400 hover:border-white hover:text-white'

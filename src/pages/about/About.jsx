@@ -1,8 +1,10 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import React from "react";
 import { motion } from "framer-motion";
-import headingImg from "../../assets/Heading.png";
-import ourCustomer from "../../assets/ourCustomer.png";
-import logoPutih from "../../assets/logoPutih.jpg";
+import headingImg from '../../assets/Heading.webp';
+import ourCustomer from '../../assets/ourCustomer.webp';
+import aboutUsImg from '../../assets/aboutUs.webp';
+import logoPutih from '../../assets/logoPutih.webp';
 
 const FadeUp = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -23,6 +25,7 @@ const stats = [
 ];
 
 export default function About() {
+  useDocumentTitle('About Us | FreePigMovement');
   return (
     <div className="bg-[#252525] min-h-screen font-poppins text-white overflow-x-hidden">
       {/* ── HERO BANNER ── */}
@@ -66,64 +69,79 @@ export default function About() {
           </p>
         </FadeUp>
 
-        {/* Split: heading + body */}
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start mb-20">
-          {/* Left — large heading */}
-          <FadeUp delay={0.1} className="lg:w-[38%] shrink-0">
-            <h2 className="font-oswald text-4xl md:text-5xl lg:text-[52px] font-black leading-tight text-white">
-              BORN FROM
-              <br />
-              THE OCEAN,
-              <br />
-              BUILT BY
-              <br />
-              HAND.
-            </h2>
-            <div className="w-10 h-1 bg-white/30 mt-6" />
-          </FadeUp>
-
-          {/* Right — paragraphs */}
-          <FadeUp delay={0.2} className="flex-1 flex flex-col gap-6">
-            <p className="text-gray-300 text-base md:text-[17px] leading-[1.85] font-light">
-              Founded in Bali in 2001, we started with a simple goal: to build
-              surfboards that we would be proud to ride ourselves.
-            </p>
-            <p className="text-gray-300 text-base md:text-[17px] leading-[1.85] font-light">
-              For over two decades, we have focused on quality, using genuine
-              materials and paying close attention to every detail throughout
-              the shaping process. We believe that a great surfboard should feel
-              reliable, perform well, and last for years.
-            </p>
-            <p className="text-gray-300 text-base md:text-[17px] leading-[1.85] font-light">
-              What began as a local Bali brand has grown beyond the island, with
-              our boards now being ridden by surfers from around the world.
-              While we've expanded internationally, our commitment remains the
-              same — creating quality surfboards and staying true to our roots.
-            </p>
-          </FadeUp>
-        </div>
-
-        {/* ── IMAGE PAIR ── */}
-        <FadeUp delay={0.1}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20">
-            <div className="overflow-hidden rounded-2xl h-[280px] md:h-[360px] group">
-              <img
-                loading="lazy"
-                src={logoPutih}
-                alt="Our Riders"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-            </div>
-            <div className="overflow-hidden rounded-2xl h-[280px] md:h-[360px] group">
-              <img
-                loading="lazy"
-                src={ourCustomer}
-                alt="Our Customers"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-            </div>
-          </div>
+        {/* ── HEADING ── */}
+        <FadeUp delay={0.1} className="text-center mb-16 md:mb-24">
+          <h2 className="font-oswald text-4xl md:text-6xl lg:text-[76px] font-black leading-[1.1] text-white uppercase tracking-wide">
+            BORN FROM THE OCEAN, <br className="hidden md:block" /> BUILT BY HAND.
+          </h2>
+          <div className="w-24 h-1 bg-white/30 mx-auto mt-8" />
         </FadeUp>
+
+        {/* ── CONTENT GRID ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-24">
+          {/* Left Side - Tall Image */}
+          <div className="lg:col-span-5">
+            <FadeUp delay={0.2} className="overflow-hidden rounded-2xl h-[400px] lg:h-[600px] group sticky top-32">
+              <img
+                loading="lazy"
+                src={aboutUsImg}
+                alt="About Us"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+            </FadeUp>
+          </div>
+
+          {/* Right Side - Text & Small Image */}
+          <div className="lg:col-span-7 flex flex-col gap-8">
+            <FadeUp delay={0.3}>
+              <p className="text-gray-300 text-[17px] md:text-[19px] leading-[1.8] font-light">
+                <strong className="text-white font-medium">Back in 2001</strong> with a simple, uncompromising mission: to build surfboards that we would actually want to paddle out on ourselves. No shortcuts. No compromises.
+              </p>
+            </FadeUp>
+
+            <FadeUp delay={0.4}>
+              <p className="text-gray-300 text-[17px] md:text-[19px] leading-[1.8] font-light">
+                Over two decades later, our obsession with detail hasn't changed. We believe a great board isn't just manufactured—it's handcrafted. From sourcing genuine premium materials to chasing precision through every step of the shaping and glassing process, it's the human touch and years of refined instinct that give our boards their soul. For us, it's about reliability, peak performance, and durability that stands the test of time.
+              </p>
+            </FadeUp>
+            
+          </div>
+
+          {/* Full Width Paragraph + Image */}
+          <div className="lg:col-span-12 flex flex-col md:flex-row gap-8 lg:gap-16 items-center lg:-mt-8">
+            <FadeUp delay={0.5} className="flex-1 w-full">
+              <p className="text-gray-300 text-[17px] md:text-[19px] leading-[1.8] font-light">
+                What began as a core local Bali brand has now found its way into line-ups across the globe. We may be shipping worldwide, but our roots remain exactly where we started: dedicated to high-performance quality shapes, respecting the ocean, and staying true to our heritage.
+              </p>
+            </FadeUp>
+            <FadeUp delay={0.6} className="w-full md:w-[40%] lg:w-[35%] shrink-0">
+              <div className="overflow-hidden rounded-xl h-[260px] group shadow-2xl">
+                <img
+                  loading="lazy"
+                  src={logoPutih}
+                  alt="Our Heritage"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                />
+              </div>
+            </FadeUp>
+          </div>
+
+          {/* Full Width Footer Text */}
+          <div className="lg:col-span-12 mt-4 lg:mt-8">
+            <FadeUp delay={0.7}>
+              <div className="pt-12 border-t border-white/10 relative">
+                <div className="absolute top-0 left-0 w-32 h-[2px] bg-white/50" />
+                <p className="font-oswald text-white text-3xl md:text-4xl tracking-[0.1em] font-bold">
+                  PROUDLY HANDCRAFTED
+                </p>
+                <p className="font-oswald text-gray-400 text-xl md:text-2xl tracking-[0.15em] font-medium mt-2">
+                  THE HIGHEST QUALITY GOODS SINCE 2001
+                </p>
+              </div>
+            </FadeUp>
+          </div>
+        </div>
 
         {/* ── TAGLINE HIGHLIGHT ── */}
         <FadeUp delay={0.1}>

@@ -1,7 +1,8 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { testimonialsService } from '../../api/testimonials';
-import headingImg from '../../assets/Heading.png';
+import headingImg from '../../assets/Heading.webp';
 import PigLoader from '../../components/PigLoader';
 
 const FadeUp = ({ children, delay = 0, className = '' }) => (
@@ -28,6 +29,7 @@ const InstagramIcon = () => (
 );
 
 export default function Customer() {
+  useDocumentTitle('Customers | FreePigMovement');
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

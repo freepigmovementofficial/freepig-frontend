@@ -1,3 +1,4 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { galleryService } from '../../api/gallery';
@@ -22,6 +23,7 @@ const Container = ({ children, className = '' }) => (
 );
 
 export default function Gallery() {
+  useDocumentTitle('Gallery | FreePigMovement');
   const [galleries, setGalleries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

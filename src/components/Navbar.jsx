@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import logotr from "../assets/logoPutihh.png";
+import logotr from '../assets/logoPutihh.webp';
 import { authService } from "../api/auth";
 
 export default function Navbar() {
@@ -213,29 +213,32 @@ export default function Navbar() {
 
       {/* HAMBURGER — hanya mobile, dorong ke kanan */}
       <div
-        className="ml-auto md:hidden w-6 flex flex-col justify-center items-end gap-1.5 cursor-pointer group z-50"
+        className="ml-auto md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer z-50"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       >
-        <div
-          className={`w-full h-0.5 bg-gray-400 group-hover:bg-white transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
-        ></div>
-        <div
-          className={`w-4 h-0.5 bg-gray-400 group-hover:bg-accent-teal group-hover:w-full transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}
-        ></div>
-        <div
-          className={`w-full h-0.5 bg-gray-400 group-hover:bg-white transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
-        ></div>
+        <div className="w-6 flex flex-col items-end gap-1.5 group">
+          <div
+            className={`w-full h-0.5 bg-gray-400 group-hover:bg-white transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+          ></div>
+          <div
+            className={`w-4 h-0.5 bg-gray-400 group-hover:bg-accent-teal group-hover:w-full transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}
+          ></div>
+          <div
+            className={`w-full h-0.5 bg-gray-400 group-hover:bg-white transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+          ></div>
+        </div>
       </div>
 
       {/* MOBILE MENU DROPDOWN */}
-      <div
-        className={`absolute top-full left-0 w-full bg-[#1e1e1e]/95 backdrop-blur-xl flex flex-col items-center py-8 gap-8 md:hidden transition-all duration-300 origin-top border-t border-white/10 shadow-xl
-          ${
-            isMobileMenuOpen
-              ? "opacity-100 scale-y-100 visible"
-              : "opacity-0 scale-y-0 invisible"
-          }`}
-      >
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="absolute top-full left-0 w-full bg-[#1e1e1e]/98 backdrop-blur-2xl flex flex-col items-center py-8 gap-8 md:hidden border-t border-white/10 shadow-2xl"
+          >
         <Link
           to="/store"
           onClick={() => setIsMobileMenuOpen(false)}
@@ -321,7 +324,9 @@ export default function Navbar() {
             </button>
           </Link>
         )}
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
     </>
   );

@@ -1,8 +1,9 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { authService } from '../../api/auth';
-import logotr from '../../assets/logoPutihh.png';
+import logotr from '../../assets/logoPutihh.webp';
 import videoLandingPage from '../../assets/videoLandingPage.mp4';
 
 const inputClass =
@@ -11,6 +12,7 @@ const inputClass =
 const labelClass = 'block text-[10px] font-bold text-gray-400 tracking-[0.18em] uppercase mb-2';
 
 export default function Login() {
+  useDocumentTitle('Login | FreePigMovement');
   const [mode, setMode] = useState('LOGIN'); // 'LOGIN' | 'REGISTER' | 'VERIFY_OTP'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

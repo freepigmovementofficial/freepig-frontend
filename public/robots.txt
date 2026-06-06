@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin/dashboard
+Disallow: /login
+
+# Ganti 'freepigmovement.com' dengan nama domain asli Anda saat sudah live
+Sitemap: https://freepigmovement.com/sitemap.xml

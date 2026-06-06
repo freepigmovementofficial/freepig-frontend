@@ -1,7 +1,8 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import headingImg from "../../assets/Heading.png";
-import volumeImg from "../../assets/volumeCalculate.png";
+import headingImg from '../../assets/Heading.webp';
+import volumeImg from '../../assets/volumeCalculate.webp';
 
 // ── Shape factors ──────────────────────────────────────────────────────────────
 const SHAPE_FACTORS = {
@@ -244,6 +245,7 @@ function DimLabel({ color, label, delay }) {
 
 // ── Main Component ─────────────────────────────────────────────────────────────
 export default function Volume() {
+  useDocumentTitle('Volume Calculator | FreePigMovement');
   const [length, setLength] = useState(6.5);
   const [width, setWidth] = useState(20.5);
   const [thickness, setThickness] = useState(2.75);

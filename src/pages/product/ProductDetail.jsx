@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { productService } from '../../api/products';
-import headingImg from '../../assets/Heading.png';
+import headingImg from '../../assets/Heading.webp';
 import PigLoader from '../../components/PigLoader';
 
 export default function ProductDetail() {
