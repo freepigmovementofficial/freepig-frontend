@@ -200,6 +200,18 @@ export default function AdminSidebar({
             </button>
           );
         })}
+        {/* Mobile Logout Button */}
+        <button
+          onClick={onLogout}
+          className="flex flex-col items-center justify-center p-2 min-w-[60px] rounded-lg transition-colors text-red-400 hover:text-red-300 hover:bg-red-500/10"
+        >
+          <div className="mb-1 transition-transform">
+            <FiLogOut size={20} />
+          </div>
+          <span className="text-[9px] font-bold tracking-wider truncate max-w-[56px] text-center">
+            LOGOUT
+          </span>
+        </button>
       </nav>
     </>
   );

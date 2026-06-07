@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FiInstagram, FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
 import { MdSurfing } from 'react-icons/md';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,6 +19,7 @@ const FadeUp = ({ children, delay = 0, className = '' }) => (
 
 export default function RiderDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [rider, setRider] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -107,6 +108,12 @@ export default function RiderDetail() {
 
       {/* ── MAIN CONTENT ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 -mt-16 sm:-mt-20 md:-mt-32 relative z-10">
+        <button 
+          onClick={() => navigate(-1)} 
+          className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-6 transition-all font-bold tracking-widest text-xs uppercase drop-shadow-lg"
+        >
+          <FiChevronLeft size={16} /> BACK
+        </button>
         <div className="flex flex-col md:flex-row gap-8 md:gap-16 items-start">
 
           {/* Left: Photo Carousel */}

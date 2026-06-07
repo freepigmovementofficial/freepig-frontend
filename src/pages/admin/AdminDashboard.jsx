@@ -2526,9 +2526,6 @@ function FeaturedSectionsTable() {
           <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">
             FEATURED SECTIONS
           </h2>
-          <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">
-            Select products to display on the Home page
-          </p>
         </div>
         <button
           onClick={() => {
@@ -4154,14 +4151,21 @@ function RidersTable() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#111]">
-      <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-[#161616]">
-        <h1 className="font-oswald text-3xl font-bold tracking-widest text-white uppercase">RIDERS SPOTLIGHT</h1>
-        <button onClick={() => { setEditRider(null); setModalOpen(true); }} className="px-5 py-2.5 bg-white text-black rounded-full text-[10px] font-bold tracking-[0.2em] hover:bg-gray-200 transition">
+    <div className="flex flex-col h-full p-8 pb-0">
+      <div className="flex items-center justify-between mb-6 shrink-0">
+        <div>
+          <h2 className="font-oswald text-2xl font-bold tracking-widest text-white uppercase">
+            RIDERS SPOTLIGHT
+          </h2>
+          <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">
+            {riders.length} total
+          </p>
+        </div>
+        <button onClick={() => { setEditRider(null); setModalOpen(true); }} className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition">
           + ADD RIDER
         </button>
       </div>
-      <div className="flex-1 overflow-auto p-8">
+      <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
         {loading ? (
           <div className="flex justify-center items-center h-full">
             <PigLoader size="mini" text="Loading riders..." />

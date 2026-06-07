@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { productService } from '../../api/products';
@@ -8,6 +8,7 @@ import PigLoader from '../../components/PigLoader';
 
 export default function ProductDetail() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -116,6 +117,12 @@ export default function ProductDetail() {
       )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 mt-8 sm:mt-12">
+        <button 
+          onClick={() => navigate(-1)} 
+          className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-6 transition-all font-bold tracking-widest text-xs uppercase drop-shadow-lg"
+        >
+          <FiChevronLeft size={16} /> BACK
+        </button>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           
           {/* Left Column: Images */}

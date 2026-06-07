@@ -138,84 +138,86 @@ export default function Store() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.1 }}
-          className="flex flex-col gap-4 pb-5 border-b border-[#333]"
+          className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 pb-5 border-b border-[#333]"
         >
-          {/* Surfboard filters */}
-          {activeTab === 'SURFBOARD' && (
-            <div className="flex flex-col gap-3 w-full">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">SKILL LEVEL</span>
-                <div className="flex gap-2 flex-wrap overflow-x-auto pb-1">
-                  {skillLevels.map((skill) => (
-                    <button
-                      key={skill}
-                      id={`filter-skill-${skill.toLowerCase()}`}
-                      onClick={() => handleSkillClick(skill)}
-                      className={`min-h-[44px] flex items-center justify-center px-5 py-2 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
-                        activeSkill === skill
-                          ? 'bg-white text-black border-white shadow-lg'
-                          : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
-                      }`}
-                    >
-                      {skill}
-                    </button>
-                  ))}
+          {/* Filters (Left Side) */}
+          <div className="flex-1 w-full overflow-hidden">
+            {activeTab === 'SURFBOARD' && (
+              <div className="flex flex-col gap-4 w-full">
+                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                  <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">SKILL LEVEL</span>
+                  <div className="flex gap-2 flex-nowrap md:flex-wrap overflow-x-auto pb-2 md:pb-0 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {skillLevels.map((skill) => (
+                      <button
+                        key={skill}
+                        id={`filter-skill-${skill.toLowerCase()}`}
+                        onClick={() => handleSkillClick(skill)}
+                        className={`min-h-[44px] shrink-0 flex items-center justify-center px-5 py-2 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
+                          activeSkill === skill
+                            ? 'bg-white text-black border-white shadow-lg'
+                            : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
+                        }`}
+                      >
+                        {skill}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                  <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">WAVES</span>
+                  <div className="flex gap-2 flex-nowrap md:flex-wrap overflow-x-auto pb-2 md:pb-0 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {waveTypes.map((wave) => (
+                      <button
+                        key={wave}
+                        id={`filter-wave-${wave.toLowerCase()}`}
+                        onClick={() => handleWaveClick(wave)}
+                        className={`min-h-[44px] shrink-0 flex items-center justify-center px-5 py-2 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
+                          activeWave === wave
+                            ? 'bg-white text-black border-white shadow-lg'
+                            : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
+                        }`}
+                      >
+                        {waveLabelMap[wave]}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">WAVES</span>
-                <div className="flex gap-2 flex-wrap overflow-x-auto pb-1">
-                  {waveTypes.map((wave) => (
-                    <button
-                      key={wave}
-                      id={`filter-wave-${wave.toLowerCase()}`}
-                      onClick={() => handleWaveClick(wave)}
-                      className={`min-h-[44px] flex items-center justify-center px-5 py-2 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
-                        activeWave === wave
-                          ? 'bg-white text-black border-white shadow-lg'
-                          : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
-                      }`}
-                    >
-                      {waveLabelMap[wave]}
-                    </button>
-                  ))}
+            )}
+
+            {activeTab === 'ACCESSORIES' && categories.length > 0 && (
+              <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">CATEGORY</span>
+                <div className="flex gap-2 flex-nowrap md:flex-wrap overflow-x-auto pb-2 md:pb-0 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                  {categories
+                    .filter((cat) => ['traction-pad', 'leash', 'fins', 'board-bag', 'sock'].includes(cat.slug))
+                    .map((cat) => (
+                      <button
+                        key={cat.id}
+                        id={`filter-cat-${cat.slug}`}
+                        onClick={() => setActiveCategory((prev) => (prev === cat.id ? null : cat.id))}
+                        className={`min-h-[44px] shrink-0 flex items-center justify-center px-5 py-2 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
+                          activeCategory === cat.id
+                            ? 'bg-white text-black border-white shadow-lg'
+                            : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
+                        }`}
+                      >
+                        {cat.name.toUpperCase()}
+                      </button>
+                    ))}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          {activeTab === 'ACCESSORIES' && categories.length > 0 && (
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase w-24 shrink-0">CATEGORY</span>
-              <div className="flex gap-2 flex-wrap">
-                {categories
-                  .filter((cat) => ['traction-pad', 'leash', 'fins', 'board-bag', 'sock'].includes(cat.slug))
-                  .map((cat) => (
-                    <button
-                      key={cat.id}
-                      id={`filter-cat-${cat.slug}`}
-                      onClick={() => setActiveCategory((prev) => (prev === cat.id ? null : cat.id))}
-                      className={`min-h-[44px] flex items-center justify-center px-5 py-2 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
-                        activeCategory === cat.id
-                          ? 'bg-white text-black border-white shadow-lg'
-                          : 'border-[#555] text-gray-400 hover:border-white hover:text-white'
-                      }`}
-                    >
-                      {cat.name.toUpperCase()}
-                    </button>
-                  ))}
-              </div>
-            </div>
-          )}
-
-          {/* Tab toggle */}
-          <div className="flex gap-2 shrink-0 self-start md:self-auto">
+          {/* Tab toggle (Right Side) */}
+          <div className="flex gap-2 shrink-0 self-start lg:self-auto w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {['SURFBOARD', 'ACCESSORIES'].map((tab) => (
               <button
                 key={tab}
                 id={`tab-${tab.toLowerCase()}`}
                 onClick={() => handleTabChange(tab)}
-                className={`min-h-[44px] flex items-center justify-center px-6 py-2.5 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
+                className={`min-h-[44px] shrink-0 flex items-center justify-center px-6 py-2.5 rounded-full border text-[10px] font-black tracking-widest transition-all duration-300 ${
                   activeTab === tab
                     ? 'bg-white text-black border-white shadow-lg'
                     : 'border-[#555] text-gray-400 hover:border-white hover:text-white'

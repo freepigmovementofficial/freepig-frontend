@@ -54,12 +54,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/custom"
-                  className="hover:text-accent-teal transition duration-300"
+                <button
+                  onClick={handleContactPopup}
+                  className="hover:text-accent-teal transition duration-300 text-left"
                 >
                   Custom Boards
-                </Link>
+                </button>
               </li>
               <li>
                 <Link

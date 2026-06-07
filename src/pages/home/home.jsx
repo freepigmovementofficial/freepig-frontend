@@ -432,6 +432,8 @@ export default function Home() {
           />
         </motion.div>
         <div className="absolute inset-0 bg-black/60"></div>
+        {/* Top gradient transition to blend with background */}
+        <div className="absolute top-0 left-0 w-full h-32 md:h-48 bg-gradient-to-b from-[#252525] to-transparent pointer-events-none"></div>
 
         {/* LEFT — Text content */}
         <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center px-8 md:px-14 lg:px-20 py-24 md:py-0">
@@ -476,7 +478,7 @@ export default function Home() {
           >
             {newRelease.images.length === 1 ? (
               /* Single image — full height, no crop */
-              <div className="absolute inset-0 flex items-center justify-end overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center md:justify-end overflow-hidden">
                 <img
                   loading="lazy"
                   src={newRelease.images[0].url}
@@ -536,7 +538,7 @@ export default function Home() {
                     />
                   </div>
                   <div className="bg-[#1f1f1f] border-t border-[#333] w-full py-5 text-center group-hover:bg-[#2a2a2a] transition duration-500">
-                    <h4 className="font-oswald text-xl font-bold tracking-[0.2em] text-gray-200 group-hover:text-accent-teal transition">
+                    <h4 className="font-oswald text-xs sm:text-sm md:text-xl font-bold tracking-[0.1em] md:tracking-[0.2em] text-gray-200 group-hover:text-accent-teal transition">
                       {level.title}
                     </h4>
                   </div>
