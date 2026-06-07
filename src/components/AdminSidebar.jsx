@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronLeft, FiChevronRight, FiLogOut } from 'react-icons/fi';
+import fpWhiteLogo from '../assets/FPWHITE.png';
 
 export default function AdminSidebar({
   menuItems,
@@ -68,8 +69,8 @@ export default function AdminSidebar({
         {/* Brand */}
         <div className="h-20 flex items-center border-b border-white/5 shrink-0 overflow-hidden px-4">
           <div className="flex items-center min-w-[200px]">
-             <div className="w-8 h-8 bg-accent-teal/20 text-accent-teal rounded flex items-center justify-center font-bold shrink-0">
-                FP
+             <div className="w-8 h-8 rounded flex items-center justify-center shrink-0">
+                <img src={fpWhiteLogo} alt="FP Logo" className="w-full h-full object-contain" />
              </div>
              <AnimatePresence>
                {isExpanded && (

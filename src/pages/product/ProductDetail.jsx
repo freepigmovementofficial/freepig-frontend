@@ -106,6 +106,11 @@ export default function ProductDetail() {
             allowFullScreen
           />
           <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute bottom-3 right-4 md:right-8 z-10 pointer-events-none">
+            <span className="text-[8px] sm:text-[9px] text-white/40 tracking-[0.15em] uppercase font-medium drop-shadow-md">
+              Video playback quality adapts to your connection speed
+            </span>
+          </div>
         </div>
       ) : (
         <div
@@ -131,7 +136,7 @@ export default function ProductDetail() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="relative bg-white rounded-lg overflow-hidden flex items-center justify-center aspect-[3/4] p-4 sm:p-8 shadow-2xl group"
+              className="relative bg-white rounded-lg overflow-hidden aspect-[3/4] shadow-2xl group"
             >
               <AnimatePresence mode="wait">
                 <motion.img
@@ -143,7 +148,7 @@ export default function ProductDetail() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  className="w-full h-full object-contain drop-shadow-xl"
+                  className="w-full h-full object-cover"
                 />
               </AnimatePresence>
 
@@ -187,11 +192,11 @@ export default function ProductDetail() {
                   <button
                     key={img.id}
                     onClick={() => setActiveIndex(i)}
-                    className={`bg-white rounded-lg overflow-hidden flex items-center justify-center aspect-[3/4] p-2 transition-all duration-300 ${
+                    className={`bg-white rounded-lg overflow-hidden aspect-[3/4] transition-all duration-300 ${
                       i === activeIndex ? 'ring-2 ring-accent-teal shadow-lg scale-105' : 'opacity-70 hover:opacity-100 hover:scale-105'
                     }`}
                   >
-                    <img loading="lazy" src={img.url} alt={`${product.name} thumbnail`} className="w-full h-full object-contain" />
+                    <img loading="lazy" src={img.url} alt={`${product.name} thumbnail`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
