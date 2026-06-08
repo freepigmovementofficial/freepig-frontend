@@ -606,21 +606,20 @@ export default function Home() {
                   onClick={() =>
                     navigate(`/store?filter=${encodeURIComponent(wave.title)}`)
                   }
-                  className="bg-[#222] border border-[#333] group cursor-pointer flex flex-col items-center justify-center pt-10 pb-6 w-full max-w-[280px] hover:bg-[#2a2a2a] hover:border-accent-teal transition duration-500 shadow-xl"
+                  className="bg-[#222] border border-[#333] group cursor-pointer flex flex-col hover:bg-[#2a2a2a] hover:border-accent-teal transition duration-500 shadow-xl overflow-hidden w-full max-w-[280px]"
                 >
-                  <img
-                    loading="lazy"
-                    src={wave.img}
-                    alt={wave.title}
-                    className={`${wave.imgClass} object-contain opacity-80 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-300`}
-                  />
-                  <div className="mt-8 text-center">
-                    <h4 className="font-oswald text-sm md:text-base font-bold tracking-[0.15em] text-gray-300 group-hover:text-accent-teal transition uppercase">
+                  <div className="h-64 sm:h-72 w-full overflow-hidden">
+                    <img
+                      loading="lazy"
+                      src={wave.img}
+                      alt={wave.title}
+                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-700 ease-out"
+                    />
+                  </div>
+                  <div className="bg-[#1f1f1f] border-t border-[#333] w-full py-5 text-center group-hover:bg-[#2a2a2a] transition duration-500 flex flex-col items-center justify-center min-h-[80px]">
+                    <h4 className="font-oswald text-sm md:text-base font-bold tracking-[0.15em] text-gray-200 group-hover:text-accent-teal transition uppercase">
                       {wave.title}
                     </h4>
-                    <p className="text-[10px] text-gray-500 tracking-widest mt-1 uppercase">
-                      {wave.desc}
-                    </p>
                   </div>
                 </motion.div>
               ))}
