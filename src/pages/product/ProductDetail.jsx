@@ -247,10 +247,10 @@ export default function ProductDetail() {
                       />
                     </div>
                     <div className="flex justify-between mt-2 text-[8px] sm:text-[9px] text-gray-400 uppercase tracking-widest">
-                      <span className="w-1/4 text-left">Groms</span>
-                      <span className="w-1/4 text-center">Beginner</span>
-                      <span className="w-1/4 text-center">Intermediate</span>
-                      <span className="w-1/4 text-right">Advanced</span>
+                      <span>Groms</span>
+                      <span>Beginner</span>
+                      <span>Intermediate</span>
+                      <span>Advanced</span>
                     </div>
                   </div>
 
