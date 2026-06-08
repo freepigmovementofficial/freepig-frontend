@@ -18,7 +18,6 @@ import Customer from "./pages/customer/Customer";
 import Riders from "./pages/riders/Riders";
 import RiderDetail from "./pages/riders/RiderDetail";
 import ContactPopup from "./components/ContactPopup";
-import CtaPopup from "./components/CTAPopup";
 import ErrorPage from "./pages/error/ErrorPage";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -88,7 +87,6 @@ function App() {
       </Routes>
       <Footer />
       <ContactPopup />
-      <CtaPopup />
     </BrowserRouter>
   );
 }
