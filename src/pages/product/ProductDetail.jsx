@@ -239,7 +239,7 @@ export default function ProductDetail() {
 
             {/* Ability Level & Wave Height — only for Surfboards (Moved to Left Column) */}
             {!isAccessory && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8 lg:mt-12">
+              <div className="flex flex-col gap-10 mt-8 lg:mt-12">
                 {/* Ability Level */}
                 <div>
                   <h3 className="text-center font-bold text-sm tracking-widest mb-3">Ability Level</h3>
