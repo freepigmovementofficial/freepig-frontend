@@ -352,18 +352,18 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: "easeOut" }}
         >
-          <p className="text-[12px] md:text-[16px] font-bold tracking-[0.2em] uppercase text-gray-100 drop-shadow-md mb-2">
+          <p className="text-[10px] md:text-[14px] font-bold tracking-[0.2em] uppercase text-gray-100 drop-shadow-md mb-2">
             {hero?.subtitle || "BUILD DIFFERENT, RIDE DIFFERENT"}
           </p>
-          <h1 className="font-oswald text-5xl md:text-[64px] font-bold tracking-tight text-white drop-shadow-xl leading-none mb-4">
+          <h1 className="font-oswald text-4xl md:text-5xl lg:text-[56px] font-bold tracking-tight text-white drop-shadow-xl leading-none mb-4">
             {hero?.title || "RIDE YOUR OWN WAVE"}
           </h1>
-          <p className="text-[15px] md:text-[18px] font-medium text-gray-300 drop-shadow-md mb-8">
+          <p className="text-sm md:text-base font-medium text-gray-300 drop-shadow-md mb-8">
             {hero?.description || "Custom surfboards made for your identity."}
           </p>
           <motion.button
             onClick={() => window.dispatchEvent(new Event("openContactPopup"))}
-            className="px-8 py-3.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[12px] font-bold tracking-[0.15em] uppercase"
+            className="px-8 py-3.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[10px] md:text-[11px] font-bold tracking-[0.15em] uppercase"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
           >
