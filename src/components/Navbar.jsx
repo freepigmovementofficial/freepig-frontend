@@ -218,13 +218,13 @@ export default function Navbar() {
       >
         <div className="w-6 flex flex-col items-end gap-1.5 group">
           <div
-            className={`w-full h-0.5 bg-gray-400 group-hover:bg-white transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+            className={`w-full h-0.5 bg-white group-hover:bg-white transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
           ></div>
           <div
-            className={`w-4 h-0.5 bg-gray-400 group-hover:bg-accent-teal group-hover:w-full transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}
+            className={`w-4 h-0.5 bg-white group-hover:bg-accent-teal group-hover:w-full transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}
           ></div>
           <div
-            className={`w-full h-0.5 bg-gray-400 group-hover:bg-white transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+            className={`w-full h-0.5 bg-white group-hover:bg-white transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
           ></div>
         </div>
       </div>
