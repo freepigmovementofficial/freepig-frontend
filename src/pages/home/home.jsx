@@ -826,8 +826,7 @@ export default function Home() {
               <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
                 Every board we build carries a piece of Bali’s surfing heritage
                 and over two decades of raw dedication. No shortcuts, no
-                compromises—just pure handcrafted quality since 2001. buttonnya
-                ini [Discover Our Story]
+                compromises—just pure handcrafted quality since 2001.
                 <br />
                 <br />
                 Whether you're a beginner catching your first whitewash or a
@@ -840,7 +839,7 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                OUR STORY
+                DISCOVER OUR STORY
               </motion.button>
             </FadeUp>
           </div>
