@@ -77,10 +77,9 @@ export default function ProductDetail() {
     });
   };
 
-  // Helper for Ability Level Bar
   const skillLevels = ['GROMS', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
-  const currentSkillIndex = skillLevels.indexOf(product.skillLevel);
-  const abilityPercentage = currentSkillIndex >= 0 ? ((currentSkillIndex + 1) / skillLevels.length) * 100 : 50;
+  const currentSkillIndex = skillLevels.indexOf(product.skillLevel?.toUpperCase());
+  const abilityPercentage = currentSkillIndex >= 0 ? ((currentSkillIndex + 1) / skillLevels.length) * 100 : 0;
 
   // Helper for Wave Height Bar (Approximate mapping)
   let waveMin = 0; let waveMax = 0;
@@ -241,16 +240,17 @@ export default function ProductDetail() {
                   {/* Ability Level */}
                   <div>
                     <h3 className="text-center font-bold text-sm tracking-widest mb-3">Ability Level</h3>
-                    <div className="w-full h-4 bg-white border border-gray-500 relative">
+                    <div className="w-full h-4 bg-[#333] border border-gray-500 relative">
                       <div 
-                        className="absolute top-0 left-0 h-full bg-[#333] transition-all duration-1000"
+                        className="absolute top-0 left-0 h-full bg-white transition-all duration-1000"
                         style={{ width: `${abilityPercentage}%` }}
                       />
                     </div>
-                    <div className="flex justify-between mt-2 text-[9px] text-gray-400 uppercase tracking-widest">
-                      <span>Beginner</span>
-                      <span>Intermediate</span>
-                      <span>Advanced</span>
+                    <div className="flex justify-between mt-2 text-[8px] sm:text-[9px] text-gray-400 uppercase tracking-widest">
+                      <span className="w-1/4 text-left">Groms</span>
+                      <span className="w-1/4 text-center">Beginner</span>
+                      <span className="w-1/4 text-center">Intermediate</span>
+                      <span className="w-1/4 text-right">Advanced</span>
                     </div>
                   </div>
 
