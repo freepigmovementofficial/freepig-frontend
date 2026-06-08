@@ -17,6 +17,7 @@ import {
   FiHeart,
   FiUsers,
   FiVideo,
+  FiDatabase,
 } from "react-icons/fi";
 import { productService } from "../../api/products";
 import { adminService } from "../../api/admin";
@@ -4689,14 +4690,21 @@ function HeroTable() {
 const SIDEBAR_ITEMS = [
   { id: "overview", label: "Overview", icon: FiPieChart },
   { id: "hero", label: "Hero Section", icon: FiVideo },
-  { id: "surfboards", label: "Surfboards", icon: FiLayers },
-  { id: "accessories", label: "Accessories", icon: FiTag },
   { id: "new-releases", label: "New Releases", icon: FiStar },
   { id: "featured", label: "Featured Sections", icon: FiLayout },
-  { id: "reviews", label: "Reviews", icon: FiMessageSquare },
-  { id: "gallery", label: "Gallery", icon: FiImage },
-  { id: "testimonials", label: "Testimonials", icon: FiHeart },
-  { id: "riders", label: "Riders", icon: FiUsers },
+  { 
+    id: "master-data", 
+    label: "Master Data", 
+    icon: FiDatabase,
+    subItems: [
+      { id: "surfboards", label: "Surfboards", icon: FiLayers },
+      { id: "accessories", label: "Accessories", icon: FiTag },
+      { id: "reviews", label: "Reviews", icon: FiMessageSquare },
+      { id: "gallery", label: "Gallery", icon: FiImage },
+      { id: "testimonials", label: "Testimonials", icon: FiHeart },
+      { id: "riders", label: "Riders", icon: FiUsers },
+    ]
+  },
 ];
 
 export default function AdminDashboard() {

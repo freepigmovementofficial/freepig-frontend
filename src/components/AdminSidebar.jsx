@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiChevronLeft, FiChevronRight, FiLogOut } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiLogOut, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import fpWhiteLogo from "../assets/FPWHITE.png";
 
 export default function AdminSidebar({
@@ -18,6 +18,16 @@ export default function AdminSidebar({
     }
     return window.innerWidth >= 1024;
   });
+
+  // State for expanding/collapsing grouped menus
+  const [openGroups, setOpenGroups] = useState({ "master-data": false });
+
+  const toggleGroup = (groupId) => {
+    if (!isExpanded) {
+      setIsExpanded(true); // Automatically expand the whole sidebar if collapsed
+    }
+    setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+  };
 
   // Handle window resize for tablet default collapsed behavior
   useEffect(() => {
@@ -89,7 +99,7 @@ export default function AdminSidebar({
                   transition={{ duration: 0.2 }}
                   className="ml-3 whitespace-nowrap"
                 >
-                  <p className="font-oswald text-lg font-bold tracking-[0.01em] text-accent-teal leading-none">
+                  <p className="font-oswald text-lg font-bold tracking-[0.01em] text-accent-teal leading-none mt-3">
                     FREEPIG MOVEMENT
                   </p>
                   <p className="text-[9px] text-gray-500 tracking-widest mt-0.5 uppercase">
@@ -104,46 +114,90 @@ export default function AdminSidebar({
         {/* Navigation */}
         <nav className="flex-1 py-6 px-2 flex flex-col gap-2 overflow-y-auto custom-scrollbar overflow-x-hidden">
           {menuItems.map((item) => {
-            const isActive = activeMenu === item.id;
+            const hasSubItems = item.subItems && item.subItems.length > 0;
+            const isGroupActive = hasSubItems && item.subItems.some((sub) => sub.id === activeMenu);
+            const isActive = !hasSubItems && activeMenu === item.id;
             const Icon = item.icon;
+            
             return (
-              <button
-                key={item.id}
-                onClick={() => onMenuClick(item.id)}
-                title={!isExpanded ? item.label : undefined}
-                className={`flex items-center rounded-xl p-3 transition-colors relative group ${
-                  isActive
-                    ? "bg-accent-teal/10 text-accent-teal"
-                    : "text-gray-500 hover:bg-white/5 hover:text-gray-300"
-                }`}
-              >
-                <div className="shrink-0 flex items-center justify-center w-5 h-5">
-                  <Icon size={18} />
-                </div>
+              <div key={item.id} className="flex flex-col gap-1">
+                <button
+                  onClick={() => hasSubItems ? toggleGroup(item.id) : onMenuClick(item.id)}
+                  title={!isExpanded ? item.label : undefined}
+                  className={`flex items-center rounded-xl p-3 transition-colors relative group ${
+                    isActive || isGroupActive
+                      ? "bg-accent-teal/10 text-accent-teal"
+                      : "text-gray-500 hover:bg-white/5 hover:text-gray-300"
+                  }`}
+                >
+                  <div className="shrink-0 flex items-center justify-center w-5 h-5">
+                    <Icon size={18} />
+                  </div>
 
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: "auto" }}
+                        exit={{ opacity: 0, width: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="ml-3 flex-1 flex justify-between items-center overflow-hidden whitespace-nowrap"
+                      >
+                        <span className="text-xs font-bold tracking-wide">
+                          {item.label}
+                        </span>
+                        {hasSubItems && (
+                          <div className="text-gray-500 ml-2">
+                            {openGroups[item.id] ? <FiChevronUp size={14} /> : <FiChevronDown size={14} />}
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Tooltip for collapsed state */}
+                  {!isExpanded && (
+                    <div className="absolute left-full ml-3 px-2 py-1 bg-[#1a1c23] border border-white/10 text-white text-[10px] font-bold tracking-widest uppercase rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+                      {item.label}
+                    </div>
+                  )}
+                </button>
+
+                {/* SubItems Rendering */}
                 <AnimatePresence>
-                  {isExpanded && (
+                  {hasSubItems && isExpanded && openGroups[item.id] && (
                     <motion.div
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: "auto" }}
-                      exit={{ opacity: 0, width: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="ml-3 overflow-hidden whitespace-nowrap"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="flex flex-col gap-1 ml-4 border-l border-white/10 pl-2 overflow-hidden"
                     >
-                      <span className="text-xs font-bold tracking-wide">
-                        {item.label}
-                      </span>
+                      {item.subItems.map((subItem) => {
+                        const isSubActive = activeMenu === subItem.id;
+                        const SubIcon = subItem.icon;
+                        return (
+                          <button
+                            key={subItem.id}
+                            onClick={() => onMenuClick(subItem.id)}
+                            className={`flex items-center rounded-xl p-2.5 transition-colors relative group ${
+                              isSubActive
+                                ? "text-white bg-white/5"
+                                : "text-gray-500 hover:bg-white/5 hover:text-gray-300"
+                            }`}
+                          >
+                            <div className="shrink-0 flex items-center justify-center w-4 h-4 mr-3">
+                              <SubIcon size={14} />
+                            </div>
+                            <span className="text-[11px] font-bold tracking-wide">
+                              {subItem.label}
+                            </span>
+                          </button>
+                        );
+                      })}
                     </motion.div>
                   )}
                 </AnimatePresence>
-
-                {/* Tooltip for collapsed state */}
-                {!isExpanded && (
-                  <div className="absolute left-full ml-3 px-2 py-1 bg-[#1a1c23] border border-white/10 text-white text-[10px] font-bold tracking-widest uppercase rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
-                    {item.label}
-                  </div>
-                )}
-              </button>
+              </div>
             );
           })}
         </nav>
