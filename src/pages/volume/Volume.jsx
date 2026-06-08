@@ -6,12 +6,44 @@ import volumeImg from '../../assets/volumeCalculate.webp';
 
 // ── Shape factors ──────────────────────────────────────────────────────────────
 const SHAPE_FACTORS = {
-  shortboard: 0.52,
+  shortboard: 0.54,
   hybrid: 0.56,
-  malibu: 0.62,
-  bigboy: 0.68,
-  funboard: 0.65,
+  malibu: 0.58,
+  bigboy: 0.58,
+  funboard: 0.58,
 };
+
+// Exact lookup tables from old website to match their rounding quirks perfectly
+function getLengthCm(feetFloat) {
+  const inches = Math.round(feetFloat * 12);
+  const table = {
+    60: 152.4, 61: 155.0, 62: 157.5, 63: 160.0, 64: 162.5, 65: 165.0, 66: 167.6, 67: 170.0, 68: 172.7, 69: 175.3,
+    70: 178, 71: 180.5, 72: 183.0, 73: 185.4, 74: 188.0, 75: 190.5, 76: 193.0, 77: 195.6, 78: 198.0, 79: 200.7,
+    80: 203.2, 81: 205.7, 82: 208, 83: 210, 84: 213.4, 85: 215.9, 86: 218.4, 87: 220.1, 88: 223.5, 89: 226.0,
+    90: 228.6, 91: 231.1, 92: 233.7, 93: 236.2, 94: 238.5, 95: 240.5, 96: 243.8
+  };
+  return table[inches] || Math.round(inches * 2.54 * 10) / 10;
+}
+
+function getWidthCm(inchesFloat) {
+  const eighths = Math.round(inchesFloat * 8);
+  const table = {
+    136: 43.1, 138: 43.8, 140: 44.4, 142: 45, 144: 45.7, 146: 46.3, 148: 47.0, 150: 47.6,
+    152: 48.2, 154: 48.9, 156: 49.5, 158: 50.1, 160: 50.8, 162: 51.4, 164: 52.1, 166: 52.7,
+    168: 53.3, 170: 53.9, 172: 54.6, 174: 55.2, 176: 55.9, 178: 56.5, 180: 57.1, 182: 57.8,
+    184: 58.4, 186: 59, 188: 59.7, 190: 60.3, 192: 60.9
+  };
+  return table[eighths] || Math.round(inchesFloat * 2.54 * 10) / 10;
+}
+
+function getThicknessCm(inchesFloat) {
+  const eighths = Math.round(inchesFloat * 8);
+  const table = {
+    16: 5.0, 17: 5.3, 18: 5.7, 19: 6.0, 20: 6.3, 21: 6.6, 22: 6.9, 23: 7.3,
+    24: 7.6, 25: 7.9, 26: 8.2, 27: 8.6, 28: 8.9, 29: 9.3, 30: 9.5, 31: 9.8, 32: 10.1
+  };
+  return table[eighths] || Math.round(inchesFloat * 2.54 * 10) / 10;
+}
 
 const BOARD_TYPES = [
   { id: "shortboard", label: "Shortboard" },
@@ -255,8 +287,17 @@ export default function Volume() {
 
   const calculate = () => {
     const factor = SHAPE_FACTORS[boardType];
-    const vol = (length * 12 * width * thickness * factor) / 61.024;
-    setVolume(vol.toFixed(2));
+    
+    // Convert all measurements to cm exactly as the original documentation explains
+    const lengthCm = getLengthCm(length);
+    const widthCm = getWidthCm(width);
+    const thicknessCm = getThicknessCm(thickness);
+    
+    // EXACT math from the old website's script.js
+    const rawVal = (lengthCm * widthCm * thicknessCm * factor) / 100;
+    const vol = Math.floor(rawVal) / 10;
+    
+    setVolume(vol.toFixed(1));
     setCalculated(true);
   };
 

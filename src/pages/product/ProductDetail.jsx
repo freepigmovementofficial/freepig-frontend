@@ -243,7 +243,7 @@ export default function ProductDetail() {
                 {/* Ability Level */}
                 <div>
                   <h3 className="text-center font-bold text-sm tracking-widest mb-3">Ability Level</h3>
-                  <div className="w-full h-4 bg-[#333] border border-gray-500 relative flex">
+                  <div className="w-full h-[21px] bg-[#333] border border-gray-500 relative flex">
                     {skillLevels.map((level, idx) => {
                       const isActive = activeSkillLevels.includes(level);
                       return (
@@ -267,7 +267,7 @@ export default function ProductDetail() {
                 {/* Wave Height */}
                 <div>
                   <h3 className="text-center font-bold text-sm tracking-widest mb-3">Wave Height (Feet)</h3>
-                  <div className="w-full h-4 bg-[#333] border border-gray-500 relative">
+                  <div className="w-full h-[21px] bg-[#333] border border-gray-500 relative">
                     {waveMax > 0 && (
                       <div 
                         className="absolute top-0 h-full bg-white transition-all duration-1000"
