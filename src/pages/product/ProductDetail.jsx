@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
@@ -13,6 +13,14 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const carouselRef = useRef(null);
+
+  const scrollCarousel = (dir) => {
+    if (carouselRef.current) {
+      const scrollAmount = carouselRef.current.offsetWidth * 0.5;
+      carouselRef.current.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -184,20 +192,43 @@ export default function ProductDetail() {
               )}
             </motion.div>
 
-            {/* Thumbnails */}
+            {/* Thumbnails (Carousel) */}
             {totalImages > 1 && (
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
-                {images.map((img, i) => (
+              <div className="relative group">
+                {totalImages > 4 && (
                   <button
-                    key={img.id}
-                    onClick={() => setActiveIndex(i)}
-                    className={`bg-white rounded-lg overflow-hidden aspect-[3/4] transition-all duration-300 ${
-                      i === activeIndex ? 'ring-2 ring-accent-teal shadow-lg scale-105' : 'opacity-70 hover:opacity-100 hover:scale-105'
-                    }`}
+                    onClick={() => scrollCarousel(-1)}
+                    className="absolute left-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black transition-all duration-200 z-10 shadow-lg"
                   >
-                    <img loading="lazy" src={img.url} alt={`${product.name} thumbnail`} className="w-full h-full object-cover" />
+                    <FiChevronLeft size={18} />
                   </button>
-                ))}
+                )}
+                
+                <div 
+                  ref={carouselRef}
+                  className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 pt-2 scrollbar-hide snap-x snap-mandatory px-1"
+                >
+                  {images.map((img, i) => (
+                    <button
+                      key={img.id}
+                      onClick={() => setActiveIndex(i)}
+                      className={`shrink-0 w-[28%] sm:w-[22%] bg-white rounded-lg overflow-hidden aspect-[3/4] transition-all duration-300 snap-start ${
+                        i === activeIndex ? 'ring-2 ring-accent-teal shadow-lg scale-105' : 'opacity-70 hover:opacity-100 hover:scale-105'
+                      }`}
+                    >
+                      <img loading="lazy" src={img.url} alt={`${product.name} thumbnail`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+
+                {totalImages > 4 && (
+                  <button
+                    onClick={() => scrollCarousel(1)}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black transition-all duration-200 z-10 shadow-lg"
+                  >
+                    <FiChevronRight size={18} />
+                  </button>
+                )}
               </div>
             )}
 

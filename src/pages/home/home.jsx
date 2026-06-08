@@ -13,9 +13,9 @@ import videoLandingPage from "../../assets/videoLandingPage.mp4";
 import meetTheRiders from "../../assets/meetTheRiders.webp";
 import lovedCustomer from "../../assets/LovedHome.webp";
 import customresinTint from "../../assets/customresinTint.webp";
-import smallWavesImg from "../../assets/small.webp";
-import mediumWavesImg from "../../assets/medium.webp";
-import bigWavesImg from "../../assets/big.webp";
+import smallWavesImg from "../../assets/smallWave.png";
+import mediumWavesImg from "../../assets/mediumWave.png";
+import bigWavesImg from "../../assets/bigWave.png";
 import categoryAdvance from "../../assets/CategoryAdvance.webp";
 import categoryIntermediate from "../../assets/CategoryIntermediate.webp";
 import categoryBeginner from "../../assets/CategoryBeginner.webp";
@@ -573,7 +573,7 @@ export default function Home() {
       </section>
 
       {/* SHOP BY WAVE */}
-      <section className="w-full bg-[#1f1f1f] py-24 border-t border-[#333]">
+      <section className="w-full bg-[#1a1a1a] py-24">
         <Container>
           <FadeUp>
             <h3 className="font-oswald text-3xl font-bold tracking-[0.3em] text-gray-400 uppercase text-center mb-12">
@@ -584,17 +584,17 @@ export default function Home() {
                 {
                   title: "SMALL WAVES",
                   img: smallWavesImg,
-                  imgClass: "w-20 md:w-24",
+                  imgClass: "w-28 md:w-40",
                 },
                 {
                   title: "MEDIUM WAVES",
                   img: mediumWavesImg,
-                  imgClass: "w-28 md:w-32",
+                  imgClass: "w-28 md:w-40",
                 },
                 {
                   title: "BIG WAVES",
                   img: bigWavesImg,
-                  imgClass: "w-36 md:w-40",
+                  imgClass: "w-28 md:w-40",
                 },
               ].map((wave, idx) => (
                 <motion.div
@@ -606,16 +606,16 @@ export default function Home() {
                   onClick={() =>
                     navigate(`/store?filter=${encodeURIComponent(wave.title)}`)
                   }
-                  className="flex flex-col items-center gap-4 group cursor-pointer"
+                  className="bg-[#222] border border-[#333] group cursor-pointer flex flex-col items-center justify-center pt-10 pb-6 w-full max-w-[280px] hover:bg-[#2a2a2a] hover:border-accent-teal transition duration-500 shadow-xl"
                 >
                   <img
                     loading="lazy"
                     src={wave.img}
                     alt={wave.title}
-                    className={`${wave.imgClass} object-contain opacity-80 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-300 drop-shadow-xl`}
+                    className={`${wave.imgClass} object-contain opacity-80 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-300`}
                   />
-                  <div>
-                    <h4 className="font-oswald text-sm font-bold tracking-[0.15em] text-gray-300 group-hover:text-white transition uppercase mt-2">
+                  <div className="mt-8 text-center">
+                    <h4 className="font-oswald text-sm md:text-base font-bold tracking-[0.15em] text-gray-300 group-hover:text-accent-teal transition uppercase">
                       {wave.title}
                     </h4>
                     <p className="text-[10px] text-gray-500 tracking-widest mt-1 uppercase">
