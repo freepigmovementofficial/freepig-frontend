@@ -85,18 +85,23 @@ export default function ProductDetail() {
     });
   };
 
-  const skillLevels = ['GROMS', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
-  const currentSkillIndex = skillLevels.indexOf(product.skillLevel?.toUpperCase());
-  const abilityPercentage = currentSkillIndex >= 0 ? ((currentSkillIndex + 1) / skillLevels.length) * 100 : 0;
+  const skillLevels = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
+  let activeSkillLevels = product.skillLevel 
+    ? product.skillLevel.split(",").map(s => s.trim().toUpperCase())
+    : [];
+    
+  // Map legacy GROMS to INTERMEDIATE and ADVANCED
+  if (activeSkillLevels.includes('GROMS')) {
+    activeSkillLevels = activeSkillLevels.filter(s => s !== 'GROMS');
+    if (!activeSkillLevels.includes('INTERMEDIATE')) activeSkillLevels.push('INTERMEDIATE');
+    if (!activeSkillLevels.includes('ADVANCED')) activeSkillLevels.push('ADVANCED');
+  }
 
-  // Helper for Wave Height Bar (Approximate mapping)
-  let waveMin = 0; let waveMax = 0;
-  if (waveLevels.includes('SMALL')) { waveMin = 1; waveMax = Math.max(waveMax, 3); }
-  if (waveLevels.includes('MEDIUM')) { waveMin = waveMin === 0 ? 3 : waveMin; waveMax = Math.max(waveMax, 6); }
-  if (waveLevels.includes('BIG')) { waveMin = waveMin === 0 ? 6 : waveMin; waveMax = Math.max(waveMax, 10); }
+  const waveMin = product.waveHeightMin !== undefined ? product.waveHeightMin : 0;
+  const waveMax = product.waveHeightMax !== undefined ? product.waveHeightMax : 0;
   
   const waveLeftPercent = (waveMin / 10) * 100;
-  const waveWidthPercent = ((waveMax - waveMin) / 10) * 100;
+  const waveWidthPercent = waveMax > 0 ? ((waveMax - waveMin) / 10) * 100 : 0;
 
   return (
     <div className="bg-[#222] min-h-screen font-poppins text-white pb-24">
@@ -238,17 +243,24 @@ export default function ProductDetail() {
                 {/* Ability Level */}
                 <div>
                   <h3 className="text-center font-bold text-sm tracking-widest mb-3">Ability Level</h3>
-                  <div className="w-full h-4 bg-[#333] border border-gray-500 relative">
-                    <div 
-                      className="absolute top-0 left-0 h-full bg-white transition-all duration-1000"
-                      style={{ width: `${abilityPercentage}%` }}
-                    />
+                  <div className="w-full h-4 bg-[#333] border border-gray-500 relative flex">
+                    {skillLevels.map((level, idx) => {
+                      const isActive = activeSkillLevels.includes(level);
+                      return (
+                        <div 
+                          key={level}
+                          className={`h-full flex-1 transition-colors duration-1000 ${isActive ? 'bg-white' : 'bg-transparent'}`}
+                          style={{
+                            borderRight: idx < skillLevels.length - 1 ? '1px solid #555' : 'none'
+                          }}
+                        />
+                      );
+                    })}
                   </div>
                   <div className="flex justify-between mt-2 text-[8px] sm:text-[9px] text-gray-400 uppercase tracking-widest">
-                    <span>Groms</span>
-                    <span>Beginner</span>
-                    <span>Intermediate</span>
-                    <span>Advanced</span>
+                    <span className="flex-1 text-left">Beginner</span>
+                    <span className="flex-1 text-center">Intermediate</span>
+                    <span className="flex-1 text-right">Advanced</span>
                   </div>
                 </div>
 
@@ -263,11 +275,11 @@ export default function ProductDetail() {
                       />
                     )}
                     {/* Ruler Marks */}
-                    <div className="absolute top-full left-0 w-full flex justify-between mt-1">
+                    <div className="absolute top-full left-0 w-full flex justify-between">
                       {[0,1,2,3,4,5,6,7,8,9,10].map(n => (
-                        <div key={n} className="flex flex-col items-center">
-                          <div className="w-[1px] h-1.5 bg-gray-500"></div>
-                          <span className="text-[8px] text-gray-500 mt-0.5">{n}</span>
+                        <div key={n} className="flex flex-col items-center w-4" style={{ marginLeft: n === 0 ? '-8px' : 0, marginRight: n === 10 ? '-8px' : 0 }}>
+                          <div className="w-[1px] h-2 bg-gray-500"></div>
+                          <span className="text-[8px] text-gray-400 mt-0.5">{n}</span>
                         </div>
                       ))}
                     </div>

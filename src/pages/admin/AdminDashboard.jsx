@@ -51,7 +51,7 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const SKILL_LEVELS = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "GROMS"];
+  const SKILL_LEVELS = ["BEGINNER", "INTERMEDIATE", "ADVANCED"];
   const WAVE_LEVELS = ["SMALL", "MEDIUM", "BIG", "WAVE_POOL"];
 
   useEffect(() => {
@@ -64,6 +64,8 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
           ? product.waveLevels
           : ["SMALL"],
         videoUrl: product.videoUrl || "",
+        waveHeightMin: product.waveHeightMin !== undefined ? product.waveHeightMin : 1,
+        waveHeightMax: product.waveHeightMax !== undefined ? product.waveHeightMax : 10,
         images: [],
         dimensions: [{ size: "", width: "", thickness: "", volume: "" }],
       });
@@ -74,6 +76,8 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
         skillLevel: "BEGINNER",
         waveLevels: ["SMALL"],
         videoUrl: "",
+        waveHeightMin: 1,
+        waveHeightMax: 10,
         images: [],
         dimensions: [{ size: "", width: "", thickness: "", volume: "" }],
       });
@@ -142,6 +146,8 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
       description: form.description || undefined,
       skillLevel: form.skillLevel,
       waveLevels: form.waveLevels.filter((w) => w !== "WAVE_POOL"),
+      waveHeightMin: form.waveHeightMin,
+      waveHeightMax: form.waveHeightMax,
       categoryId: surfboardCategory ? surfboardCategory.id : undefined,
       productType: "SURFBOARD",
     };
@@ -204,6 +210,8 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
         skillLevel: "BEGINNER",
         waveLevels: ["SMALL"],
         videoUrl: "",
+        waveHeightMin: 1,
+        waveHeightMax: 10,
         images: [],
         dimensions: [{ size: "", width: "", thickness: "", volume: "" }],
       });
@@ -334,6 +342,58 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
                       {w.replace(/_/g, " ")}
                     </button>
                   ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                  Wave Height (Feet) *
+                </label>
+                <div className="flex gap-4 items-center mt-2">
+                  <div className="flex-1">
+                    <label className="text-[10px] text-gray-500 uppercase tracking-widest mb-1 block">
+                      Min Height: {form.waveHeightMin} ft
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="10"
+                      step="1"
+                      value={form.waveHeightMin}
+                      onChange={(e) =>
+                        setForm((p) => ({
+                          ...p,
+                          waveHeightMin: Number(e.target.value),
+                          // Ensure max is not less than min
+                          waveHeightMax: Math.max(Number(e.target.value), p.waveHeightMax)
+                        }))
+                      }
+                      className="w-full accent-accent-teal"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-[10px] text-gray-500 uppercase tracking-widest mb-1 block">
+                      Max Height: {form.waveHeightMax} ft
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="10"
+                      step="1"
+                      value={form.waveHeightMax}
+                      onChange={(e) =>
+                        setForm((p) => ({
+                          ...p,
+                          waveHeightMax: Number(e.target.value),
+                          // Ensure min is not greater than max
+                          waveHeightMin: Math.min(Number(e.target.value), p.waveHeightMin)
+                        }))
+                      }
+                      className="w-full accent-accent-teal"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
