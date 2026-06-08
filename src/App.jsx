@@ -20,13 +20,47 @@ import RiderDetail from "./pages/riders/RiderDetail";
 import ContactPopup from "./components/ContactPopup";
 import CtaPopup from "./components/CTAPopup";
 import ErrorPage from "./pages/error/ErrorPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <BrowserRouter>
-      <Toaster position="top-center" />
+      <ScrollToTop />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#1a1a1a',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '12px',
+            fontSize: '12px',
+            fontWeight: '600',
+            letterSpacing: '0.05em',
+            padding: '12px 16px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+          },
+          success: {
+            iconTheme: { primary: '#00e5ff', secondary: '#000' },
+            style: {
+              background: '#1a1a1a',
+              border: '1px solid rgba(0,229,255,0.2)',
+              color: '#fff',
+            },
+          },
+          error: {
+            iconTheme: { primary: '#ef4444', secondary: '#fff' },
+            style: {
+              background: '#1a1a1a',
+              border: '1px solid rgba(239,68,68,0.3)',
+              color: '#fff',
+            },
+          },
+        }}
+      />
       <Navbar />
       <Routes>
         <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />

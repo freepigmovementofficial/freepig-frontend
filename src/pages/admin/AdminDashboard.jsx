@@ -16,6 +16,7 @@ import {
   FiImage,
   FiHeart,
   FiUsers,
+  FiVideo,
 } from "react-icons/fi";
 import { productService } from "../../api/products";
 import { adminService } from "../../api/admin";
@@ -26,10 +27,12 @@ import { storeReviewService } from "../../api/storeReviews";
 import { galleryService } from "../../api/gallery";
 import { testimonialsService } from "../../api/testimonials";
 import { riderService } from "../../api/riders";
+import { heroService } from "../../api/hero";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import PigLoader from "../../components/PigLoader";
 import AdminSidebar from "../../components/AdminSidebar";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import DashboardOverview from "./components/DashboardOverview";
 
 // ─── Product Form Modal ──────────────────────────────────────────────────────
@@ -327,7 +330,7 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
                           : "border-gray-600 text-gray-400 hover:border-white hover:text-white"
                       }`}
                     >
-                      {w}
+                      {w.replace(/_/g, " ")}
                     </button>
                   ))}
                 </div>
@@ -463,6 +466,7 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pinnedId, setPinnedId] = useState(null);
+  const [imageToDelete, setImageToDelete] = useState(null);
 
   useEffect(() => {
     setFiles([]);
@@ -534,29 +538,40 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
       await productService.uploadImages(product.id, formData);
       setFiles([]);
       setTypes([]);
+      toast.success("Images uploaded successfully!");
       onSaved();
+      onClose();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to upload images.");
       setError(err.response?.data?.message || "Failed to upload images.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (imageId) => {
-    if (!window.confirm("Delete this image?")) return;
+  const handleDelete = (imageId) => {
+    setImageToDelete(imageId);
+  };
+
+  const doDeleteImage = async () => {
+    if (!imageToDelete) return;
     setLoading(true);
     setError("");
     try {
-      await productService.deleteImage(product.id, imageId);
+      await productService.deleteImage(product.id, imageToDelete);
       // Clear pin if deleted image was pinned
-      if (pinnedId === imageId) {
+      if (pinnedId === imageToDelete) {
         setPinnedId(null);
       }
+      toast.success("Image deleted.");
       onSaved();
+      onClose();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete image.");
       setError(err.response?.data?.message || "Failed to delete image.");
     } finally {
       setLoading(false);
+      setImageToDelete(null);
     }
   };
 
@@ -726,6 +741,15 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
           </div>
         </motion.div>
       </motion.div>
+      <ConfirmationModal
+        isOpen={!!imageToDelete}
+        onClose={() => setImageToDelete(null)}
+        onConfirm={doDeleteImage}
+        title="DELETE IMAGE?"
+        message="Are you sure you want to delete this image? This action cannot be undone."
+        loading={loading}
+        loadingText="DELETING..."
+      />
     </AnimatePresence>
   );
 }
@@ -739,6 +763,7 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
     { size: "", width: "", thickness: "", volume: "" },
   ]);
   const [submitting, setSubmitting] = useState(false);
+  const [dimensionToDelete, setDimensionToDelete] = useState(null);
 
   useEffect(() => {
     if (open && productSlug) {
@@ -793,25 +818,37 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
       );
       setForms([{ size: "", width: "", thickness: "", volume: "" }]);
       await loadProduct();
+      toast.success("Dimensions saved successfully!");
       onSaved();
+      onClose();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to add dimensions.");
       setError(err.response?.data?.message || "Failed to add dimensions.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDelete = async (dimensionId) => {
-    if (!window.confirm("Delete this dimension?")) return;
+  const handleDelete = (dimensionId) => {
+    setDimensionToDelete(dimensionId);
+  };
+
+  const doDeleteDimension = async () => {
+    if (!dimensionToDelete) return;
     setLoading(true);
     setError("");
     try {
-      await productService.deleteDimension(product.id, dimensionId);
+      await productService.deleteDimension(product.id, dimensionToDelete);
       await loadProduct();
+      toast.success("Dimension deleted.");
       onSaved();
+      onClose();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete dimension.");
       setError(err.response?.data?.message || "Failed to delete dimension.");
+    } finally {
       setLoading(false);
+      setDimensionToDelete(null);
     }
   };
 
@@ -976,6 +1013,15 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
           </div>
         </motion.div>
       </motion.div>
+      <ConfirmationModal
+        isOpen={!!dimensionToDelete}
+        onClose={() => setDimensionToDelete(null)}
+        onConfirm={doDeleteDimension}
+        title="DELETE DIMENSION?"
+        message="Are you sure you want to delete this dimension? This action cannot be undone."
+        loading={loading}
+        loadingText="DELETING..."
+      />
     </AnimatePresence>
   );
 }
@@ -1092,9 +1138,10 @@ function ProductsTable({ categories }) {
     try {
       await productService.delete(id);
       setDeleteConfirm(null);
+      toast.success("Product deleted successfully.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete product.");
+      toast.error(err.response?.data?.message || "Failed to delete product.");
     } finally {
       setDeleteLoading(false);
     }
@@ -1579,9 +1626,10 @@ function AccessoriesTable({ categories }) {
     try {
       await productService.delete(id);
       setDeleteConfirm(null);
+      toast.success("Accessory deleted successfully.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete accessory.");
+      toast.error(err.response?.data?.message || "Failed to delete accessory.");
     } finally {
       setDeleteLoading(false);
     }
@@ -1986,6 +2034,7 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
   const [error, setError] = useState("");
   const [videoFile, setVideoFile] = useState(null);
   const [imageFiles, setImageFiles] = useState([]);
+  const [imageToDelete, setImageToDelete] = useState(null);
 
   useEffect(() => {
     setVideoFile(null);
@@ -2005,8 +2054,11 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
     try {
       await newReleaseService.uploadVideo(release.id, formData);
       setVideoFile(null);
+      toast.success("Video uploaded successfully!");
       onSaved();
+      onClose();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to upload video.");
       setError(err.response?.data?.message || "Failed to upload video.");
     } finally {
       setLoading(false);
@@ -2023,25 +2075,36 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
     try {
       await newReleaseService.uploadImages(release.id, formData);
       setImageFiles([]);
+      toast.success("Images uploaded successfully!");
       onSaved();
+      onClose();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to upload images.");
       setError(err.response?.data?.message || "Failed to upload images.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeleteImage = async (imageId) => {
-    if (!window.confirm("Delete this image?")) return;
+  const handleDeleteImage = (imageId) => {
+    setImageToDelete(imageId);
+  };
+
+  const doDeleteImage = async () => {
+    if (!imageToDelete) return;
     setLoading(true);
     setError("");
     try {
-      await newReleaseService.deleteImage(release.id, imageId);
+      await newReleaseService.deleteImage(release.id, imageToDelete);
+      toast.success("Image deleted.");
       onSaved();
+      onClose();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete image.");
       setError(err.response?.data?.message || "Failed to delete image.");
     } finally {
       setLoading(false);
+      setImageToDelete(null);
     }
   };
 
@@ -2174,6 +2237,15 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
           </div>
         </motion.div>
       </motion.div>
+      <ConfirmationModal
+        isOpen={!!imageToDelete}
+        onClose={() => setImageToDelete(null)}
+        onConfirm={doDeleteImage}
+        title="DELETE IMAGE?"
+        message="Are you sure you want to delete this image? This action cannot be undone."
+        loading={loading}
+        loadingText="DELETING..."
+      />
     </AnimatePresence>
   );
 }
@@ -2183,6 +2255,7 @@ function NewReleasesTable() {
   const [releases, setReleases] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [mediaModalOpen, setMediaModalOpen] = useState(false);
   const [editRelease, setEditRelease] = useState(null);
@@ -2209,21 +2282,26 @@ function NewReleasesTable() {
   }, []);
 
   const handleDelete = async (id) => {
+    setDeleteLoading(true);
     try {
       await newReleaseService.delete(id);
       setDeleteConfirm(null);
+      toast.success("Release deleted.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete release.");
+      toast.error(err.response?.data?.message || "Failed to delete release.");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
   const handleToggleActive = async (id) => {
     try {
       await newReleaseService.toggleActive(id);
+      toast.success("Status updated.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to toggle active status.");
+      toast.error(err.response?.data?.message || "Failed to toggle active status.");
     }
   };
 
@@ -2442,9 +2520,10 @@ function FeaturedSectionsTable() {
     setActionLoading(true);
     try {
       await featuredService.toggleActive(id);
+      toast.success("Section status updated.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to toggle active status.");
+      toast.error(err.response?.data?.message || "Failed to toggle active status.");
     } finally {
       setActionLoading(false);
     }
@@ -2455,9 +2534,10 @@ function FeaturedSectionsTable() {
     try {
       await featuredService.delete(id);
       setDeleteConfirm(null);
+      toast.success("Featured section deleted.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete section.");
+      toast.error(err.response?.data?.message || "Failed to delete section.");
     } finally {
       setActionLoading(false);
     }
@@ -2946,9 +3026,10 @@ function ReviewsTable() {
     try {
       await storeReviewService.delete(id);
       setDeleteConfirm(null);
+      toast.success("Review deleted.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete review.");
+      toast.error(err.response?.data?.message || "Failed to delete review.");
     } finally {
       setDeleteLoading(false);
     }
@@ -3125,9 +3206,10 @@ function GalleryTable() {
       await galleryService.upload(formData);
       setUploadOpen(false);
       setFiles([]);
+      toast.success("Photos uploaded successfully!");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to upload images");
+      toast.error(err.response?.data?.message || "Failed to upload images");
     } finally {
       setActionLoading(false);
     }
@@ -3141,9 +3223,10 @@ function GalleryTable() {
         caption: caption || null,
       });
       setEditItem(null);
+      toast.success("Caption updated.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to update caption");
+      toast.error(err.response?.data?.message || "Failed to update caption");
     } finally {
       setActionLoading(false);
     }
@@ -3154,9 +3237,10 @@ function GalleryTable() {
     try {
       await galleryService.delete(id);
       setDeleteConfirm(null);
+      toast.success("Image deleted.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete image");
+      toast.error(err.response?.data?.message || "Failed to delete image");
     } finally {
       setActionLoading(false);
     }
@@ -3205,8 +3289,8 @@ function GalleryTable() {
                 <div className="flex gap-3 mt-4">
                   <button
                     type="button"
-                    onClick={() => setUploadOpen(false)}
-                    disabled={!files.length || actionLoading}
+                    onClick={() => { setUploadOpen(false); setFiles([]); }}
+                    disabled={actionLoading}
                     className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50"
                   >
                     CANCEL
@@ -3484,9 +3568,10 @@ function TestimonialsTable() {
     setActionLoading(true);
     try {
       await testimonialsService.toggle(item.id);
+      toast.success("Testimonial status updated.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to toggle status.");
+      toast.error(err.response?.data?.message || "Failed to toggle status.");
     } finally {
       setActionLoading(false);
     }
@@ -3502,9 +3587,10 @@ function TestimonialsTable() {
       await testimonialsService.uploadPhoto(photoItem.id, formData);
       setPhotoItem(null);
       setPhotoFile(null);
+      toast.success("Photo uploaded successfully!");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to upload photo.");
+      toast.error(err.response?.data?.message || "Failed to upload photo.");
     } finally {
       setActionLoading(false);
     }
@@ -3515,9 +3601,10 @@ function TestimonialsTable() {
     try {
       await testimonialsService.delete(id);
       setDeleteConfirm(null);
+      toast.success("Testimonial deleted.");
       load();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete testimonial.");
+      toast.error(err.response?.data?.message || "Failed to delete testimonial.");
     } finally {
       setActionLoading(false);
     }
@@ -3984,6 +4071,7 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
   const [videoFile, setVideoFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, type: "", targetId: null, title: "", message: "" });
 
   if (!open || !rider) return null;
 
@@ -3997,8 +4085,11 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
     try {
       await riderService.uploadImages(rider.id, formData);
       setFiles([]);
+      toast.success("Images uploaded successfully!");
       onSaved();
+      onClose();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to upload images.");
       setError(err.response?.data?.message || "Failed to upload images.");
     } finally {
       setLoading(false);
@@ -4015,39 +4106,55 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
     try {
       await riderService.uploadVideo(rider.id, formData);
       setVideoFile(null);
+      toast.success("Video uploaded successfully!");
       onSaved();
+      onClose();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to upload video.");
       setError(err.response?.data?.message || "Failed to upload video.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeleteImage = async (imageId) => {
-    if (!window.confirm("Delete this image?")) return;
-    setLoading(true);
-    setError("");
-    try {
-      await riderService.deleteImage(rider.id, imageId);
-      onSaved();
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to delete image.");
-    } finally {
-      setLoading(false);
-    }
+  const handleDeleteImage = (imageId) => {
+    setDeleteConfirm({
+      isOpen: true,
+      type: "image",
+      targetId: imageId,
+      title: "DELETE IMAGE?",
+      message: "Are you sure you want to delete this image? This action cannot be undone.",
+    });
   };
 
-  const handleDeleteVideo = async () => {
-    if (!window.confirm("Delete the hero video?")) return;
+  const handleDeleteVideo = () => {
+    setDeleteConfirm({
+      isOpen: true,
+      type: "video",
+      targetId: null,
+      title: "DELETE HERO VIDEO?",
+      message: "Are you sure you want to delete the hero video? This action cannot be undone.",
+    });
+  };
+
+  const handleConfirmDelete = async () => {
     setLoading(true);
     setError("");
     try {
-      await riderService.deleteVideo(rider.id);
+      if (deleteConfirm.type === "image") {
+        await riderService.deleteImage(rider.id, deleteConfirm.targetId);
+      } else if (deleteConfirm.type === "video") {
+        await riderService.deleteVideo(rider.id);
+      }
+      toast.success(`${deleteConfirm.type === "video" ? "Video" : "Image"} deleted.`);
       onSaved();
+      onClose();
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to delete video.");
+      toast.error(err.response?.data?.message || `Failed to delete ${deleteConfirm.type}.`);
+      setError(err.response?.data?.message || `Failed to delete ${deleteConfirm.type}.`);
     } finally {
       setLoading(false);
+      setDeleteConfirm({ isOpen: false, type: "", targetId: null, title: "", message: "" });
     }
   };
 
@@ -4113,6 +4220,15 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
           </div>
         </motion.div>
       </motion.div>
+      <ConfirmationModal
+        isOpen={deleteConfirm.isOpen}
+        onClose={() => setDeleteConfirm({ isOpen: false, type: "", targetId: null, title: "", message: "" })}
+        onConfirm={handleConfirmDelete}
+        title={deleteConfirm.title}
+        message={deleteConfirm.message}
+        loading={loading}
+        loadingText="DELETING..."
+      />
     </AnimatePresence>
   );
 }
@@ -4124,6 +4240,8 @@ function RidersTable() {
   const [modalOpen, setModalOpen] = useState(false);
   const [mediaModalOpen, setMediaModalOpen] = useState(false);
   const [editRider, setEditRider] = useState(null);
+  const [riderToDelete, setRiderToDelete] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchRiders = async () => {
     setLoading(true);
@@ -4139,14 +4257,22 @@ function RidersTable() {
 
   useEffect(() => { fetchRiders(); }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this rider?")) return;
+  const handleDelete = (id) => {
+    setRiderToDelete(id);
+  };
+
+  const doDeleteRider = async () => {
+    if (!riderToDelete) return;
+    setDeleteLoading(true);
     try {
-      await riderService.delete(id);
+      await riderService.delete(riderToDelete);
       toast.success("Rider deleted");
       fetchRiders();
     } catch (err) {
       toast.error("Failed to delete rider");
+    } finally {
+      setDeleteLoading(false);
+      setRiderToDelete(null);
     }
   };
 
@@ -4212,6 +4338,349 @@ function RidersTable() {
       </div>
       <RiderFormModal open={modalOpen} onClose={() => setModalOpen(false)} rider={editRider} onSaved={fetchRiders} />
       <RiderMediaModal open={mediaModalOpen} onClose={() => setMediaModalOpen(false)} rider={editRider} onSaved={fetchRiders} />
+      <ConfirmationModal
+        isOpen={!!riderToDelete}
+        onClose={() => setRiderToDelete(null)}
+        onConfirm={doDeleteRider}
+        title="DELETE RIDER?"
+        message="Are you sure you want to delete this rider? This action cannot be undone."
+        loading={deleteLoading}
+        loadingText="DELETING..."
+      />
+    </div>
+  );
+}
+
+// ─── Hero Section Table ───────────────────────────────────────────────────────
+function HeroTable() {
+  const [heroes, setHeroes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editHero, setEditHero] = useState(null);
+  const [videoModalHero, setVideoModalHero] = useState(null);
+  const [heroToDelete, setHeroToDelete] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  // Form state
+  const [form, setForm] = useState({ title: "", subtitle: "", description: "", isActive: false });
+  const [formError, setFormError] = useState("");
+  const [formLoading, setFormLoading] = useState(false);
+  const [formVideoFile, setFormVideoFile] = useState(null);
+
+  // Video state (for separate video modal on existing hero)
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoLoading, setVideoLoading] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await heroService.getAll();
+      setHeroes(res.data || []);
+    } catch {
+      setHeroes([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const openCreate = () => {
+    setEditHero(null);
+    setForm({ title: "", subtitle: "", description: "", isActive: false });
+    setFormError("");
+    setFormVideoFile(null);
+    setModalOpen(true);
+  };
+
+  const openEdit = (hero) => {
+    setEditHero(hero);
+    setForm({ title: hero.title, subtitle: hero.subtitle, description: hero.description || "", isActive: hero.isActive });
+    setFormError("");
+    setFormVideoFile(null);
+    setModalOpen(true);
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setFormLoading(true);
+    setFormError("");
+    try {
+      if (editHero) {
+        await heroService.update(editHero.id, { title: form.title, subtitle: form.subtitle, description: form.description || undefined });
+        toast.success("Hero section updated!");
+      } else {
+        // Step 1: Create hero
+        const res = await heroService.create({
+          title: form.title,
+          subtitle: form.subtitle,
+          description: form.description || undefined,
+          isActive: form.isActive,
+        });
+        const newId = res.data?.id;
+        // Step 2: Upload video if provided
+        if (formVideoFile && newId) {
+          const fd = new FormData();
+          fd.append("video", formVideoFile);
+          await heroService.uploadVideo(newId, fd);
+          toast.success("Hero created with video!");
+        } else {
+          toast.success("Hero section created!");
+        }
+      }
+      setModalOpen(false);
+      setFormVideoFile(null);
+      load();
+    } catch (err) {
+      const msg = err.response?.data?.message || "Failed to save hero section.";
+      setFormError(msg);
+      toast.error(msg);
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleToggle = async (id) => {
+    setActionLoading(true);
+    try {
+      await heroService.toggleActive(id);
+      toast.success("Hero status updated.");
+      load();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to toggle status.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const doDelete = async () => {
+    if (!heroToDelete) return;
+    setDeleteLoading(true);
+    try {
+      await heroService.delete(heroToDelete);
+      setHeroToDelete(null);
+      toast.success("Hero section deleted.");
+      load();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const handleUploadVideo = async (e) => {
+    e.preventDefault();
+    if (!videoFile || !videoModalHero) return;
+    setVideoLoading(true);
+    const formData = new FormData();
+    formData.append("video", videoFile);
+    try {
+      await heroService.uploadVideo(videoModalHero.id, formData);
+      setVideoFile(null);
+      setVideoModalHero(null);
+      toast.success("Video uploaded successfully!");
+      load();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to upload video.");
+    } finally {
+      setVideoLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-full p-8 pb-0">
+      <div className="flex items-center justify-between mb-6 shrink-0">
+        <div>
+          <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">HERO SECTION</h2>
+          <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">Manage landing page hero banner</p>
+        </div>
+        <button onClick={openCreate} className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition">
+          + ADD HERO
+        </button>
+      </div>
+
+      {/* Form Modal */}
+      <AnimatePresence>
+        {modalOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            onClick={() => setModalOpen(false)}
+          >
+            <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
+              className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">
+                  {editHero ? "EDIT HERO" : "CREATE HERO"}
+                </h2>
+                <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-white text-lg font-bold w-8 h-8 flex items-center justify-center">✕</button>
+              </div>
+              {formError && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{formError}</div>}
+              <form onSubmit={handleSave} className="flex flex-col gap-4">
+                <div>
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Title *</label>
+                  <input required value={form.title} onChange={(e) => setForm(p => ({ ...p, title: e.target.value }))}
+                    placeholder="e.g. RIDE YOUR OWN WAVE"
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Subtitle *</label>
+                  <input required value={form.subtitle} onChange={(e) => setForm(p => ({ ...p, subtitle: e.target.value }))}
+                    placeholder="e.g. BUILD DIFFERENT, RIDE DIFFERENT"
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Description</label>
+                  <textarea rows={3} value={form.description} onChange={(e) => setForm(p => ({ ...p, description: e.target.value }))}
+                    placeholder="e.g. Custom surfboards made for your identity."
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none" />
+                </div>
+                {!editHero && (
+                  <div>
+                    <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                      Background Video <span className="text-gray-600 normal-case font-normal">(optional)</span>
+                    </label>
+                    <input
+                      type="file"
+                      accept="video/mp4,video/webm,video/quicktime"
+                      onChange={(e) => setFormVideoFile(e.target.files[0] || null)}
+                      className="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-white/10 file:text-white hover:file:bg-white/20 transition"
+                    />
+                    {formVideoFile && (
+                      <p className="text-[10px] text-accent-teal mt-1.5 tracking-widest">
+                        ✓ {formVideoFile.name}
+                      </p>
+                    )}
+                  </div>
+                )}
+                {!editHero && (
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <div className={`w-10 h-5 rounded-full transition-colors duration-300 relative ${form.isActive ? 'bg-accent-teal' : 'bg-gray-700'}`}
+                      onClick={() => setForm(p => ({ ...p, isActive: !p.isActive }))}>
+                      <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-300 ${form.isActive ? 'translate-x-5' : ''}`} />
+                    </div>
+                    <span className="text-xs text-gray-400 font-bold tracking-widest uppercase">Set as Active</span>
+                  </label>
+                )}
+                <div className="flex gap-3 mt-2">
+                  <button type="button" onClick={() => setModalOpen(false)} disabled={formLoading}
+                    className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50">CANCEL</button>
+                  <button type="submit" disabled={formLoading}
+                    className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50 flex items-center justify-center gap-2">
+                    {formLoading ? <PigLoader size="mini" text="SAVING..." /> : (editHero ? "UPDATE" : "CREATE")}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Video Upload Modal */}
+      <AnimatePresence>
+        {videoModalHero && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            onClick={() => { setVideoModalHero(null); setVideoFile(null); }}
+          >
+            <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
+              className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="font-oswald text-xl font-bold tracking-widest text-white">UPLOAD HERO VIDEO</h2>
+                  <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">{videoModalHero.title}</p>
+                </div>
+                <button onClick={() => { setVideoModalHero(null); setVideoFile(null); }} className="text-gray-400 hover:text-white text-lg font-bold">✕</button>
+              </div>
+              {videoModalHero.videoUrl && (
+                <div className="mb-5 rounded-xl overflow-hidden border border-gray-700 bg-black max-h-48 flex justify-center">
+                  <video src={videoModalHero.videoUrl} controls className="h-48 object-contain" />
+                </div>
+              )}
+              <form onSubmit={handleUploadVideo} className="flex flex-col gap-4">
+                <input type="file" accept="video/mp4,video/webm,video/quicktime"
+                  onChange={(e) => setVideoFile(e.target.files[0])}
+                  className="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-white/10 file:text-white hover:file:bg-white/20 transition" />
+                <div className="flex gap-3">
+                  <button type="button" onClick={() => { setVideoModalHero(null); setVideoFile(null); }} disabled={videoLoading}
+                    className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50">CANCEL</button>
+                  <button type="submit" disabled={!videoFile || videoLoading}
+                    className="flex-1 py-2.5 bg-accent-teal text-black rounded-full text-xs font-bold tracking-widest hover:bg-accent-teal/80 transition disabled:opacity-50 flex items-center justify-center gap-2">
+                    {videoLoading ? <PigLoader size="mini" text="UPLOADING..." /> : "UPLOAD VIDEO"}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirm */}
+      <ConfirmationModal
+        isOpen={!!heroToDelete}
+        onClose={() => setHeroToDelete(null)}
+        onConfirm={doDelete}
+        title="DELETE HERO?"
+        message="Are you sure you want to delete this hero section? Its video will also be deleted from storage."
+        loading={deleteLoading}
+        loadingText="DELETING..."
+      />
+
+      {/* Table */}
+      <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
+        {loading ? (
+          <div className="py-16 flex justify-center"><PigLoader size="mini" text="Loading hero sections..." /></div>
+        ) : heroes.length === 0 ? (
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No hero sections yet. Create one to get started.</div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase shadow-md">
+                <th className="px-4 py-3 text-left">Title</th>
+                <th className="px-4 py-3 text-left">Subtitle</th>
+                <th className="px-4 py-3 text-left">Description</th>
+                <th className="px-4 py-3 text-left">Video</th>
+                <th className="px-4 py-3 text-left">Status</th>
+                <th className="px-4 py-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {heroes.map((h, idx) => (
+                <tr key={h.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? 'bg-[#1c1c1c]' : 'bg-[#1a1a1a]'}`}>
+                  <td className="px-4 py-3 font-bold text-white tracking-wide max-w-[160px] truncate">{h.title}</td>
+                  <td className="px-4 py-3 text-gray-400 max-w-[160px] truncate">{h.subtitle}</td>
+                  <td className="px-4 py-3 text-gray-500 text-xs max-w-[180px] truncate">{h.description || '—'}</td>
+                  <td className="px-4 py-3">
+                    {h.videoUrl
+                      ? <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-full text-[9px] font-bold">VIDEO ✓</span>
+                      : <span className="px-2 py-0.5 bg-gray-700/50 text-gray-500 rounded-full text-[9px] font-bold">NO VIDEO</span>}
+                  </td>
+                  <td className="px-4 py-3">
+                    <button onClick={() => handleToggle(h.id)} disabled={actionLoading}
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest transition ${h.isActive ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-gray-500/20 text-gray-400 border border-gray-600 hover:bg-gray-700/50'}`}>
+                      {h.isActive ? 'ACTIVE' : 'INACTIVE'}
+                    </button>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-center gap-2">
+                      <button onClick={() => setVideoModalHero(h)}
+                        className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-widest text-white hover:bg-white/20 transition">VIDEO</button>
+                      <button onClick={() => openEdit(h)}
+                        className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition">EDIT</button>
+                      <button onClick={() => setHeroToDelete(h.id)}
+                        className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition">DELETE</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }
@@ -4219,6 +4688,7 @@ function RidersTable() {
 // ─── Main Admin Dashboard ────────────────────────────────────────────────────
 const SIDEBAR_ITEMS = [
   { id: "overview", label: "Overview", icon: FiPieChart },
+  { id: "hero", label: "Hero Section", icon: FiVideo },
   { id: "surfboards", label: "Surfboards", icon: FiLayers },
   { id: "accessories", label: "Accessories", icon: FiTag },
   { id: "new-releases", label: "New Releases", icon: FiStar },
@@ -4274,6 +4744,7 @@ export default function AdminDashboard() {
             className="absolute inset-0 flex flex-col"
           >
             {active === "overview" && <DashboardOverviewWrapper />}
+            {active === "hero" && <HeroTable />}
             {active === "surfboards" && (
               <ProductsTable categories={categories} />
             )}

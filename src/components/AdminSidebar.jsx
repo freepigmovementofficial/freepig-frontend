@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronLeft, FiChevronRight, FiLogOut } from 'react-icons/fi';
-import fpWhiteLogo from '../assets/FPWHITE.png';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiChevronLeft, FiChevronRight, FiLogOut } from "react-icons/fi";
+import fpWhiteLogo from "../assets/FPWHITE.png";
 
 export default function AdminSidebar({
   menuItems,
   activeMenu,
   onMenuClick,
   user,
-  onLogout
+  onLogout,
 }) {
   // Load initial expanded state from localStorage or default to true on large screens
   const [isExpanded, setIsExpanded] = useState(() => {
-    const saved = localStorage.getItem('adminSidebarExpanded');
+    const saved = localStorage.getItem("adminSidebarExpanded");
     if (saved !== null) {
       return JSON.parse(saved);
     }
@@ -24,27 +24,27 @@ export default function AdminSidebar({
     const handleResize = () => {
       // If tablet, default to collapsed unless user explicitly expanded recently
       if (window.innerWidth >= 768 && window.innerWidth < 1024) {
-        if (localStorage.getItem('adminSidebarExpanded') === null) {
+        if (localStorage.getItem("adminSidebarExpanded") === null) {
           setIsExpanded(false);
         }
       } else if (window.innerWidth >= 1024) {
-         if (localStorage.getItem('adminSidebarExpanded') === null) {
-           setIsExpanded(true);
-         }
+        if (localStorage.getItem("adminSidebarExpanded") === null) {
+          setIsExpanded(true);
+        }
       }
     };
-    
+
     // Initial check
     handleResize();
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const toggleSidebar = () => {
     const newState = !isExpanded;
     setIsExpanded(newState);
-    localStorage.setItem('adminSidebarExpanded', JSON.stringify(newState));
+    localStorage.setItem("adminSidebarExpanded", JSON.stringify(newState));
   };
 
   return (
@@ -52,10 +52,10 @@ export default function AdminSidebar({
       {/* ── Desktop & Tablet Sidebar ── */}
       <motion.aside
         initial={false}
-        animate={{ 
-          width: isExpanded ? 240 : 64
+        animate={{
+          width: isExpanded ? 240 : 64,
         }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
         className="hidden md:flex flex-col bg-[#0f1117] border-r border-white/5 h-full shrink-0 relative z-20 overflow-visible"
       >
         {/* Toggle Button */}
@@ -63,29 +63,41 @@ export default function AdminSidebar({
           onClick={toggleSidebar}
           className="absolute -right-3 top-6 bg-[#1a1c23] border border-white/10 text-gray-400 hover:text-white w-6 h-6 rounded-full flex items-center justify-center transition-colors shadow-lg z-30"
         >
-          {isExpanded ? <FiChevronLeft size={14} /> : <FiChevronRight size={14} />}
+          {isExpanded ? (
+            <FiChevronLeft size={14} />
+          ) : (
+            <FiChevronRight size={14} />
+          )}
         </button>
 
         {/* Brand */}
         <div className="h-20 flex items-center border-b border-white/5 shrink-0 overflow-hidden px-4">
           <div className="flex items-center min-w-[200px]">
-             <div className="w-8 h-8 rounded flex items-center justify-center shrink-0">
-                <img src={fpWhiteLogo} alt="FP Logo" className="w-full h-full object-contain" />
-             </div>
-             <AnimatePresence>
-               {isExpanded && (
-                 <motion.div
-                   initial={{ opacity: 0, x: -10 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   exit={{ opacity: 0, x: -10 }}
-                   transition={{ duration: 0.2 }}
-                   className="ml-3 whitespace-nowrap"
-                 >
-                   <p className="font-oswald text-lg font-bold tracking-[0.1em] text-accent-teal leading-none">FREEPIG</p>
-                   <p className="text-[9px] text-gray-500 tracking-widest mt-0.5 uppercase">Admin Panel</p>
-                 </motion.div>
-               )}
-             </AnimatePresence>
+            <div className="w-8 h-8 rounded flex items-center justify-center shrink-0">
+              <img
+                src={fpWhiteLogo}
+                alt="FP Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="ml-3 whitespace-nowrap"
+                >
+                  <p className="font-oswald text-lg font-bold tracking-[0.01em] text-accent-teal leading-none">
+                    FREEPIG MOVEMENT
+                  </p>
+                  <p className="text-[9px] text-gray-500 tracking-widest mt-0.5 uppercase">
+                    Admin Panel
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -101,24 +113,26 @@ export default function AdminSidebar({
                 title={!isExpanded ? item.label : undefined}
                 className={`flex items-center rounded-xl p-3 transition-colors relative group ${
                   isActive
-                    ? 'bg-accent-teal/10 text-accent-teal'
-                    : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
+                    ? "bg-accent-teal/10 text-accent-teal"
+                    : "text-gray-500 hover:bg-white/5 hover:text-gray-300"
                 }`}
               >
                 <div className="shrink-0 flex items-center justify-center w-5 h-5">
                   <Icon size={18} />
                 </div>
-                
+
                 <AnimatePresence>
                   {isExpanded && (
                     <motion.div
                       initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
+                      animate={{ opacity: 1, width: "auto" }}
                       exit={{ opacity: 0, width: 0 }}
                       transition={{ duration: 0.2 }}
                       className="ml-3 overflow-hidden whitespace-nowrap"
                     >
-                      <span className="text-xs font-bold tracking-wide">{item.label}</span>
+                      <span className="text-xs font-bold tracking-wide">
+                        {item.label}
+                      </span>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -137,29 +151,33 @@ export default function AdminSidebar({
         {/* User / Logout */}
         <div className="p-3 border-t border-white/5 shrink-0 overflow-hidden">
           <div className="flex items-center min-w-[200px] mb-2 p-1">
-             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-300 text-xs shrink-0 uppercase">
-                {user?.name?.charAt(0) || 'A'}
-             </div>
-             <AnimatePresence>
-               {isExpanded && (
-                 <motion.div
-                   initial={{ opacity: 0, width: 0 }}
-                   animate={{ opacity: 1, width: 'auto' }}
-                   exit={{ opacity: 0, width: 0 }}
-                   className="ml-3 overflow-hidden whitespace-nowrap"
-                 >
-                   <p className="text-xs text-gray-300 font-medium truncate w-[140px]">{user?.name || 'Admin'}</p>
-                   <p className="text-[10px] text-gray-600 truncate w-[140px]">{user?.email || ''}</p>
-                 </motion.div>
-               )}
-             </AnimatePresence>
+            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-300 text-xs shrink-0 uppercase">
+              {user?.name?.charAt(0) || "A"}
+            </div>
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  className="ml-3 overflow-hidden whitespace-nowrap"
+                >
+                  <p className="text-xs text-gray-300 font-medium truncate w-[140px]">
+                    {user?.name || "Admin"}
+                  </p>
+                  <p className="text-[10px] text-gray-600 truncate w-[140px]">
+                    {user?.email || ""}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-          
+
           <button
             onClick={onLogout}
             title={!isExpanded ? "Logout" : undefined}
             className={`w-full flex items-center p-3 rounded-xl transition-colors text-red-400 hover:bg-red-500/10 group ${
-              isExpanded ? 'justify-start' : 'justify-center'
+              isExpanded ? "justify-start" : "justify-center"
             }`}
           >
             <FiLogOut size={16} className="shrink-0" />
@@ -167,11 +185,13 @@ export default function AdminSidebar({
               {isExpanded && (
                 <motion.div
                   initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
+                  animate={{ opacity: 1, width: "auto" }}
                   exit={{ opacity: 0, width: 0 }}
                   className="ml-3 overflow-hidden whitespace-nowrap"
                 >
-                  <span className="text-[10px] font-bold tracking-widest uppercase">Logout</span>
+                  <span className="text-[10px] font-bold tracking-widest uppercase">
+                    Logout
+                  </span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -189,10 +209,14 @@ export default function AdminSidebar({
               key={item.id}
               onClick={() => onMenuClick(item.id)}
               className={`flex flex-col items-center justify-center p-2 min-w-[60px] rounded-lg transition-colors ${
-                isActive ? 'text-accent-teal' : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'
+                isActive
+                  ? "text-accent-teal"
+                  : "text-gray-500 hover:text-gray-300 hover:bg-white/5"
               }`}
             >
-              <div className={`mb-1 transition-transform ${isActive ? 'scale-110' : ''}`}>
+              <div
+                className={`mb-1 transition-transform ${isActive ? "scale-110" : ""}`}
+              >
                 <Icon size={20} />
               </div>
               <span className="text-[9px] font-bold tracking-wider truncate max-w-[56px] text-center">

@@ -281,15 +281,17 @@ export default function ProductDetail() {
               {/* Dimensions Grid */}
               {product.dimensions && product.dimensions.length > 0 && (
                 <div>
-                  <h3 className="text-center font-bold text-lg tracking-widest mb-6">DIMENSIONS</h3>
+                  <h3 className="text-center font-bold text-lg tracking-widest mb-2">DIMENSIONS</h3>
+                  <p className="text-center text-[9px] text-gray-500 tracking-widest mb-6 uppercase">Tap a size to order</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {product.dimensions.map((dim) => (
-                      <div 
+                      <button
                         key={dim.id}
-                        className="bg-white text-black py-2.5 px-4 rounded-full text-center text-xs font-bold tracking-widest hover:bg-gray-200 transition cursor-default"
+                        onClick={() => window.dispatchEvent(new Event("openContactPopup"))}
+                        className="bg-white text-black py-2.5 px-4 rounded-full text-center text-xs font-bold tracking-widest hover:bg-accent-teal hover:text-black transition-all duration-300 cursor-pointer active:scale-95"
                       >
                         {dim.size} x {dim.width} x {dim.thickness} {dim.volume ? `${dim.volume}` : ''}
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>

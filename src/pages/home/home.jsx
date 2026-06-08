@@ -1,8 +1,8 @@
-import useDocumentTitle from '../../hooks/useDocumentTitle';
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { getDisplayImage } from "../../utils/productImage";
-import Rectangle94 from '../../assets/Rectangle94.webp';
+import Rectangle94 from "../../assets/Rectangle94.webp";
 import {
   motion,
   useScroll,
@@ -10,22 +10,25 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import videoLandingPage from "../../assets/videoLandingPage.mp4";
-import meetTheRiders from '../../assets/meetTheRiders.webp';
-import lovedCustomer from '../../assets/LovedHome.webp';
-import customresinTint from '../../assets/customresinTint.webp';
-import smallWavesImg from '../../assets/small.webp';
-import mediumWavesImg from '../../assets/medium.webp';
-import bigWavesImg from '../../assets/big.webp';
-import categoryAdvance from '../../assets/CategoryAdvance.webp';
-import categoryIntermediate from '../../assets/CategoryIntermediate.webp';
-import categoryBeginner from '../../assets/CategoryBeginner.webp';
-import categoryGroms from '../../assets/CategoryGroms.webp';
-import aboutUsImg from '../../assets/aboutUs.webp';
+import meetTheRiders from "../../assets/meetTheRiders.webp";
+import lovedCustomer from "../../assets/LovedHome.webp";
+import customresinTint from "../../assets/customresinTint.webp";
+import smallWavesImg from "../../assets/small.webp";
+import mediumWavesImg from "../../assets/medium.webp";
+import bigWavesImg from "../../assets/big.webp";
+import categoryAdvance from "../../assets/CategoryAdvance.webp";
+import categoryIntermediate from "../../assets/CategoryIntermediate.webp";
+import categoryBeginner from "../../assets/CategoryBeginner.webp";
+import categoryGroms from "../../assets/CategoryGroms.webp";
+import aboutUsImg from "../../assets/aboutUs.webp";
 import CTAPopup from "../../components/CTAPopup";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import { newReleaseService } from "../../api/newReleases";
 import { productService } from "../../api/products";
 import { featuredService } from "../../api/featured";
 import { storeReviewService } from "../../api/storeReviews";
+import { heroService } from "../../api/hero";
+import toast from "react-hot-toast";
 
 const FadeUp = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -47,7 +50,7 @@ const Container = ({ children, className = "" }) => (
 );
 
 export default function Home() {
-  useDocumentTitle('Home | FreePigMovement');
+  useDocumentTitle("Home | FreePigMovement");
   const newReleaseRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: newReleaseRef,
@@ -60,6 +63,7 @@ export default function Home() {
   const [newRelease, setNewRelease] = useState(null);
   const [surfboards, setSurfboards] = useState([]);
   const [surfboardsLoading, setSurfboardsLoading] = useState(true);
+  const [hero, setHero] = useState(null);
 
   // Store Reviews state
   const [reviews, setReviews] = useState([]);
@@ -79,6 +83,7 @@ export default function Home() {
   const [reviewSuccess, setReviewSuccess] = useState("");
   const [isEditMode, setIsEditMode] = useState(false); // editing own review
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [deleteReviewConfirmOpen, setDeleteReviewConfirmOpen] = useState(false);
 
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -107,6 +112,16 @@ export default function Home() {
       }
     };
     fetchRelease();
+
+    const fetchHero = async () => {
+      try {
+        const res = await heroService.getActive();
+        if (res?.data) setHero(res.data);
+      } catch (err) {
+        // fallback to static content
+      }
+    };
+    fetchHero();
   }, []);
 
   useEffect(() => {
@@ -181,18 +196,21 @@ export default function Home() {
           comment: reviewComment || undefined,
         });
         setReviewSuccess("Review updated successfully!");
+        toast.success("Review updated!");
       } else {
         await storeReviewService.create({
           rating: reviewRating,
           comment: reviewComment || undefined,
         });
         setReviewSuccess("Review submitted successfully!");
+        toast.success("Review submitted!");
       }
       setReviewRating(0);
       setReviewComment("");
       setIsEditMode(false);
       fetchStoreReviews();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to submit review.");
       setReviewError(err.response?.data?.message || "Failed to submit review.");
     } finally {
       setReviewSubmitting(false);
@@ -202,14 +220,19 @@ export default function Home() {
   // Delete own review
   const handleDeleteReview = async () => {
     if (!myReview) return;
-    if (!window.confirm("Delete your review?")) return;
+    setReviewSubmitting(true);
     try {
       await storeReviewService.delete(myReview.id);
       setMyReview(null);
       setHasReviewed(false);
+      toast.success("Review deleted.");
       fetchStoreReviews();
     } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete review.");
       setReviewError(err.response?.data?.message || "Failed to delete review.");
+    } finally {
+      setReviewSubmitting(false);
+      setDeleteReviewConfirmOpen(false);
     }
   };
 
@@ -312,7 +335,7 @@ export default function Home() {
       <section className="relative w-full h-screen flex flex-col justify-end pb-20 px-10 md:px-20 overflow-hidden">
         <div className="absolute inset-0 w-full h-full">
           <video
-            src={videoLandingPage}
+            src={hero?.videoUrl || videoLandingPage}
             autoPlay
             muted
             loop
@@ -330,13 +353,13 @@ export default function Home() {
           transition={{ duration: 0.9, ease: "easeOut" }}
         >
           <p className="text-[12px] md:text-[16px] font-bold tracking-[0.2em] uppercase text-gray-100 drop-shadow-md mb-2">
-            BUILD DIFFERENT, RIDE DIFFERENT
+            {hero?.subtitle || "BUILD DIFFERENT, RIDE DIFFERENT"}
           </p>
           <h1 className="font-oswald text-5xl md:text-[64px] font-bold tracking-tight text-white drop-shadow-xl leading-none mb-4">
-            RIDE YOUR OWN WAVE
+            {hero?.title || "RIDE YOUR OWN WAVE"}
           </h1>
           <p className="text-[15px] md:text-[18px] font-medium text-gray-300 drop-shadow-md mb-8">
-            Custom surfboards made for your identity.
+            {hero?.description || "Custom surfboards made for your identity."}
           </p>
           <motion.button
             onClick={() => window.dispatchEvent(new Event("openContactPopup"))}
@@ -561,20 +584,17 @@ export default function Home() {
                 {
                   title: "SMALL WAVES",
                   img: smallWavesImg,
-                  desc: "Longboards & Funboards",
-                  imgClass: "w-28 md:w-36",
+                  imgClass: "w-20 md:w-24",
                 },
                 {
                   title: "MEDIUM WAVES",
                   img: mediumWavesImg,
-                  desc: "Mid-Length & Fish",
-                  imgClass: "w-28 md:w-36",
+                  imgClass: "w-28 md:w-32",
                 },
                 {
                   title: "BIG WAVES",
                   img: bigWavesImg,
-                  desc: "Guns & Step-Ups",
-                  imgClass: "w-28 md:w-36",
+                  imgClass: "w-36 md:w-40",
                 },
               ].map((wave, idx) => (
                 <motion.div
@@ -800,13 +820,14 @@ export default function Home() {
                 Since 2001
               </p>
               <h2 className="font-oswald text-4xl md:text-5xl font-bold tracking-widest text-white mb-6 leading-tight">
-                MORE THAN JUST <br />A SURFBOARD
+                THE HIGHEST <br />
+                QUALITY GOODS
               </h2>
               <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
-                At Freepigmovement, we believe that every wave is unique, and
-                every surfer deserves a board built specifically for them. We
-                pour our passion and craftsmanship into every shape, combining
-                traditional techniques with modern innovations.
+                Every board we build carries a piece of Bali’s surfing heritage
+                and over two decades of raw dedication. No shortcuts, no
+                compromises—just pure handcrafted quality since 2001. buttonnya
+                ini [Discover Our Story]
                 <br />
                 <br />
                 Whether you're a beginner catching your first whitewash or a
@@ -928,7 +949,7 @@ export default function Home() {
                               EDIT
                             </button>
                             <button
-                              onClick={handleDeleteReview}
+                              onClick={() => setDeleteReviewConfirmOpen(true)}
                               className="px-2 py-1 text-[9px] font-bold tracking-widest border border-red-500/40 rounded-full text-red-400 hover:bg-red-500/10 transition"
                             >
                               DEL
@@ -1002,7 +1023,7 @@ export default function Home() {
                       EDIT REVIEW
                     </button>
                     <button
-                      onClick={handleDeleteReview}
+                      onClick={() => setDeleteReviewConfirmOpen(true)}
                       className="px-6 py-2.5 border border-red-500/40 rounded-full text-red-400 text-xs font-bold tracking-widest hover:bg-red-500/10 transition"
                     >
                       DELETE
@@ -1104,7 +1125,15 @@ export default function Home() {
           </FadeUp>
         </Container>
       </section>
+      <ConfirmationModal
+        isOpen={deleteReviewConfirmOpen}
+        onClose={() => setDeleteReviewConfirmOpen(false)}
+        onConfirm={handleDeleteReview}
+        title="DELETE REVIEW?"
+        message="Are you sure you want to delete your review? This action cannot be undone."
+        loading={reviewSubmitting}
+        loadingText="DELETING..."
+      />
     </div>
   );
-
 }

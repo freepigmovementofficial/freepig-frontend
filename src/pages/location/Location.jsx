@@ -1,9 +1,9 @@
-import useDocumentTitle from '../../hooks/useDocumentTitle';
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { useParams, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiMapPin, FiClock, FiPhone, FiGlobe } from "react-icons/fi";
-import headingImg from '../../assets/Heading.webp';
-
+import headingImg from "../../assets/Heading.webp";
+import { FaInstagram } from "react-icons/fa";
 const shopsData = {
   rpm: {
     name: "RPM Surf Shop",
@@ -39,7 +39,7 @@ const shopsData = {
 };
 
 export default function Location() {
-  useDocumentTitle('Location | FreePigMovement');
+  useDocumentTitle("Location | FreePigMovement");
   const { shopId } = useParams();
 
   const shop = shopsData[shopId];
@@ -130,7 +130,7 @@ export default function Location() {
               </div>
 
               <div className="flex items-start gap-4 group">
-                <FiGlobe className="text-white-teal text-2xl mt-0.5" />
+                <FaInstagram className="text-white-teal text-2xl mt-0.5" />
                 <div>
                   <h4 className="text-white font-bold tracking-widest uppercase mb-2">
                     Instagram
