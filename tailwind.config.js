@@ -9,9 +9,10 @@ export default {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
         oswald: ['Oswald', 'sans-serif'],
+        'road-rage': ['"Road Rage"', 'cursive'],
       },
       colors: {
-        'accent-teal': '#5ab9ea',
+        'accent-teal': '#4ADDDE',
       }
     },
   },

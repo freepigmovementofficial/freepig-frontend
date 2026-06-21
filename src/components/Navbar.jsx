@@ -121,20 +121,20 @@ export default function Navbar() {
       <ul className="hidden md:flex ml-auto items-center gap-14 text-xs font-semibold tracking-widest uppercase">
         <Link to="/store">
           <li
-            className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/store" ? "text-accent-teal border-accent-teal" : "text-gray-300 hover:text-white border-transparent hover:border-white/40"}`}
+            className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/store" ? "text-accent-teal border-accent-teal" : "text-white hover:text-white border-transparent hover:border-white/40"}`}
           >
             STORE
           </li>
         </Link>
         <li
           onClick={() => window.dispatchEvent(new Event('openContactPopup'))}
-          className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/custom" ? "text-accent-teal border-accent-teal" : "text-gray-300 hover:text-white border-transparent hover:border-white/40"}`}
+          className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/custom" ? "text-accent-teal border-accent-teal" : "text-white hover:text-white border-transparent hover:border-white/40"}`}
         >
           CUSTOM
         </li>
         <Link to="/volume">
           <li
-            className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/volume" ? "text-accent-teal border-accent-teal" : "text-gray-300 hover:text-white border-transparent hover:border-white/40"}`}
+            className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/volume" ? "text-accent-teal border-accent-teal" : "text-white hover:text-white border-transparent hover:border-white/40"}`}
           >
             VOLUME CALCULATE
           </li>
@@ -142,7 +142,7 @@ export default function Navbar() {
 
         {/* LOCATION WITH DROPDOWN */}
         <li
-          className={`relative group cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname.startsWith("/location") ? "text-accent-teal border-accent-teal" : "text-gray-300 hover:text-white border-transparent hover:border-white/40"}`}
+          className={`relative group cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname.startsWith("/location") ? "text-accent-teal border-accent-teal" : "text-white hover:text-white border-transparent hover:border-white/40"}`}
         >
           <div className="flex items-center gap-1">
             LOCATION
@@ -163,13 +163,13 @@ export default function Navbar() {
           <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-56 bg-[#1e1e1e]/95 backdrop-blur-xl border border-white/10 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden flex flex-col">
             <Link
               to="/location/rpm"
-              className={`block px-6 py-4 text-xs tracking-widest hover:text-accent-teal hover:bg-white/5 transition ${location.pathname === "/location/rpm" ? "text-accent-teal" : "text-gray-300"}`}
+              className={`block px-6 py-4 text-xs tracking-widest hover:text-accent-teal hover:bg-white/5 transition ${location.pathname === "/location/rpm" ? "text-accent-teal" : "text-white"}`}
             >
               RPM SURF SHOP
             </Link>
             <Link
               to="/location/pit"
-              className={`block px-6 py-4 text-xs tracking-widest hover:text-accent-teal hover:bg-white/5 transition border-t border-white/5 ${location.pathname === "/location/pit" ? "text-accent-teal" : "text-gray-300"}`}
+              className={`block px-6 py-4 text-xs tracking-widest hover:text-accent-teal hover:bg-white/5 transition border-t border-white/5 ${location.pathname === "/location/pit" ? "text-accent-teal" : "text-white"}`}
             >
               THE PIT SURF SHOP
             </Link>
@@ -178,14 +178,14 @@ export default function Navbar() {
 
         <Link to="/about">
           <li
-            className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/about" ? "text-accent-teal border-accent-teal" : "text-gray-300 hover:text-white border-transparent hover:border-white/40"}`}
+            className={`cursor-pointer pb-0.5 transition duration-300 border-b-2 ${location.pathname === "/about" ? "text-accent-teal border-accent-teal" : "text-white hover:text-white border-transparent hover:border-white/40"}`}
           >
             ABOUT US
           </li>
         </Link>
         {user ? (
           <li className="flex items-center gap-3">
-            <span className="text-gray-300 capitalize text-[10px] tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/10 hidden lg:inline-block">
+            <span className="text-white capitalize text-[10px] tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/10 hidden lg:inline-block">
               {user.name}
             </span>
             {user.role === "ADMIN" && (
@@ -242,7 +242,7 @@ export default function Navbar() {
         <Link
           to="/store"
           onClick={() => setIsMobileMenuOpen(false)}
-          className={`text-sm font-semibold tracking-widest uppercase transition duration-300 ${location.pathname === "/store" ? "text-accent-teal" : "text-gray-300 hover:text-white"}`}
+          className={`text-sm font-semibold tracking-widest uppercase transition duration-300 ${location.pathname === "/store" ? "text-accent-teal" : "text-white hover:text-white"}`}
         >
           STORE
         </Link>
@@ -251,14 +251,14 @@ export default function Navbar() {
             setIsMobileMenuOpen(false);
             window.dispatchEvent(new Event('openContactPopup'));
           }}
-          className={`text-sm font-semibold tracking-widest uppercase transition duration-300 ${location.pathname === "/custom" ? "text-accent-teal" : "text-gray-300 hover:text-white"}`}
+          className={`text-sm font-semibold tracking-widest uppercase transition duration-300 ${location.pathname === "/custom" ? "text-accent-teal" : "text-white hover:text-white"}`}
         >
           CUSTOM
         </button>
         <Link
           to="/volume"
           onClick={() => setIsMobileMenuOpen(false)}
-          className={`text-sm font-semibold tracking-widest uppercase transition duration-300 ${location.pathname === "/volume" ? "text-accent-teal" : "text-gray-300 hover:text-white"}`}
+          className={`text-sm font-semibold tracking-widest uppercase transition duration-300 ${location.pathname === "/volume" ? "text-accent-teal" : "text-white hover:text-white"}`}
         >
           VOLUME CALCULATE
         </Link>
@@ -266,7 +266,7 @@ export default function Navbar() {
         {/* MOBILE LOCATION WITH DROPDOWN */}
         <div className="flex flex-col items-center gap-4 w-full">
           <span
-            className={`text-sm font-semibold tracking-widest uppercase ${location.pathname.startsWith("/location") ? "text-accent-teal" : "text-gray-300"}`}
+            className={`text-sm font-semibold tracking-widest uppercase ${location.pathname.startsWith("/location") ? "text-accent-teal" : "text-white"}`}
           >
             LOCATION
           </span>
@@ -291,7 +291,7 @@ export default function Navbar() {
         <Link
           to="/about"
           onClick={() => setIsMobileMenuOpen(false)}
-          className={`text-sm font-semibold tracking-widest uppercase transition duration-300 ${location.pathname === "/about" ? "text-accent-teal" : "text-gray-300 hover:text-white"}`}
+          className={`text-sm font-semibold tracking-widest uppercase transition duration-300 ${location.pathname === "/about" ? "text-accent-teal" : "text-white hover:text-white"}`}
         >
           ABOUT US
         </Link>

@@ -1,6 +1,7 @@
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { FaChevronRight } from "react-icons/fa";
 import { getDisplayImage } from "../../utils/productImage";
 import Rectangle94 from "../../assets/Rectangle94.webp";
 import {
@@ -21,6 +22,11 @@ import categoryIntermediate from "../../assets/CategoryIntermediate.webp";
 import categoryBeginner from "../../assets/CategoryBeginner.webp";
 import categoryGroms from "../../assets/CategoryGroms.webp";
 import aboutUsImg from "../../assets/aboutUs.webp";
+import maskotBabi from "../../assets/maskotBabi.png";
+import bercakBercak from "../../assets/bercak-bercak.png";
+import bercakPembatas from "../../assets/bercakPembatas.png";
+import aksesoris2 from "../../assets/aksesoris2.png";
+import surfboard2 from "../../assets/surfboard2.png";
 import CTAPopup from "../../components/CTAPopup";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { newReleaseService } from "../../api/newReleases";
@@ -285,7 +291,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="bg-[#252525] min-h-screen font-poppins overflow-x-hidden text-white">
+    <div className="bg-[#000000] min-h-screen font-poppins overflow-x-hidden text-white">
       <CTAPopup isOpen={showPopup} onClose={() => setShowPopup(false)} />
 
       {/* LOGIN PROMPT POPUP */}
@@ -332,8 +338,12 @@ export default function Home() {
       </AnimatePresence>
 
       {/* HERO SECTION */}
-      <section className="relative w-full h-screen flex flex-col justify-end pb-20 px-10 md:px-20 overflow-hidden">
-        <div className="absolute inset-0 w-full h-full">
+      <section className="relative w-full h-screen flex flex-col justify-end pb-20 px-10 md:px-20 overflow-visible z-10">
+        {/* Video diperpanjang ke bawah sejauh 128px (seukuran mt-32) biar ngisi ruang kosong */}
+        <div
+          className="absolute top-0 left-0 w-full z-0"
+          style={{ height: "calc(100vh + 128px)" }}
+        >
           <video
             src={hero?.videoUrl || videoLandingPage}
             autoPlay
@@ -342,8 +352,20 @@ export default function Home() {
             playsInline
             className="w-full h-full object-cover object-top bg-cover"
           />
-          <div className="absolute inset-0 bg-black/20"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/40 to-transparent"></div>
+          {/* Efek Radial Gradient Figma: Pusat transparan di atas, gelap di bawah */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(150% 100% at 50% 0%, rgba(1, 14, 25, 0) 44%, rgba(1, 14, 25, 0.25) 68%, rgba(1, 14, 25, 1) 100%)",
+            }}
+          ></div>
+          {/* Efek tekstur bercak di batas bawah video */}
+          <img
+            src={bercakPembatas}
+            alt="Bercak pembatas video"
+            className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[55%]"
+          />
         </div>
 
         <motion.div
@@ -352,87 +374,183 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: "easeOut" }}
         >
-          <p className="text-[10px] md:text-[14px] font-bold tracking-[0.2em] uppercase text-gray-100 drop-shadow-md mb-2">
-            {hero?.subtitle || "BUILD DIFFERENT, RIDE DIFFERENT"}
-          </p>
-          <h1 className="font-oswald text-4xl md:text-5xl lg:text-[56px] font-bold tracking-tight text-white drop-shadow-xl leading-none mb-4">
-            {hero?.title || "RIDE YOUR OWN WAVE"}
+          {/* Stacked typographic hero title — layout matches Figma reference */}
+          <h1 className="font-road-rage text-white drop-shadow-xl tracking-wide leading-none mb-4">
+            {hero?.title && hero.title.toUpperCase() !== "RIDE YOUR OWN WAVE" ? (
+              <span className="text-5xl md:text-7xl lg:text-8xl break-words max-w-2xl">
+                {hero.title}
+              </span>
+            ) : (
+              <span className="relative flex flex-col items-start w-fit">
+                {/* RIDE */}
+                <span className="block whitespace-nowrap text-[110px] md:text-[145px] lg:text-[128px] leading-[0.75] ml-[20px] md:ml-[90px] lg:ml-[72px] relative z-20 lg:mb-[65px]">
+                  RIDE
+                </span>
+                {/* YOUR OWN */}
+                <span className="absolute whitespace-nowrap text-[42px] md:text-[55px] lg:text-[53px] leading-[1] left-[180px] md:left-[250px] lg:left-[158px] top-[75px] md:top-[100px] lg:top-[115px] z-30 drop-shadow-md">
+                  YOUR OWN
+                </span>
+                {/* W and AVE container */}
+                <span className="relative flex items-end -mt-[20px] md:-mt-[30px] lg:-mt-[40px] z-10">
+                  {/* W — rotated just like in Figma */}
+                  <span className="block text-[110px] md:text-[145px] lg:text-[200px] leading-[0.75] -rotate-[10deg] origin-bottom transform">
+                    W
+                  </span>
+                  {/* AVE */}
+                  <span className="block text-[110px] md:text-[145px] lg:text-[128px] leading-[0.75] ml-[10px] md:ml-[15px] lg:ml-[-30px] lg:mt-[60px]">
+                    AVE
+                  </span>
+                </span>
+              </span>
+            )}
           </h1>
-          <p className="text-sm md:text-base font-medium text-gray-300 drop-shadow-md mb-8">
-            {hero?.description || "Custom surfboards made for your identity."}
-          </p>
-          <motion.button
-            onClick={() => window.dispatchEvent(new Event("openContactPopup"))}
-            className="px-8 py-3.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[10px] md:text-[11px] font-bold tracking-[0.15em] uppercase"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            CUSTOMIZE NOW
-          </motion.button>
         </motion.div>
       </section>
 
       {/* BANNER SECTION */}
-      <section className="w-full bg-[#1a1a1a] py-20">
-        <Container className="flex flex-col items-center justify-center text-center">
-          <FadeUp>
-            <p className="text-sm md:text-base font-bold tracking-[0.4em] text-gray-400 mb-3">
-              FREEPIGMOVEMENT
-            </p>
-            <h2 className="font-oswald text-4xl md:text-6xl font-bold tracking-widest mb-6 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
-              PROUDLY LOCAL HAND CRAFTED
-            </h2>
-            <p className="text-gray-400 text-lg md:text-xl font-light tracking-wide">
-              The highest quality good since 2001
-            </p>
-          </FadeUp>
+      <section className="w-full py-28 mt-32 relative overflow-hidden">
+        <Container className="relative z-10">
+          <div className="flex flex-col items-center justify-center text-center w-full">
+            <FadeUp className="w-full">
+              <p className="text-[clamp(14px,2vw,20px)] text-[#4ADDDE] font-bold tracking-[0.4em] md:tracking-[0.5em] mb-1 md:mb-3 relative z-20">
+                FREEPIGMOVEMENT
+              </p>
+              <h2 className="font-road-rage text-[clamp(16px,3vw,48px)] tracking-wider md:tracking-widest mb-6 text-white whitespace-nowrap drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] relative z-20">
+                SHAPED WITH PASSION, SHARED WITH TRUST.
+              </h2>
+            </FadeUp>
+          </div>
         </Container>
       </section>
 
-      {/* ACCESSORIES & SURFBOARD SPLIT */}
-      <section className="w-full text-white mb-24">
-        <div className="flex flex-col md:flex-row h-auto md:h-[600px]">
-          {[
-            {
-              label: "ACCESSORIES",
-              img: "/Accessories.webp",
-              link: "/store?tab=accessories",
-            },
-            {
-              label: "SURFBOARD",
-              img: "/Surfboard.webp",
-              link: "/store?tab=surfboard",
-            },
-          ].map((item, idx) => (
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: idx * 0.2 }}
-              key={idx}
-              onClick={() => navigate(item.link)}
-              className="flex-1 relative group cursor-pointer overflow-hidden h-[400px] md:h-full"
-            >
-              {/* Background Image */}
-              <img
-                loading="lazy"
-                src={item.img}
-                alt={item.label}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
-              />
+      {/* ABOUT US PREVIEW */}
+      <section className="w-full relative -mt-16 mb-32 z-10">
+        {/* Background biru yang ukurannya dipotong atas-bawah biar fotonya nembus */}
+        <div className="absolute top-14 bottom-[-40px] left-0 w-full bg-[#1A2127] z-0"></div>
 
-              {/* Overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
+        {/* Bercak background dipindah ke mari biar bisa nembus ke atas persis kayak maskot */}
+        <img
+          src={bercakBercak}
+          alt="Bercak background"
+          className="absolute -top-64 md:-top-96 left-0 w-[400px] md:w-[600px] opacity-60 pointer-events-none z-[5]"
+        />
 
-              {/* Label */}
-              <div className="absolute inset-0 flex flex-col justify-end items-center pb-12 md:pb-16">
-                <h3 className="relative z-10 font-oswald text-4xl md:text-5xl font-black tracking-[0.2em] text-white group-hover:text-accent-teal transition duration-500 drop-shadow-2xl">
-                  {item.label}
-                </h3>
+        {/* Mascot watermark ditarik ke sini biar bisa nembus ke atas kotak biru */}
+        <img
+          src={maskotBabi}
+          alt="Maskot Babi"
+          className="absolute -top-64 md:-top-96 -right-[5%] w-[350px] md:w-[500px] lg:w-[420px] opacity-90 pointer-events-none z-[5]"
+        />
+
+        <Container className="relative z-10">
+          <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-16 py-4">
+            {/* IMAGE SIDE */}
+            <div className="w-full md:w-1/2 relative z-20">
+              <div className="w-full max-w-[644px] h-[400px] md:h-[550px] mx-auto rounded-[32px] overflow-hidden border border-[#4ADDDE] relative group shadow-2xl bg-black">
+                <img
+                  loading="lazy"
+                  src={aboutUsImg}
+                  alt="About Freepigmovement"
+                  className="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-[1.5s] ease-out group-hover:scale-105 group-hover:grayscale-0"
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-500"></div>
               </div>
-            </motion.div>
-          ))}
-        </div>
+            </div>
+
+            {/* TEXT SIDE */}
+            <div className="w-full md:w-1/2 flex flex-col justify-center py-4 relative z-30">
+              <FadeUp>
+                <div className="relative md:-ml-16 lg:-ml-28 pointer-events-none -rotate-[5deg] origin-left">
+                  <div className="mb-5 md:ml-16 lg:ml-[80px]">
+                    <h4 className="font-road-rage text-[24px] text-[#4ADDDE] tracking-widest drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] inline-block">
+                      SINCE 2001
+                    </h4>
+                  </div>
+                  <h2 className="font-road-rage text-6xl md:text-7xl lg:text-[70px] tracking-wide text-white mb-8 leading-[0.85] uppercase drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)]">
+                    THE HIGHEST <br />
+                    QUALITY <span className="text-[#4ADDDE]">GOODS</span>
+                  </h2>
+                </div>
+
+                <p className="text-gray-200 text-sm md:text-lg leading-relaxed mb-10 font-poppins lg:ml-[-30px]">
+                  Every board we build carries a piece of Bali’s surfing
+                  heritage and over two decades of raw dedication. No shortcuts,
+                  no compromises—just pure handcrafted quality since 2001.
+                </p>
+                <p className="text-gray-200 text-sm md:text-lg leading-relaxed mb-8 font-poppins lg:ml-[-30px]">
+                  Whether you're a beginner catching your first whitewash or a
+                  seasoned pro chasing barrels, we don't just shape boards—we
+                  craft experiences.
+                </p>
+                <div className="w-full flex justify-end">
+                  <motion.button
+                    onClick={() => navigate("/about")}
+                    className="text-white text-[15px] font-road-rage tracking-widest hover:text-accent-teal transition duration-300 flex items-center gap-1"
+                    whileHover={{ x: 5 }}
+                  >
+                    DISCOVER OUR STORY{" "}
+                    <FaChevronRight className="text-accent-teal text-[15px]" />
+                  </motion.button>
+                </div>
+              </FadeUp>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ACCESSORIES & SURFBOARD CARDS */}
+      <section className="w-full text-white mb-24 mt-10 md:mt-20">
+        <Container>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+            {[
+              {
+                label: "ACCESSORIES",
+                img: aksesoris2,
+                link: "/store?tab=accessories",
+              },
+              {
+                label: "SURFBOARD",
+                img: surfboard2,
+                link: "/store?tab=surfboard",
+              },
+            ].map((item, idx) => (
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: idx * 0.2 }}
+                key={idx}
+                onClick={() => navigate(item.link)}
+                className="relative group cursor-pointer overflow-hidden rounded-[20px] border border-[#4ADDDE]/60 hover:border-[#4ADDDE] h-[400px] md:h-[550px] transition-colors duration-500"
+              >
+                {/* Background Image */}
+                <img
+                  loading="lazy"
+                  src={item.img}
+                  alt={item.label}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                />
+
+                {/* Overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+
+                {/* Efek tekstur bercak di batas bawah card */}
+                <img
+                  src={bercakPembatas}
+                  alt="Bercak pembatas card"
+                  className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-[5] mix-blend-normal opacity-80"
+                />
+
+                {/* Label (Bottom Left) */}
+                <div className="absolute inset-x-0 bottom-0 px-8 pb-10 md:px-12 md:pb-14 flex items-end">
+                  <h3 className="relative z-10 font-road-rage text-[40px] tracking-widest text-white group-hover:text-accent-teal transition duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+                    {item.label}
+                  </h3>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </Container>
       </section>
 
       {/* NEW RELEASE SECTION — Full Frame */}
@@ -454,20 +572,49 @@ export default function Home() {
             className="w-full h-full object-cover"
           />
         </motion.div>
-        <div className="absolute inset-0 bg-black/60"></div>
+
+        {/* Base dark overlay */}
+        <div className="absolute inset-0 bg-black/10"></div>
+
+        {/* Shadow Kanan Atas (Hanya fokus di pojok) */}
+        <div
+          className="absolute inset-0 pointer-events-none z-[2]"
+          style={{
+            background:
+              "radial-gradient(circle at top right, rgba(0,0,0,0.85) 0%, transparent 50%)",
+          }}
+        ></div>
+
+        {/* Shadow Bawah Kiri (Hanya fokus di pojok) */}
+        <div
+          className="absolute inset-0 pointer-events-none z-[2]"
+          style={{
+            background:
+              "radial-gradient(circle at bottom left, rgba(0,0,0,0.85) 0%, transparent 60%)",
+          }}
+        ></div>
+
+        {/* Shadow Bawah Sedikit */}
+        <div
+          className="absolute inset-0 pointer-events-none z-[2]"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 25%)",
+          }}
+        ></div>
         {/* Top gradient transition to blend with background */}
-        <div className="absolute top-0 left-0 w-full h-32 md:h-48 bg-gradient-to-b from-[#252525] to-transparent pointer-events-none"></div>
+        <div className="absolute top-0 left-0 w-full h-32 md:h-48 bg-gradient-to-b from-[#0A0F13] to-transparent pointer-events-none z-[5]"></div>
 
         {/* LEFT — Text content */}
-        <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center px-8 md:px-14 lg:px-20 py-24 md:py-0">
-          <FadeUp className="flex flex-col items-start gap-6 text-white">
-            <h2 className="font-oswald text-6xl md:text-8xl font-bold leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">
+        <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center px-8 md:px-14 lg:px-20 py-32 md:py-32">
+          <FadeUp className="flex flex-col items-start gap-4 text-white">
+            <h2 className="font-road-rage text-6xl md:text-8xl lg:text-[110px] leading-[0.9] text-white tracking-widest -rotate-[6deg] origin-left drop-shadow-md">
               NEW
               <br />
               RELEASE
             </h2>
-            <div className="mt-4">
-              <h3 className="font-oswald text-3xl font-bold mb-3 text-white-teal tracking-widest">
+            <div className="mt-8">
+              <h3 className="font-sans font-black text-2xl md:text-3xl mb-3 text-[#4ADDDE] tracking-wide">
                 {newRelease?.title || "THE ROOSTER"}
               </h3>
               <p className="text-gray-300 text-sm md:text-base leading-relaxed max-w-lg">
@@ -497,7 +644,7 @@ export default function Home() {
         {newRelease?.images?.length > 0 && (
           <FadeUp
             delay={0.2}
-            className="relative w-full md:w-1/2 min-h-[60vh] md:min-h-0"
+            className="relative z-10 w-full md:w-1/2 min-h-[60vh] md:min-h-0"
           >
             {newRelease.images.length === 1 ? (
               /* Single image — full height, no crop */
@@ -531,7 +678,7 @@ export default function Home() {
       <section className="w-full bg-[#1a1a1a] py-24">
         <Container>
           <FadeUp>
-            <h3 className="font-oswald text-3xl font-bold tracking-[0.3em] text-gray-400 uppercase text-center mb-12">
+            <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-gray-400 uppercase text-center mb-12">
               find your level
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -561,7 +708,7 @@ export default function Home() {
                     />
                   </div>
                   <div className="bg-[#1f1f1f] border-t border-[#333] w-full py-5 text-center group-hover:bg-[#2a2a2a] transition duration-500">
-                    <h4 className="font-oswald text-xs sm:text-sm md:text-xl font-bold tracking-[0.1em] md:tracking-[0.2em] text-gray-200 group-hover:text-accent-teal transition">
+                    <h4 className="font-road-rage text-sm sm:text-base md:text-2xl tracking-wide text-gray-200 group-hover:text-accent-teal transition">
                       {level.title}
                     </h4>
                   </div>
@@ -576,7 +723,7 @@ export default function Home() {
       <section className="w-full bg-[#1a1a1a] py-24">
         <Container>
           <FadeUp>
-            <h3 className="font-oswald text-3xl font-bold tracking-[0.3em] text-gray-400 uppercase text-center mb-12">
+            <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-gray-400 uppercase text-center mb-12">
               find your wave
             </h3>
             <div className="flex flex-col md:flex-row justify-center items-center md:items-end gap-12 md:gap-24 text-center mt-12">
@@ -617,7 +764,7 @@ export default function Home() {
                     />
                   </div>
                   <div className="bg-[#1f1f1f] border-t border-[#333] w-full py-5 text-center group-hover:bg-[#2a2a2a] transition duration-500 flex flex-col items-center justify-center min-h-[80px]">
-                    <h4 className="font-oswald text-sm md:text-base font-bold tracking-[0.15em] text-gray-200 group-hover:text-accent-teal transition uppercase">
+                    <h4 className="font-road-rage text-base md:text-xl tracking-wide text-gray-200 group-hover:text-accent-teal transition uppercase">
                       {wave.title}
                     </h4>
                   </div>
@@ -632,7 +779,7 @@ export default function Home() {
       <section className="w-full bg-[#151515] py-24">
         <Container>
           <FadeUp className="flex flex-wrap items-center justify-between gap-3 mb-12">
-            <h3 className="font-oswald text-3xl sm:text-4xl font-bold tracking-widest">
+            <h3 className="font-road-rage text-4xl sm:text-5xl tracking-wide">
               SURFBOARDS
             </h3>
             <p
@@ -691,7 +838,7 @@ export default function Home() {
                         <p className="text-[9px] text-gray-400 tracking-[0.18em] uppercase mb-0.5 font-semibold">
                           {category}
                         </p>
-                        <p className="font-oswald text-sm font-bold tracking-wider uppercase text-white group-hover:text-accent-teal transition duration-300">
+                        <p className="font-road-rage text-base tracking-wide uppercase text-white group-hover:text-accent-teal transition duration-300">
                           {product.name}
                         </p>
                       </div>
@@ -751,7 +898,7 @@ export default function Home() {
                 <span className="font-poppins text-lg md:text-xl font-medium tracking-wide text-white drop-shadow-md">
                   {item.topTitle}
                 </span>
-                <h3 className="font-oswald text-4xl md:text-5xl font-bold tracking-widest leading-none text-white drop-shadow-lg transition duration-300">
+                <h3 className="font-road-rage text-5xl md:text-6xl tracking-wide leading-none text-white drop-shadow-lg transition duration-300">
                   {item.bottomTitle}
                 </h3>
               </div>
@@ -765,7 +912,7 @@ export default function Home() {
         <Container>
           <div className="flex flex-col md:flex-row gap-16 border-t border-b border-gray-700 py-16">
             <FadeUp className="w-full md:w-1/3">
-              <h2 className="font-oswald text-4xl md:text-5xl font-bold tracking-wide leading-tight">
+              <h2 className="font-road-rage text-5xl md:text-6xl tracking-wide leading-tight">
                 Frequently Asked Questions
               </h2>
               <div className="w-12 h-1 bg-accent-teal mt-4"></div>
@@ -809,60 +956,13 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* ABOUT US PREVIEW */}
-      <section className="w-full bg-[#111]">
-        <div className="flex flex-col md:flex-row w-full h-auto md:h-[600px]">
-          {/* TEXT SIDE */}
-          <div className="w-full md:w-1/2 flex flex-col justify-center px-10 md:px-20 lg:px-32 py-20 bg-[#1c1c1c]">
-            <FadeUp>
-              <p className="text-accent-teal text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-4">
-                Since 2001
-              </p>
-              <h2 className="font-oswald text-4xl md:text-5xl font-bold tracking-widest text-white mb-6 leading-tight">
-                THE HIGHEST <br />
-                QUALITY GOODS
-              </h2>
-              <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
-                Every board we build carries a piece of Bali’s surfing heritage
-                and over two decades of raw dedication. No shortcuts, no
-                compromises—just pure handcrafted quality since 2001.
-                <br />
-                <br />
-                Whether you're a beginner catching your first whitewash or a
-                seasoned pro chasing barrels, we don't just shape boards—we
-                craft experiences.
-              </p>
-              <motion.button
-                onClick={() => navigate("/about")}
-                className="px-8 py-3.5 border border-white text-white text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-black transition duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                DISCOVER OUR STORY
-              </motion.button>
-            </FadeUp>
-          </div>
-
-          {/* IMAGE SIDE */}
-          <div className="w-full md:w-1/2 h-[400px] md:h-full relative overflow-hidden group">
-            <img
-              loading="lazy"
-              src={aboutUsImg}
-              alt="About Freepigmovement"
-              className="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-[1.5s] ease-out group-hover:scale-105 group-hover:grayscale-0"
-            />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-500"></div>
-          </div>
-        </div>
-      </section>
-
       {/* CUSTOMER REVIEWS SECTION */}
       <section className="w-full bg-[#151515] py-24">
         <Container>
           <FadeUp>
             {/* Header + rating summary */}
             <div className="text-center mb-16">
-              <h2 className="font-oswald text-4xl md:text-5xl font-bold tracking-widest text-white mb-3">
+              <h2 className="font-road-rage text-5xl md:text-6xl tracking-wide text-white mb-3">
                 Voices From The Lineup
               </h2>
               <p className="text-gray-400 text-sm tracking-widest mb-6">
@@ -992,7 +1092,7 @@ export default function Home() {
           {/* RATE & REVIEW FORM */}
           <FadeUp delay={0.2}>
             <div className="mt-20 max-w-lg mx-auto">
-              <h3 className="font-oswald text-3xl font-bold tracking-widest text-white text-center mb-2">
+              <h3 className="font-road-rage text-4xl tracking-wide text-white text-center mb-2">
                 {isEditMode ? "Edit Your Review" : "Rate & Review"}
               </h3>
               <p className="text-gray-500 text-xs tracking-widest text-center mb-8">
