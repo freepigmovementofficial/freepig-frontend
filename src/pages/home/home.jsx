@@ -617,7 +617,7 @@ export default function Home() {
         {/* LEFT — Text content */}
         <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center px-8 md:px-[70px] py-32 md:py-32">
           <FadeUp className="flex flex-col items-start gap-4 text-white">
-            <h2 className="font-road-rage text-6xl md:text-8xl lg:text-[110px] leading-[0.9] text-white tracking-widest -rotate-[6deg] origin-left drop-shadow-md">
+            <h2 className="font-road-rage text-5xl md:text-7xl lg:text-[100px] leading-[0.9] text-white tracking-widest -rotate-[6deg] origin-left drop-shadow-md">
               NEW
               <br />
               RELEASE

@@ -35,7 +35,6 @@ export default function About() {
         className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-hidden"
         style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
       >
-
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -63,7 +62,7 @@ export default function About() {
       </div>
 
       {/* ── STATS BAR ── */}
-      <div className="bg-[#1a1a1a] border-b border-white/5">
+      <div className="border-b border-white/5">
         <div className="w-full mx-auto px-6 md:px-[70px] py-12 grid grid-cols-1 md:grid-cols-3 gap-[20px]">
           {stats.map((s, i) => (
             <FadeUp key={i} delay={i * 0.1} className="text-center">
@@ -89,7 +88,7 @@ export default function About() {
 
         {/* ── HEADING ── */}
         <FadeUp delay={0.1} className="text-center mb-16 md:mb-24">
-          <h2 className="font-oswald text-4xl md:text-6xl lg:text-[76px] font-black leading-[1.1] text-white uppercase tracking-wide">
+          <h2 className="font-road-rage text-5xl md:text-7xl lg:text-[80px] leading-[0.9] text-white uppercase tracking-wide drop-shadow-md">
             BORN FROM THE OCEAN, <br className="hidden md:block" /> BUILT BY
             HAND.
           </h2>
