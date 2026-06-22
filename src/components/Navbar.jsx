@@ -237,7 +237,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="absolute top-full left-0 w-full bg-[#1e1e1e]/98 backdrop-blur-2xl flex flex-col items-center py-8 gap-8 md:hidden border-t border-white/10 shadow-2xl"
+            className="absolute top-full left-0 w-full h-screen bg-black flex flex-col items-center pt-10 pb-40 gap-8 md:hidden border-t border-white/10 shadow-2xl overflow-y-auto"
           >
         <Link
           to="/store"

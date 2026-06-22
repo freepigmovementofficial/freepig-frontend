@@ -37,11 +37,12 @@ import { productService } from "../../api/products";
 import { featuredService } from "../../api/featured";
 import { storeReviewService } from "../../api/storeReviews";
 import { heroService } from "../../api/hero";
+import { wallMagazineService } from "../../api/wallMagazine";
 import toast from "react-hot-toast";
 
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(
-    typeof window !== "undefined" ? window.innerWidth < 768 : false
+    typeof window !== "undefined" ? window.innerWidth < 768 : false,
   );
 
   useEffect(() => {
@@ -93,6 +94,7 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [newRelease, setNewRelease] = useState(null);
+  const [wallMagazine, setWallMagazine] = useState(null);
   const [surfboards, setSurfboards] = useState([]);
   const [surfboardsLoading, setSurfboardsLoading] = useState(true);
   const [hero, setHero] = useState(null);
@@ -154,6 +156,16 @@ export default function Home() {
       }
     };
     fetchHero();
+
+    const fetchWallMagazine = async () => {
+      try {
+        const res = await wallMagazineService.getActive();
+        if (res?.data) setWallMagazine(res.data);
+      } catch (err) {
+        // fallback to null
+      }
+    };
+    fetchWallMagazine();
   }, []);
 
   useEffect(() => {
@@ -447,7 +459,7 @@ export default function Home() {
               <p className="text-[clamp(14px,2vw,20px)] text-[#4ADDDE] font-bold tracking-[0.4em] md:tracking-[0.5em] mb-1 md:mb-3 relative z-20">
                 FREEPIGMOVEMENT
               </p>
-              <h2 className="font-road-rage text-[clamp(16px,3vw,48px)] tracking-wider md:tracking-widest mb-6 text-white whitespace-nowrap drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] relative z-20">
+              <h2 className="font-road-rage text-[clamp(20px,5vw,48px)] tracking-wider md:tracking-widest mb-6 text-white whitespace-normal md:whitespace-nowrap drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] relative z-20">
                 SHAPED WITH PASSION, SHARED WITH TRUST.
               </h2>
             </FadeUp>
@@ -575,7 +587,7 @@ export default function Home() {
 
                 {/* Label (Bottom Left) */}
                 <div className="absolute inset-x-0 bottom-0 px-8 pb-10 md:px-12 md:pb-14 flex items-end">
-                  <h3 className="relative z-10 font-road-rage text-[40px] tracking-widest text-white group-hover:text-accent-teal transition duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+                  <h3 className="relative z-10 font-road-rage text-[clamp(28px,8vw,40px)] tracking-widest text-white group-hover:text-accent-teal transition duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
                     {item.label}
                   </h3>
                 </div>
@@ -639,13 +651,20 @@ export default function Home() {
 
         {/* LEFT — Text content */}
         <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center px-8 md:px-[70px] py-32 md:py-32">
-          <FadeUp className="flex flex-col items-start gap-4 text-white">
+          {newRelease?.logoUrl && (
+            <img
+              src={newRelease.logoUrl}
+              alt="New Release Logo"
+              className="absolute top-[10%] md:top-[5%] left-[30%] md:left-[37%] w-[155px] md:w-[280px] opacity-90 pointer-events-none z-[1]"
+            />
+          )}
+          <FadeUp className="flex flex-col items-start gap-4 text-white relative z-10">
             <h2 className="font-road-rage text-5xl md:text-7xl lg:text-[100px] leading-[0.9] text-white tracking-widest -rotate-[6deg] origin-left drop-shadow-md">
               NEW
               <br />
               RELEASE
             </h2>
-            <div className="mt-8">
+            <div className="mt-8 relative z-10">
               <h3 className="font-sans font-black text-2xl md:text-3xl mb-3 text-[#4ADDDE] tracking-wide">
                 {newRelease?.title || "THE ROOSTER"}
               </h3>
@@ -783,17 +802,17 @@ export default function Home() {
                 {
                   title: "SMALL WAVES",
                   img: smallWavesImg,
-                  imgClass: "w-28 md:w-36 lg:w-44",
+                  imgClass: "w-40 md:w-44 lg:w-48",
                 },
                 {
                   title: "MEDIUM WAVES",
                   img: mediumWavesImg,
-                  imgClass: "w-28 md:w-36 lg:w-44",
+                  imgClass: "w-40 md:w-44 lg:w-48",
                 },
                 {
                   title: "BIG WAVES",
                   img: bigWavesImg,
-                  imgClass: "w-28 md:w-36 lg:w-44",
+                  imgClass: "w-40 md:w-44 lg:w-48",
                 },
               ].map((wave, idx) => (
                 <motion.div
@@ -984,6 +1003,72 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* WALL MAGAZINE SECTION */}
+      {wallMagazine && (
+        <section className="w-full relative -mt-8 mb-24 z-10">
+          {/* Background yang ukurannya dipotong atas-bawah biar fotonya nembus */}
+          <div className="absolute top-14 bottom-[-40px] left-0 w-full bg-[#1A2127] z-0 border-t border-b border-white/5"></div>
+
+          <Container className="relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-16 py-4">
+              {/* TEXT SIDE */}
+              <div className="w-full md:w-1/2 flex flex-col justify-center py-4 relative z-30 order-2 md:order-1">
+                <FadeUp>
+                  <div className="relative pointer-events-none -rotate-[3deg] origin-left mb-6">
+                    <span className="relative flex flex-col items-start w-fit">
+                      <span className="block font-road-rage whitespace-nowrap text-[#4ADDDD] text-[70px] leading-[0.75] relative z-20 drop-shadow-md">
+                        {wallMagazine.title}
+                      </span>
+                      {/* Efek Garis Brush Putih */}
+                      {/* <img
+                        src={bercakPembatas}
+                        alt=""
+                        className="absolute -bottom-6 left-0 w-[110%] min-w-[300px] h-10 object-cover z-10 pointer-events-none opacity-90 brightness-200"
+                        style={{ filter: "brightness(0) invert(1)" }}
+                      /> */}
+                    </span>
+                  </div>
+
+                  {/* Add top margin to push description down since title is absolute/overlapping */}
+                  <div className="mt-8 md:mt-12 text-gray-200 text-sm md:text-base leading-relaxed mb-10 font-poppins whitespace-pre-wrap max-w-xl">
+                    {wallMagazine.description}
+                  </div>
+                  {wallMagazine.buttonText && wallMagazine.buttonLink && (
+                    <div className="w-full">
+                      <motion.a
+                        href={wallMagazine.buttonLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 border border-[#4ADDDE] rounded-full text-[#4ADDDE] text-xs font-bold tracking-widest hover:bg-[#4ADDDE] hover:text-black transition duration-300"
+                        whileHover={{ x: 5 }}
+                      >
+                        {wallMagazine.buttonText.toUpperCase()}{" "}
+                        <FaChevronRight className="text-[10px]" />
+                      </motion.a>
+                    </div>
+                  )}
+                </FadeUp>
+              </div>
+
+              {/* IMAGE SIDE */}
+              <div className="w-full md:w-1/2 relative z-20 order-1 md:order-2 mt-8 md:mt-0">
+                <FadeUp>
+                  <div className="w-full max-w-[644px] h-[400px] md:h-[500px] mx-auto rounded-[32px] overflow-hidden border border-[#4ADDDE] relative group shadow-2xl bg-black">
+                    <img
+                      loading="lazy"
+                      src={wallMagazine.imageUrl}
+                      alt={wallMagazine.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-500"></div>
+                  </div>
+                </FadeUp>
+              </div>
+            </div>
+          </Container>
+        </section>
+      )}
 
       {/* FAQ SECTION */}
       <section className="w-full pt-32 pb-12">

@@ -41,4 +41,10 @@ export const newReleaseService = {
     const response = await api.delete(`/new-releases/${id}/images/${imageId}`);
     return response.data;
   },
+  uploadLogo: async (id, formData) => {
+    const response = await api.post(`/new-releases/${id}/logo`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
 };

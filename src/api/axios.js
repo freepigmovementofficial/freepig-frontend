@@ -1,5 +1,7 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
+let isRateLimitToastShowing = false;
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   headers: {
@@ -32,6 +34,20 @@ api.interceptors.response.use(
       localStorage.removeItem('user');
       window.location.href = '/login?expired=true';
     }
+
+    // Handle 429 Too Many Requests globally
+    if (error.response && error.response.status === 429) {
+      if (!isRateLimitToastShowing) {
+        isRateLimitToastShowing = true;
+        toast.error('Trafik server sedang tinggi. Mohon tunggu sebentar...', {
+          duration: 5000,
+        });
+        setTimeout(() => {
+          isRateLimitToastShowing = false;
+        }, 5000);
+      }
+    }
+
     return Promise.reject(error);
   }
 );

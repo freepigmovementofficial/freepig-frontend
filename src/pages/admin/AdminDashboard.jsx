@@ -18,6 +18,7 @@ import {
   FiUsers,
   FiVideo,
   FiDatabase,
+  FiFileText,
 } from "react-icons/fi";
 import { productService } from "../../api/products";
 import { adminService } from "../../api/admin";
@@ -29,6 +30,7 @@ import { galleryService } from "../../api/gallery";
 import { testimonialsService } from "../../api/testimonials";
 import { riderService } from "../../api/riders";
 import { heroService } from "../../api/hero";
+import { wallMagazineService } from "../../api/wallMagazine";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import PigLoader from "../../components/PigLoader";
@@ -2095,11 +2097,13 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
   const [error, setError] = useState("");
   const [videoFile, setVideoFile] = useState(null);
   const [imageFiles, setImageFiles] = useState([]);
+  const [logoFile, setLogoFile] = useState(null);
   const [imageToDelete, setImageToDelete] = useState(null);
 
   useEffect(() => {
     setVideoFile(null);
     setImageFiles([]);
+    setLogoFile(null);
     setError("");
   }, [open]);
 
@@ -2142,6 +2146,26 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to upload images.");
       setError(err.response?.data?.message || "Failed to upload images.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUploadLogo = async (e) => {
+    e.preventDefault();
+    if (!logoFile) return;
+    setLoading(true);
+    setError("");
+    const formData = new FormData();
+    formData.append("logo", logoFile);
+    try {
+      await newReleaseService.uploadLogo(release.id, formData);
+      setLogoFile(null);
+      toast.success("Logo uploaded successfully!");
+      onSaved();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to upload logo.");
+      setError(err.response?.data?.message || "Failed to upload logo.");
     } finally {
       setLoading(false);
     }
@@ -2237,6 +2261,45 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
                   className="px-4 py-2 bg-accent-teal text-black rounded-full text-xs font-bold tracking-widest hover:bg-accent-teal/80 transition disabled:opacity-50"
                 >
                   UPLOAD VIDEO
+                </button>
+              </form>
+            </div>
+
+            {/* Logo Section */}
+            <div className="border border-gray-700 rounded-xl p-5 bg-[#222]">
+              <h3 className="text-sm font-bold text-gray-300 tracking-widest uppercase mb-4">
+                Release Logo
+              </h3>
+              {release.logoUrl ? (
+                <div className="mb-4 rounded overflow-hidden border border-gray-600 bg-black max-h-48 flex justify-center p-4 relative group">
+                  <img
+                    src={release.logoUrl}
+                    alt="Release Logo"
+                    className="h-32 object-contain"
+                  />
+                  {/* The API doesn't have a distinct delete logo route but uploading a new one replaces it. So no delete button is needed, or we just rely on uploading a new one. */}
+                </div>
+              ) : (
+                <p className="text-xs text-gray-500 mb-4">
+                  No logo uploaded yet.
+                </p>
+              )}
+              <form
+                onSubmit={handleUploadLogo}
+                className="flex items-center gap-3"
+              >
+                <input
+                  type="file"
+                  accept="image/png,image/webp"
+                  onChange={(e) => setLogoFile(e.target.files[0])}
+                  className="flex-1 text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-white/10 file:text-white hover:file:bg-white/20 transition"
+                />
+                <button
+                  type="submit"
+                  disabled={!logoFile || loading}
+                  className="px-4 py-2 bg-accent-teal text-black rounded-full text-xs font-bold tracking-widest hover:bg-accent-teal/80 transition disabled:opacity-50"
+                >
+                  UPLOAD LOGO
                 </button>
               </form>
             </div>
@@ -2511,6 +2574,436 @@ function NewReleasesTable() {
                       <button
                         onClick={() => {
                           setEditRelease(r);
+                          setModalOpen(true);
+                        }}
+                        className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition"
+                      >
+                        EDIT
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirm(r.id)}
+                        className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition"
+                      >
+                        DELETE
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Wall Magazine Form Modal ───────────────────────────────────────────────
+function WallMagazineFormModal({ open, onClose, magazine, onSaved }) {
+  const isEdit = !!magazine;
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    buttonText: "",
+    buttonLink: "",
+    isActive: false,
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (magazine) {
+      setForm({
+        title: magazine.title || "",
+        description: magazine.description || "",
+        buttonText: magazine.buttonText || "",
+        buttonLink: magazine.buttonLink || "",
+        isActive: magazine.isActive || false,
+      });
+    } else {
+      setForm({ title: "", description: "", buttonText: "", buttonLink: "", isActive: false });
+    }
+    setError("");
+  }, [magazine, open]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      if (isEdit) {
+        await wallMagazineService.update(magazine.id, form);
+      } else {
+        await wallMagazineService.create(form);
+      }
+      onSaved();
+      onClose();
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to save Wall Magazine.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!open) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.92, opacity: 0 }}
+          className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="font-oswald text-2xl font-bold tracking-widest text-white mb-6">
+            {isEdit ? "EDIT WALL MAGAZINE" : "ADD WALL MAGAZINE"}
+          </h2>
+          {error && (
+            <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+              {error}
+            </div>
+          )}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                Title *
+              </label>
+              <input
+                required
+                value={form.title}
+                onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-accent-teal transition"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                Description *
+              </label>
+              <textarea
+                required
+                rows={3}
+                value={form.description}
+                onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-accent-teal transition resize-none"
+              />
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                  Button Text
+                </label>
+                <input
+                  value={form.buttonText}
+                  onChange={(e) => setForm((p) => ({ ...p, buttonText: e.target.value }))}
+                  className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-accent-teal transition"
+                  placeholder="e.g. READ MORE"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                  Button Link
+                </label>
+                <input
+                  value={form.buttonLink}
+                  onChange={(e) => setForm((p) => ({ ...p, buttonLink: e.target.value }))}
+                  className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-accent-teal transition"
+                  placeholder="e.g. https://..."
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="wm-isActive"
+                checked={form.isActive}
+                onChange={(e) => setForm((p) => ({ ...p, isActive: e.target.checked }))}
+                className="w-4 h-4 rounded border-gray-700 bg-[#222] text-accent-teal"
+              />
+              <label htmlFor="wm-isActive" className="text-xs font-bold text-gray-400 tracking-widest uppercase cursor-pointer">
+                Set as Active
+              </label>
+            </div>
+            <div className="flex gap-3 mt-4">
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={loading}
+                className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50"
+              >
+                CANCEL
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {loading ? <PigLoader size="mini" text="SAVING..." /> : isEdit ? "UPDATE" : "CREATE"}
+              </button>
+            </div>
+          </form>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+// ─── Wall Magazine Image Modal ──────────────────────────────────────────────
+function WallMagazineImageModal({ open, onClose, magazine, onSaved }) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+
+  useEffect(() => {
+    setImageFile(null);
+    setError("");
+  }, [open]);
+
+  if (!open || !magazine) return null;
+
+  const handleUploadImage = async (e) => {
+    e.preventDefault();
+    if (!imageFile) return;
+    setLoading(true);
+    setError("");
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    try {
+      await wallMagazineService.uploadImage(magazine.id, formData);
+      setImageFile(null);
+      toast.success("Image uploaded successfully!");
+      onSaved();
+      onClose();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to upload image.");
+      setError(err.response?.data?.message || "Failed to upload image.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.92, opacity: 0 }}
+          className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">
+              MANAGE IMAGE: {magazine.title}
+            </h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-white font-bold">X</button>
+          </div>
+          {error && (
+            <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+              {error}
+            </div>
+          )}
+
+          <div className="border border-gray-700 rounded-xl p-5 bg-[#222]">
+            {magazine.imageUrl ? (
+              <div className="mb-4 rounded overflow-hidden border border-gray-600 bg-black max-h-48 flex justify-center">
+                <img src={magazine.imageUrl} alt="Wall Magazine" className="h-48 object-cover" />
+              </div>
+            ) : (
+              <p className="text-xs text-gray-500 mb-4">No image uploaded yet.</p>
+            )}
+            <form onSubmit={handleUploadImage} className="flex items-center gap-3">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files[0])}
+                className="flex-1 text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-white/10 file:text-white hover:file:bg-white/20 transition"
+              />
+              <button
+                type="submit"
+                disabled={!imageFile || loading}
+                className="px-4 py-2 bg-accent-teal text-black rounded-full text-xs font-bold tracking-widest hover:bg-accent-teal/80 transition disabled:opacity-50"
+              >
+                UPLOAD IMAGE
+              </button>
+            </form>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+// ─── Wall Magazine Table ────────────────────────────────────────────────────
+function WallMagazineTable() {
+  const [magazines, setMagazines] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [editMagazine, setEditMagazine] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await wallMagazineService.getAll();
+      setMagazines(res.data || []);
+    } catch {
+      setMagazines([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const handleDelete = async (id) => {
+    setDeleteLoading(true);
+    try {
+      await wallMagazineService.delete(id);
+      setDeleteConfirm(null);
+      toast.success("Wall magazine deleted.");
+      load();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const handleToggleActive = async (id) => {
+    try {
+      await wallMagazineService.toggleActive(id);
+      toast.success("Status updated.");
+      load();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to toggle status.");
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-full p-8 pb-0">
+      <div className="flex items-center justify-between mb-6 shrink-0">
+        <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">
+          WALL MAGAZINES
+        </h2>
+        <button
+          onClick={() => {
+            setEditMagazine(null);
+            setModalOpen(true);
+          }}
+          className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition"
+        >
+          + ADD MAGAZINE
+        </button>
+      </div>
+
+      <WallMagazineFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        magazine={editMagazine}
+        onSaved={load}
+      />
+      <WallMagazineImageModal
+        open={imageModalOpen}
+        onClose={() => setImageModalOpen(false)}
+        magazine={editMagazine}
+        onSaved={load}
+      />
+
+      {/* Delete Confirm */}
+      <AnimatePresence>
+        {deleteConfirm && (
+          <ConfirmationModal
+            isOpen={!!deleteConfirm}
+            onClose={() => setDeleteConfirm(null)}
+            onConfirm={() => handleDelete(deleteConfirm)}
+            title="DELETE MAGAZINE?"
+            message="This action cannot be undone."
+            loading={deleteLoading}
+            loadingText="DELETING..."
+          />
+        )}
+      </AnimatePresence>
+
+      <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
+        {loading ? (
+          <div className="py-16 flex justify-center">
+            <PigLoader size="mini" text="Loading magazines..." />
+          </div>
+        ) : magazines.length === 0 ? (
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">
+            No wall magazines found.
+          </div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase shadow-md">
+                <th className="px-4 py-3 text-left w-1/4">Title</th>
+                <th className="px-4 py-3 text-left w-1/4">Description</th>
+                <th className="px-4 py-3 text-left">Status</th>
+                <th className="px-4 py-3 text-left">Image</th>
+                <th className="px-4 py-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {magazines.map((r, idx) => (
+                <tr
+                  key={r.id}
+                  className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? "bg-[#1c1c1c]" : "bg-[#1a1a1a]"}`}
+                >
+                  <td className="px-4 py-3 font-bold text-white tracking-wide truncate max-w-[200px]">
+                    {r.title}
+                  </td>
+                  <td className="px-4 py-3 text-gray-400 truncate max-w-[250px]">
+                    {r.description}
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => handleToggleActive(r.id)}
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest transition ${r.isActive ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-gray-500/20 text-gray-400 border border-gray-600 hover:bg-gray-700/50"}`}
+                    >
+                      {r.isActive ? "ACTIVE" : "INACTIVE"}
+                    </button>
+                  </td>
+                  <td className="px-4 py-3">
+                    {r.imageUrl ? (
+                      <img src={r.imageUrl} alt="Img" className="h-8 w-12 object-cover rounded" />
+                    ) : (
+                      <span className="text-gray-500 text-xs">No img</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => {
+                          setEditMagazine(r);
+                          setImageModalOpen(true);
+                        }}
+                        className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-widest text-white hover:bg-white/20 transition"
+                      >
+                        IMAGE
+                      </button>
+                      <button
+                        onClick={() => {
+                          setEditMagazine(r);
                           setModalOpen(true);
                         }}
                         className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition"
@@ -4757,6 +5250,7 @@ const SIDEBAR_ITEMS = [
     label: "Master Data", 
     icon: FiDatabase,
     subItems: [
+      { id: "wall-magazine", label: "Wall Magazine", icon: FiFileText },
       { id: "surfboards", label: "Surfboards", icon: FiLayers },
       { id: "accessories", label: "Accessories", icon: FiTag },
       { id: "reviews", label: "Reviews", icon: FiMessageSquare },
@@ -4813,6 +5307,7 @@ export default function AdminDashboard() {
           >
             {active === "overview" && <DashboardOverviewWrapper />}
             {active === "hero" && <HeroTable />}
+            {active === "wall-magazine" && <WallMagazineTable />}
             {active === "surfboards" && (
               <ProductsTable categories={categories} />
             )}
