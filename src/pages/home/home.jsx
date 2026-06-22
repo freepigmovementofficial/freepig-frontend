@@ -1016,8 +1016,8 @@ export default function Home() {
               <div className="w-full md:w-1/2 flex flex-col justify-center py-4 relative z-30 order-2 md:order-1">
                 <FadeUp>
                   <div className="relative pointer-events-none -rotate-[3deg] origin-left mb-6">
-                    <span className="relative flex flex-col items-start w-fit">
-                      <span className="block font-road-rage whitespace-nowrap text-[#4ADDDD] text-[70px] leading-[0.75] relative z-20 drop-shadow-md">
+                    <span className="relative flex flex-col items-start w-full">
+                      <span className="block font-road-rage text-[#4ADDDD] text-[60px] md:text-[70px] leading-[0.9] md:leading-[0.75] relative z-20 drop-shadow-md break-words whitespace-normal">
                         {wallMagazine.title}
                       </span>
                       {/* Efek Garis Brush Putih */}
