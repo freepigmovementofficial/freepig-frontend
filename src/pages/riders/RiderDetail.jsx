@@ -107,7 +107,7 @@ export default function RiderDetail() {
       </div>
 
       {/* ── MAIN CONTENT ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 -mt-16 sm:-mt-20 md:-mt-32 relative z-10">
+      <div className="w-full mx-auto px-6 md:px-[70px] -mt-16 sm:-mt-20 md:-mt-32 relative z-10">
         <button 
           onClick={() => navigate(-1)} 
           className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-6 transition-all font-bold tracking-widest text-xs uppercase drop-shadow-lg"
@@ -232,10 +232,10 @@ export default function RiderDetail() {
 
       {/* ── GALLERY (masonry, clickable) ── */}
       {galleryImages.length > 0 && (
-        <div className="max-w-7xl mx-auto px-6 md:px-12 mt-24">
+        <div className="w-full mx-auto px-6 md:px-[70px] mt-24">
           <FadeUp>
             <h2 className="font-oswald text-2xl font-bold tracking-widest text-white uppercase mb-8">Gallery</h2>
-            <div className="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
+            <div className="columns-1 sm:columns-2 md:columns-3 gap-[20px] space-y-[20px]">
               {galleryImages.map((img, idx) => (
                 <div
                   key={img.id}

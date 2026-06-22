@@ -1,10 +1,12 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaInstagram, FaWhatsapp, FaEnvelope } from "react-icons/fa";
+import { FaInstagram, FaWhatsapp, FaEnvelope, FaYoutube } from "react-icons/fa";
 import logotr from "../assets/logoPutihh.webp";
 
 export default function Footer() {
   const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
 
   // Hide footer on admin and login pages
   if (
@@ -48,7 +50,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/store"
-                  className="hover:text-accent-teal transition duration-300"
+                  className={`transition duration-300 ${isActive("/store") ? "text-accent-teal font-bold" : "hover:text-accent-teal"}`}
                 >
                   Store
                 </Link>
@@ -64,7 +66,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/volume"
-                  className="hover:text-accent-teal transition duration-300"
+                  className={`transition duration-300 ${isActive("/volume") ? "text-accent-teal font-bold" : "hover:text-accent-teal"}`}
                 >
                   Volume Calculator
                 </Link>
@@ -72,7 +74,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/riders"
-                  className="hover:text-accent-teal transition duration-300"
+                  className={`transition duration-300 ${isActive("/riders") ? "text-accent-teal font-bold" : "hover:text-accent-teal"}`}
                 >
                   Meet the Riders
                 </Link>
@@ -80,7 +82,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/gallery"
-                  className="hover:text-accent-teal transition duration-300"
+                  className={`transition duration-300 ${isActive("/gallery") ? "text-accent-teal font-bold" : "hover:text-accent-teal"}`}
                 >
                   Gallery
                 </Link>
@@ -122,6 +124,14 @@ export default function Footer() {
                 className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-accent-teal hover:text-black hover:border-accent-teal transition-all duration-300"
               >
                 <FaInstagram size={18} />
+              </a>
+              <a
+                href="https://www.youtube.com/@freepigmovement4813"
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-accent-teal hover:text-black hover:border-accent-teal transition-all duration-300"
+              >
+                <FaYoutube size={18} />
               </a>
               <a
                 href="https://wa.me/+6281224222380"

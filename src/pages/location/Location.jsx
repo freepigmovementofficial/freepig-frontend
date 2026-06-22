@@ -1,9 +1,16 @@
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { useParams, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiMapPin, FiClock, FiPhone, FiGlobe } from "react-icons/fi";
-import headingImg from "../../assets/Heading.webp";
-import { FaInstagram } from "react-icons/fa";
+import {
+  FiMapPin,
+  FiClock,
+  FiPhone,
+  FiGlobe,
+  FiInstagram,
+} from "react-icons/fi";
+import headingImg from "../../assets/headerRiderss.png";
+import headerTransparanImg from "../../assets/headertranparan.png";
+import bercakPembatas from "../../assets/bercakPembatas.png";
 const shopsData = {
   rpm: {
     name: "RPM Surf Shop",
@@ -49,36 +56,51 @@ export default function Location() {
   }
 
   return (
-    <div className="bg-[#1c1c1c] min-h-screen font-poppins text-white pb-24">
+    <div className="bg-[#000000] min-h-screen font-poppins text-white pb-24">
       {/* ── HERO BANNER ── */}
       <div
-        className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
-        style={{ backgroundImage: `url(${headingImg})`, height: "350px" }}
+        className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-hidden"
+        style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
       >
-        <div className="absolute inset-0 bg-black/50" />
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
+          }}
+        ></div>
         <motion.h1
-          key={shop.name} // ensure animation triggers on route change
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 font-oswald text-5xl sm:text-6xl md:text-7xl lg:text-[96px] font-black tracking-[0.1em] text-center uppercase text-white drop-shadow-2xl px-4"
+          className="relative z-10 font-road-rage text-5xl sm:text-6xl md:text-7xl lg:text-[96px] text-black drop-shadow-2xl px-4 text-center"
         >
           OUR LOCATION
         </motion.h1>
+        <div
+          className="absolute inset-0 bg-cover bg-[center_15%] pointer-events-none z-20"
+          style={{ backgroundImage: `url(${headerTransparanImg})` }}
+        ></div>
+        <img
+          src={bercakPembatas}
+          alt="Bercak pembatas banner"
+          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[63%]"
+        />
       </div>
 
       {/* ── LOCATION INFO SECTION ── */}
-      <div className="max-w-7xl mx-auto px-6 md:px-10 mt-16">
+      <div className="w-full mx-auto px-6 md:px-[70px] mt-16">
         <motion.div
           key={shopId} // trigger re-render and animation on shop change
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start"
+          className="grid grid-cols-1 md:grid-cols-2 gap-[20px] items-start"
         >
           {/* Shop Details */}
-          <div className="bg-[#222] p-8 md:p-12 border border-[#333] shadow-2xl flex flex-col justify-center">
+          <div className="bg-[#222] p-8 md:p-12 border border-[#333] shadow-2xl rounded-[30px] flex flex-col justify-center">
             <h2 className="font-oswald text-4xl md:text-5xl font-bold tracking-widest text-white mb-2 uppercase">
               {shop.name}
             </h2>
@@ -93,64 +115,63 @@ export default function Location() {
             </div>
 
             <div className="flex flex-col gap-6 text-gray-300">
-              <div className="flex items-start gap-4 group">
-                <FiMapPin className="text-white-teal text-2xl mt-0.5" />
-                <div>
-                  <h4 className="text-white font-bold tracking-widest uppercase mb-1">
+              <div className="flex flex-col group">
+                <div className="flex items-center gap-3 mb-1.5">
+                  <FiMapPin className="text-white text-[18px]" />
+                  <h4 className="text-white font-bold tracking-widest uppercase text-[13px]">
                     Address
                   </h4>
+                </div>
+                <div className="pl-[30px]">
                   <p className="text-sm leading-relaxed group-hover:text-white transition duration-300">
                     {shop.address}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 group">
-                <FiClock className="text-white-teal text-2xl mt-0.5" />
-                <div>
-                  <h4 className="text-white font-bold tracking-widest uppercase mb-1">
+              <div className="flex flex-col group">
+                <div className="flex items-center gap-3 mb-1.5">
+                  <FiClock className="text-white text-[18px]" />
+                  <h4 className="text-white font-bold tracking-widest uppercase text-[13px]">
                     Opening Hours
                   </h4>
+                </div>
+                <div className="pl-[30px]">
                   <p className="text-sm text-green-400 group-hover:text-green-300 transition duration-300">
                     {shop.hours}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 group">
-                <FiPhone className="text-white-teal text-2xl mt-0.5" />
-                <div>
-                  <h4 className="text-white font-bold tracking-widest uppercase mb-1">
+              <div className="flex flex-col group">
+                <div className="flex items-center gap-3 mb-1.5">
+                  <FiPhone className="text-white text-[18px]" />
+                  <h4 className="text-white font-bold tracking-widest uppercase text-[13px]">
                     Contact
                   </h4>
+                </div>
+                <div className="pl-[30px]">
                   <p className="text-sm group-hover:text-white transition duration-300">
                     {shop.phone}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 group">
-                <FaInstagram className="text-white-teal text-2xl mt-0.5" />
-                <div>
-                  <h4 className="text-white font-bold tracking-widest uppercase mb-2">
+              <div className="flex flex-col group">
+                <div className="flex items-center gap-3 mb-2.5">
+                  <FiInstagram className="text-white text-[18px]" />
+                  <h4 className="text-white font-bold tracking-widest uppercase text-[13px]">
                     Instagram
                   </h4>
-
+                </div>
+                <div className="pl-[30px]">
                   <a
                     href={shop.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white-500/30 bg-white-500/10 text-white-400 hover:bg-blue-500 hover:text-white hover:border-white-500 transition-all duration-300 text-sm font-medium"
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-600 bg-transparent text-gray-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 text-sm font-medium"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-4 h-4"
-                    >
-                      <path d="M7.75 2C4.574 2 2 4.574 2 7.75v8.5C2 19.426 4.574 22 7.75 22h8.5C19.426 22 22 19.426 22 16.25v-8.5C22 4.574 19.426 2 16.25 2h-8.5zm0 2h8.5A3.75 3.75 0 0 1 20 7.75v8.5A3.75 3.75 0 0 1 16.25 20h-8.5A3.75 3.75 0 0 1 4 16.25v-8.5A3.75 3.75 0 0 1 7.75 4zm9.5 1a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
-                    </svg>
-                    @
+                    <FiInstagram size={14} />@
                     {shop.instagram
                       .replace("https://www.instagram.com/", "")
                       .replace("http://www.instagram.com/", "")
@@ -161,7 +182,7 @@ export default function Location() {
               </div>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-8">
               <a
                 href={shop.mapLink}
                 target="_blank"
@@ -174,7 +195,7 @@ export default function Location() {
           </div>
 
           {/* Map Image / Embedded Map */}
-          <div className="h-full min-h-[500px] w-full bg-[#111] border border-[#333] shadow-2xl relative overflow-hidden group">
+          <div className="h-full min-h-[500px] w-full bg-[#111] border border-[#333] shadow-2xl rounded-[30px] relative overflow-hidden group">
             <iframe
               src={shop.iframeSrc}
               width="100%"

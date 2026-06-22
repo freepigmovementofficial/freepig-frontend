@@ -1,29 +1,29 @@
-import useDocumentTitle from '../../hooks/useDocumentTitle';
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { galleryService } from '../../api/gallery';
-import PigLoader from '../../components/PigLoader';
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { galleryService } from "../../api/gallery";
+import PigLoader from "../../components/PigLoader";
 
 // Reusable FadeUp component
-const FadeUp = ({ children, delay = 0, className = '' }) => (
+const FadeUp = ({ children, delay = 0, className = "" }) => (
   <motion.div
     className={className}
     initial={{ opacity: 0, y: 40 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.7, ease: 'easeOut', delay }}
+    transition={{ duration: 0.7, ease: "easeOut", delay }}
   >
     {children}
   </motion.div>
 );
 
-const Container = ({ children, className = '' }) => (
-  <div className={`max-w-7xl mx-auto px-6 md:px-12 lg:px-16 ${className}`}>
+const Container = ({ children, className = "" }) => (
+  <div className={`w-full mx-auto px-6 md:px-[70px] ${className}`}>
     {children}
   </div>
 );
 
 export default function Gallery() {
-  useDocumentTitle('Gallery | FreePigMovement');
+  useDocumentTitle("Gallery | FreePigMovement");
   const [galleries, setGalleries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,7 +37,7 @@ export default function Gallery() {
         const res = await galleryService.getAll({ limit: 100 });
         setGalleries(res.data?.data?.galleries || []);
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to load gallery');
+        setError(err.response?.data?.message || "Failed to load gallery");
       } finally {
         setLoading(false);
       }
@@ -46,7 +46,7 @@ export default function Gallery() {
   }, []);
 
   return (
-    <div className="bg-[#1a1a1a] min-h-screen font-poppins pt-28 pb-20 text-white selection:bg-accent-teal selection:text-black">
+    <div className="bg-[#000000] min-h-screen font-poppins pt-28 pb-20 text-white selection:bg-accent-teal selection:text-black">
       <Container>
         <div className="text-center mb-16">
           <FadeUp>
@@ -72,16 +72,29 @@ export default function Gallery() {
         ) : (
           <AnimatePresence mode="wait">
             {loading ? (
-              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full">
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="w-full"
+              >
                 <div className="flex justify-center items-center py-8">
                   <PigLoader text="Fetching moments..." />
                 </div>
-                <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+                <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-[20px] space-y-[20px]">
                   {Array.from({ length: 12 }).map((_, idx) => (
-                    <div 
-                      key={idx} 
-                      className="break-inside-avoid relative bg-[#2a2a2a] animate-pulse rounded-xl overflow-hidden" 
-                      style={{ height: idx % 3 === 0 ? '300px' : idx % 2 === 0 ? '400px' : '250px' }}
+                    <div
+                      key={idx}
+                      className="break-inside-avoid relative bg-[#2a2a2a] animate-pulse rounded-xl overflow-hidden"
+                      style={{
+                        height:
+                          idx % 3 === 0
+                            ? "300px"
+                            : idx % 2 === 0
+                              ? "400px"
+                              : "250px",
+                      }}
                     >
                       <div className="absolute inset-0 bg-gradient-to-b from-[#333] to-[#222] opacity-50"></div>
                     </div>
@@ -89,11 +102,21 @@ export default function Gallery() {
                 </div>
               </motion.div>
             ) : galleries.length === 0 ? (
-              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 text-gray-500 tracking-widest text-sm uppercase">
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-20 text-gray-500 tracking-widest text-sm uppercase"
+              >
                 No photos available at the moment.
               </motion.div>
             ) : (
-              <motion.div key="gallery" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+              <motion.div
+                key="gallery"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-[20px] space-y-[20px]"
+              >
                 {galleries.map((img, idx) => (
                   <motion.div
                     key={img.id}
@@ -105,14 +128,14 @@ export default function Gallery() {
                   >
                     <img
                       src={img.url}
-                      alt={img.caption || 'Gallery photo'}
+                      alt={img.caption || "Gallery photo"}
                       loading="lazy"
                       className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-110"
                       onError={(e) => {
-                        e.target.src = '/black_surfboard.png';
+                        e.target.src = "/black_surfboard.png";
                       }}
                     />
-                    
+
                     {/* Overlay on hover */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
                       {img.caption && (
@@ -126,10 +149,23 @@ export default function Gallery() {
                         </motion.p>
                       )}
                       <div className="mt-3 flex items-center justify-between">
-                        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400">Preview</span>
+                        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400">
+                          Preview
+                        </span>
                         <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-accent-teal transition text-white group-hover:text-black">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                            />
                           </svg>
                         </span>
                       </div>
@@ -165,9 +201,10 @@ export default function Gallery() {
               onClick={(e) => e.stopPropagation()}
               className="relative max-w-5xl w-full max-h-full flex flex-col items-center"
             >
-              <img loading="lazy"
+              <img
+                loading="lazy"
                 src={selectedImage.url}
-                alt={selectedImage.caption || 'Preview'}
+                alt={selectedImage.caption || "Preview"}
                 className="max-w-full max-h-[80vh] object-contain shadow-2xl rounded-sm"
               />
               {selectedImage.caption && (

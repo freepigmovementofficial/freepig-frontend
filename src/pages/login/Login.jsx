@@ -1,88 +1,109 @@
-import useDocumentTitle from '../../hooks/useDocumentTitle';
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
-import { authService } from '../../api/auth';
-import logotr from '../../assets/logoPutihh.webp';
-import videoLandingPage from '../../assets/videoLandingPage.mp4';
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { authService } from "../../api/auth";
+import logotr from "../../assets/logoPutihh.webp";
+import videoLandingPage from "../../assets/videoLandingPage.mp4";
+import { toast } from "react-hot-toast";
 
 const inputClass =
-  'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-white/40 focus:bg-white/8 transition duration-300';
+  "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-white/40 focus:bg-white/8 transition duration-300";
 
-const labelClass = 'block text-[10px] font-bold text-gray-400 tracking-[0.18em] uppercase mb-2';
+const labelClass =
+  "block text-[10px] font-bold text-gray-400 tracking-[0.18em] uppercase mb-2";
 
 export default function Login() {
-  useDocumentTitle('Login | FreePigMovement');
-  const [mode, setMode] = useState('LOGIN'); // 'LOGIN' | 'REGISTER' | 'VERIFY_OTP'
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [otp, setOtp] = useState('');
+  useDocumentTitle("Login | FreePigMovement");
+  const [mode, setMode] = useState("LOGIN"); // 'LOGIN' | 'REGISTER' | 'VERIFY_OTP'
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+  const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("expired") === "true") {
+      const msg = "Sesi Anda sudah habis. Harap login kembali.";
+      setError(msg);
+      toast.error(msg, {
+        duration: 5000,
+        style: { background: "#333", color: "#fff" },
+      });
+    }
+  }, [searchParams]);
 
   const handleAuthSuccess = (res) => {
     const { user, token } = res.data;
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    if (user.role === 'ADMIN') navigate('/admin/dashboard');
-    else navigate('/');
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    if (user.role === "ADMIN") navigate("/admin/dashboard");
+    else navigate("/");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccessMsg('');
+    setError("");
+    setSuccessMsg("");
     setIsLoading(true);
     try {
-      if (mode === 'LOGIN') {
+      if (mode === "LOGIN") {
         const res = await authService.login(email, password);
         handleAuthSuccess(res);
-      } else if (mode === 'REGISTER') {
+      } else if (mode === "REGISTER") {
         const res = await authService.register(name, email, password);
-        setSuccessMsg(res.message || 'OTP sent! Please check your email.');
-        setMode('VERIFY_OTP');
-      } else if (mode === 'VERIFY_OTP') {
+        setSuccessMsg(res.message || "OTP sent! Please check your email.");
+        setMode("VERIFY_OTP");
+      } else if (mode === "VERIFY_OTP") {
         const res = await authService.verifyOtp(email, otp);
         handleAuthSuccess(res);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Action failed. Please try again.');
+      setError(
+        err.response?.data?.message || "Action failed. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   const switchMode = (next) => {
-    setError('');
-    setSuccessMsg('');
+    setError("");
+    setSuccessMsg("");
     setMode(next);
   };
 
   /* ─── FORM TITLE / SUBTITLE ─── */
   const title =
-    mode === 'LOGIN' ? 'Welcome Back' : mode === 'REGISTER' ? 'Join The Movement' : 'Verify Email';
+    mode === "LOGIN"
+      ? "Welcome Back"
+      : mode === "REGISTER"
+        ? "Join The Movement"
+        : "Verify Email";
   const subtitle =
-    mode === 'VERIFY_OTP'
+    mode === "VERIFY_OTP"
       ? `We sent a 6-digit code to ${email}`
-      : mode === 'LOGIN'
-      ? 'Sign in to your account'
-      : 'Create your free account';
+      : mode === "LOGIN"
+        ? "Sign in to your account"
+        : "Create your free account";
 
   return (
     <div className="min-h-screen flex font-poppins overflow-hidden bg-[#0d0d0d]">
-
       {/* ══════════ LEFT PANEL — Brand Visual ══════════ */}
       <div className="hidden lg:flex relative w-[52%] flex-shrink-0 flex-col items-start justify-end p-16 overflow-hidden">
-
         {/* Video background */}
         <video
           src={videoLandingPage}
-          autoPlay muted loop playsInline
+          autoPlay
+          muted
+          loop
+          playsInline
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Gradient overlays */}
@@ -90,8 +111,16 @@ export default function Login() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
 
         {/* Logo top-left */}
-        <Link to="/" className="absolute top-10 left-10 z-10 hover:opacity-75 transition">
-          <img loading="lazy" src={logotr} alt="FreePigMovement" className="h-14 w-auto object-contain" />
+        <Link
+          to="/"
+          className="absolute top-10 left-10 z-10 hover:opacity-75 transition"
+        >
+          <img
+            loading="lazy"
+            src={logotr}
+            alt="FreePigMovement"
+            className="h-14 w-auto object-contain"
+          />
         </Link>
 
         {/* Brand copy bottom-left */}
@@ -99,8 +128,9 @@ export default function Login() {
           <p className="text-[11px] font-bold tracking-[0.35em] text-gray-400 uppercase mb-3">
             FreePigMovement
           </p>
-          <h1 className="font-oswald text-5xl xl:text-6xl font-black text-white leading-none mb-5">
-            BUILD DIFFERENT,<br />RIDE DIFFERENT
+          <h1 className="font-road-rage font-normal text-[40px] xl:text-[54px] text-white leading-none mb-5">
+            BUILD DIFFERENT,
+            <br /> RIDE DIFFERENT
           </h1>
           <p className="text-gray-300 text-base leading-relaxed font-light">
             Handcrafted surfboards shaped for your identity. Quality since 2001.
@@ -109,14 +139,15 @@ export default function Login() {
           {/* Decorative divider */}
           <div className="flex items-center gap-4 mt-8">
             <div className="w-12 h-px bg-white/30" />
-            <span className="text-gray-500 text-[10px] tracking-[0.3em] uppercase">Est. 2001</span>
+            <span className="text-gray-500 text-[10px] tracking-[0.3em] uppercase">
+              Est. 2001
+            </span>
           </div>
         </div>
       </div>
 
       {/* ══════════ RIGHT PANEL — Form ══════════ */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 relative overflow-y-auto">
-
         {/* Subtle radial glow */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-white/3 rounded-full blur-[120px]" />
@@ -124,23 +155,27 @@ export default function Login() {
 
         {/* Mobile logo */}
         <Link to="/" className="lg:hidden mb-10 hover:opacity-75 transition">
-          <img loading="lazy" src={logotr} alt="FreePigMovement" className="h-12 w-auto object-contain" />
+          <img
+            loading="lazy"
+            src={logotr}
+            alt="FreePigMovement"
+            className="h-12 w-auto object-contain"
+          />
         </Link>
 
         <div className="w-full max-w-[400px] relative z-10">
-
           {/* ── Tab switcher (LOGIN / REGISTER) ── */}
-          {mode !== 'VERIFY_OTP' && (
+          {mode !== "VERIFY_OTP" && (
             <div className="flex bg-white/5 rounded-xl p-1 mb-10 border border-white/8">
-              {['LOGIN', 'REGISTER'].map((m) => (
+              {["LOGIN", "REGISTER"].map((m) => (
                 <button
                   key={m}
                   type="button"
                   onClick={() => switchMode(m)}
                   className={`flex-1 py-2.5 text-[11px] font-bold tracking-[0.18em] rounded-lg transition-all duration-300 ${
                     mode === m
-                      ? 'bg-white text-black shadow-lg'
-                      : 'text-gray-500 hover:text-gray-300'
+                      ? "bg-white text-black shadow-lg"
+                      : "text-gray-500 hover:text-gray-300"
                   }`}
                 >
                   {m}
@@ -159,7 +194,7 @@ export default function Login() {
               transition={{ duration: 0.3 }}
               className="mb-8"
             >
-              <h2 className="font-oswald text-3xl font-bold text-white tracking-wide mb-1.5">
+              <h2 className="font-road-rage font-normal text-4xl text-white tracking-wide mb-1.5">
                 {title}
               </h2>
               <p className="text-gray-500 text-sm tracking-wide">{subtitle}</p>
@@ -193,13 +228,12 @@ export default function Login() {
           {/* ── Form ── */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <AnimatePresence mode="popLayout">
-
               {/* Name — register only */}
-              {mode === 'REGISTER' && (
+              {mode === "REGISTER" && (
                 <motion.div
                   key="name"
                   initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
+                  animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.25 }}
                 >
@@ -208,7 +242,8 @@ export default function Login() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    required minLength={2}
+                    required
+                    minLength={2}
                     placeholder="Your name"
                     className={inputClass}
                   />
@@ -216,7 +251,7 @@ export default function Login() {
               )}
 
               {/* Email + Password */}
-              {mode !== 'VERIFY_OTP' && (
+              {mode !== "VERIFY_OTP" && (
                 <motion.div
                   key="email-pass"
                   initial={{ opacity: 0 }}
@@ -239,11 +274,11 @@ export default function Login() {
                     <label className={labelClass}>Password</label>
                     <div className="relative">
                       <input
-                        type={showPass ? 'text' : 'password'}
+                        type={showPass ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        minLength={mode === 'REGISTER' ? 8 : 1}
+                        minLength={mode === "REGISTER" ? 8 : 1}
                         placeholder="••••••••"
                         className={`${inputClass} pr-12`}
                       />
@@ -252,10 +287,14 @@ export default function Login() {
                         onClick={() => setShowPass(!showPass)}
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition"
                       >
-                        {showPass ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                        {showPass ? (
+                          <FiEyeOff size={18} />
+                        ) : (
+                          <FiEye size={18} />
+                        )}
                       </button>
                     </div>
-                    {mode === 'REGISTER' && (
+                    {mode === "REGISTER" && (
                       <p className="text-[10px] text-gray-600 mt-1.5 tracking-wide">
                         Minimum 8 characters
                       </p>
@@ -265,7 +304,7 @@ export default function Login() {
               )}
 
               {/* OTP */}
-              {mode === 'VERIFY_OTP' && (
+              {mode === "VERIFY_OTP" && (
                 <motion.div
                   key="otp"
                   initial={{ opacity: 0, y: 10 }}
@@ -277,7 +316,8 @@ export default function Login() {
                     type="text"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    required maxLength={6}
+                    required
+                    maxLength={6}
                     placeholder="· · · · · ·"
                     className={`${inputClass} text-center text-2xl tracking-[0.6em] font-bold`}
                   />
@@ -301,15 +341,21 @@ export default function Login() {
                   <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin inline-block" />
                   PROCESSING...
                 </>
-              ) : mode === 'LOGIN' ? 'SIGN IN' : mode === 'REGISTER' ? 'CREATE ACCOUNT' : 'VERIFY'}
+              ) : mode === "LOGIN" ? (
+                "SIGN IN"
+              ) : mode === "REGISTER" ? (
+                "CREATE ACCOUNT"
+              ) : (
+                "VERIFY"
+              )}
             </motion.button>
           </form>
 
           {/* ── Back link for OTP step ── */}
-          {mode === 'VERIFY_OTP' && (
+          {mode === "VERIFY_OTP" && (
             <button
               type="button"
-              onClick={() => switchMode('REGISTER')}
+              onClick={() => switchMode("REGISTER")}
               className="mt-5 w-full text-center text-xs text-gray-600 hover:text-gray-400 transition tracking-widest"
             >
               ← Back to Register
@@ -318,7 +364,10 @@ export default function Login() {
 
           {/* ── Back to home ── */}
           <div className="mt-8 pt-6 border-t border-white/8 text-center">
-            <Link to="/" className="text-[11px] text-gray-600 hover:text-gray-400 transition tracking-widest uppercase">
+            <Link
+              to="/"
+              className="text-[11px] text-gray-600 hover:text-gray-400 transition tracking-widest uppercase"
+            >
               ← Back to Home
             </Link>
           </div>

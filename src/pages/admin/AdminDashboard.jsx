@@ -4582,9 +4582,9 @@ function HeroTable() {
               <form onSubmit={handleSave} className="flex flex-col gap-4">
                 <div>
                   <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Title *</label>
-                  <input required value={form.title} onChange={(e) => setForm(p => ({ ...p, title: e.target.value }))}
-                    placeholder="e.g. RIDE YOUR OWN WAVE"
-                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+                  <textarea required rows={2} value={form.title} onChange={(e) => setForm(p => ({ ...p, title: e.target.value }))}
+                    placeholder="e.g. RIDE YOUR\nOWN WAVE"
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none" />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Subtitle *</label>

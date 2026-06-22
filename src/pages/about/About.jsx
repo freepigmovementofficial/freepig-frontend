@@ -1,10 +1,12 @@
-import useDocumentTitle from '../../hooks/useDocumentTitle';
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 import React from "react";
 import { motion } from "framer-motion";
-import headingImg from '../../assets/Heading.webp';
-import ourCustomer from '../../assets/ourCustomer.webp';
-import aboutUsImg from '../../assets/aboutUs.webp';
-import logoPutih from '../../assets/logoPutih.webp';
+import headingImg from "../../assets/headerRiderss.png";
+import headerTransparanImg from "../../assets/headertranparan.png";
+import bercakPembatas from "../../assets/bercakPembatas.png";
+import ourCustomer from "../../assets/ourCustomer.webp";
+import aboutUsImg from "../../assets/aboutUs.webp";
+import logoPutih from "../../assets/logoPutih.webp";
 
 const FadeUp = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -25,28 +27,44 @@ const stats = [
 ];
 
 export default function About() {
-  useDocumentTitle('About Us | FreePigMovement');
+  useDocumentTitle("About Us | FreePigMovement");
   return (
-    <div className="bg-[#252525] min-h-screen font-poppins text-white overflow-x-hidden">
+    <div className="bg-[#000000] min-h-screen font-poppins text-white overflow-x-hidden">
       {/* ── HERO BANNER ── */}
       <div
-        className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
-        style={{ backgroundImage: `url(${headingImg})`, height: "350px" }}
+        className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-hidden"
+        style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
       >
-        <div className="absolute inset-0 bg-black/55" />
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
+          }}
+        ></div>
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 font-oswald text-5xl sm:text-6xl md:text-7xl lg:text-[96px] font-black tracking-[0.1em] text-center uppercase text-white drop-shadow-2xl px-4"
+          className="relative z-10 font-road-rage text-5xl sm:text-6xl md:text-7xl lg:text-[96px] text-black drop-shadow-2xl px-4 text-center"
         >
           ABOUT US
         </motion.h1>
+        <div
+          className="absolute inset-0 bg-cover bg-[center_15%] pointer-events-none z-20"
+          style={{ backgroundImage: `url(${headerTransparanImg})` }}
+        ></div>
+        <img
+          src={bercakPembatas}
+          alt="Bercak pembatas banner"
+          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[63%]"
+        />
       </div>
 
       {/* ── STATS BAR ── */}
       <div className="bg-[#1a1a1a] border-b border-white/5">
-        <div className="max-w-5xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="w-full mx-auto px-6 md:px-[70px] py-12 grid grid-cols-1 md:grid-cols-3 gap-[20px]">
           {stats.map((s, i) => (
             <FadeUp key={i} delay={i * 0.1} className="text-center">
               <p className="font-oswald text-4xl md:text-5xl font-black text-white mb-1">
@@ -61,7 +79,7 @@ export default function About() {
       </div>
 
       {/* ── MAIN CONTENT ── */}
-      <div className="max-w-5xl mx-auto px-6 md:px-12 py-24">
+      <div className="w-full mx-auto px-6 md:px-[70px] py-24">
         {/* Section label */}
         <FadeUp>
           <p className="text-[11px] text-gray-500 tracking-[0.35em] uppercase font-bold mb-5">
@@ -72,16 +90,20 @@ export default function About() {
         {/* ── HEADING ── */}
         <FadeUp delay={0.1} className="text-center mb-16 md:mb-24">
           <h2 className="font-oswald text-4xl md:text-6xl lg:text-[76px] font-black leading-[1.1] text-white uppercase tracking-wide">
-            BORN FROM THE OCEAN, <br className="hidden md:block" /> BUILT BY HAND.
+            BORN FROM THE OCEAN, <br className="hidden md:block" /> BUILT BY
+            HAND.
           </h2>
           <div className="w-24 h-1 bg-white/30 mx-auto mt-8" />
         </FadeUp>
 
         {/* ── CONTENT GRID ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-[20px] items-start mb-24">
           {/* Left Side - Tall Image */}
           <div className="lg:col-span-5">
-            <FadeUp delay={0.2} className="overflow-hidden rounded-2xl h-[400px] lg:h-[600px] group sticky top-32">
+            <FadeUp
+              delay={0.2}
+              className="overflow-hidden rounded-2xl h-[400px] lg:h-[600px] group sticky top-32"
+            >
               <img
                 loading="lazy"
                 src={aboutUsImg}
@@ -93,29 +115,44 @@ export default function About() {
           </div>
 
           {/* Right Side - Text & Small Image */}
-          <div className="lg:col-span-7 flex flex-col gap-8">
+          <div className="lg:col-span-7 flex flex-col gap-[20px]">
             <FadeUp delay={0.3}>
               <p className="text-gray-300 text-[17px] md:text-[19px] leading-[1.8] font-light">
-                <strong className="text-white font-medium">Back in 2001</strong> with a simple, uncompromising mission: to build surfboards that we would actually want to paddle out on ourselves. No shortcuts. No compromises.
+                <strong className="text-white font-medium">Back in 2001</strong>{" "}
+                with a simple, uncompromising mission: to build surfboards that
+                we would actually want to paddle out on ourselves. No shortcuts.
+                No compromises.
               </p>
             </FadeUp>
 
             <FadeUp delay={0.4}>
               <p className="text-gray-300 text-[17px] md:text-[19px] leading-[1.8] font-light">
-                Over two decades later, our obsession with detail hasn't changed. We believe a great board isn't just manufactured—it's handcrafted. From sourcing genuine premium materials to chasing precision through every step of the shaping and glassing process, it's the human touch and years of refined instinct that give our boards their soul. For us, it's about reliability, peak performance, and durability that stands the test of time.
+                Over two decades later, our obsession with detail hasn't
+                changed. We believe a great board isn't just manufactured—it's
+                handcrafted. From sourcing genuine premium materials to chasing
+                precision through every step of the shaping and glassing
+                process, it's the human touch and years of refined instinct that
+                give our boards their soul. For us, it's about reliability, peak
+                performance, and durability that stands the test of time.
               </p>
             </FadeUp>
-            
           </div>
 
           {/* Full Width Paragraph + Image */}
-          <div className="lg:col-span-12 flex flex-col md:flex-row gap-8 lg:gap-16 items-center lg:-mt-8">
+          <div className="lg:col-span-12 flex flex-col md:flex-row gap-[20px] items-center lg:-mt-8">
             <FadeUp delay={0.5} className="flex-1 w-full">
               <p className="text-gray-300 text-[17px] md:text-[19px] leading-[1.8] font-light">
-                What began as a core local Bali brand has now found its way into line-ups across the globe. We may be shipping worldwide, but our roots remain exactly where we started: dedicated to high-performance quality shapes, respecting the ocean, and staying true to our heritage.
+                What began as a core local Bali brand has now found its way into
+                line-ups across the globe. We may be shipping worldwide, but our
+                roots remain exactly where we started: dedicated to
+                high-performance quality shapes, respecting the ocean, and
+                staying true to our heritage.
               </p>
             </FadeUp>
-            <FadeUp delay={0.6} className="w-full md:w-[40%] lg:w-[35%] shrink-0">
+            <FadeUp
+              delay={0.6}
+              className="w-full md:w-[40%] lg:w-[35%] shrink-0"
+            >
               <div className="overflow-hidden rounded-xl h-[260px] group shadow-2xl">
                 <img
                   loading="lazy"

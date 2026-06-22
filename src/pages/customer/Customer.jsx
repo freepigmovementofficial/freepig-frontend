@@ -1,17 +1,19 @@
-import useDocumentTitle from '../../hooks/useDocumentTitle';
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { testimonialsService } from '../../api/testimonials';
-import headingImg from '../../assets/Heading.webp';
-import PigLoader from '../../components/PigLoader';
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { testimonialsService } from "../../api/testimonials";
+import headingImg from "../../assets/headerRiderss.png";
+import headerTransparanImg from "../../assets/headertranparan.png";
+import bercakPembatas from "../../assets/bercakPembatas.png";
+import PigLoader from "../../components/PigLoader";
 
-const FadeUp = ({ children, delay = 0, className = '' }) => (
+const FadeUp = ({ children, delay = 0, className = "" }) => (
   <motion.div
     className={className}
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, amount: 0.15 }}
-    transition={{ duration: 0.7, ease: 'easeOut', delay }}
+    transition={{ duration: 0.7, ease: "easeOut", delay }}
   >
     {children}
   </motion.div>
@@ -29,7 +31,7 @@ const InstagramIcon = () => (
 );
 
 export default function Customer() {
-  useDocumentTitle('Customers | FreePigMovement');
+  useDocumentTitle("Customers | FreePigMovement");
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,7 +47,7 @@ export default function Customer() {
       setMeta(data?.meta || null);
       setPage(pageNum);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to load testimonials');
+      setError(err.response?.data?.message || "Failed to load testimonials");
     } finally {
       setLoading(false);
     }
@@ -56,21 +58,37 @@ export default function Customer() {
   }, []);
 
   return (
-    <div className="bg-[#252525] min-h-screen font-poppins text-white overflow-x-hidden">
+    <div className="bg-[#000000] min-h-screen font-poppins text-white overflow-x-hidden">
       {/* ── HERO HEADER ── */}
       <div
-        className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
-        style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
+        className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-hidden"
+        style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
       >
-        <div className="absolute inset-0 bg-black/50" />
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
+          }}
+        ></div>
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="relative z-10 font-oswald text-5xl sm:text-6xl md:text-7xl lg:text-[96px] font-black tracking-[0.1em] text-center uppercase text-white drop-shadow-2xl px-4"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 font-road-rage text-5xl sm:text-6xl md:text-7xl lg:text-[96px] text-black drop-shadow-2xl px-4 text-center"
         >
           CUSTOMER
         </motion.h1>
+        <div
+          className="absolute inset-0 bg-cover bg-[center_15%] pointer-events-none z-20"
+          style={{ backgroundImage: `url(${headerTransparanImg})` }}
+        ></div>
+        <img
+          src={bercakPembatas}
+          alt="Bercak pembatas banner"
+          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[63%]"
+        />
       </div>
 
       {/* ── SUBTITLE ── */}
@@ -87,7 +105,7 @@ export default function Customer() {
       </motion.div>
 
       {/* ── TESTIMONIALS LIST ── */}
-      <div className="max-w-5xl mx-auto px-4 md:px-8 pb-24 pt-8">
+      <div className="w-full mx-auto px-6 md:px-[70px] pb-24 pt-8">
         {error ? (
           <div className="text-center py-20 text-red-400 text-sm tracking-widest uppercase">
             <p>{error}</p>
@@ -108,20 +126,21 @@ export default function Customer() {
           </div>
         ) : (
           <AnimatePresence>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-[20px]">
               {testimonials.map((item, idx) => {
                 const isEven = idx % 2 === 1;
                 return (
                   <FadeUp key={item.id} delay={idx * 0.05}>
                     <div
                       className={`group flex flex-col ${
-                        isEven ? 'md:flex-row-reverse' : 'md:flex-row'
+                        isEven ? "md:flex-row-reverse" : "md:flex-row"
                       } bg-[#3a3a3a] rounded-2xl overflow-hidden border border-white/5 shadow-xl hover:border-white/15 hover:shadow-2xl transition-all duration-300 md:h-[230px]`}
                     >
                       {/* ── Photo ── */}
                       <div className="relative w-full md:w-[220px] shrink-0 h-[200px] md:h-full bg-[#2a2a2a] overflow-hidden">
                         {item.photoUrl ? (
-                          <img loading="lazy"
+                          <img
+                            loading="lazy"
                             src={item.photoUrl}
                             alt={item.name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -131,8 +150,9 @@ export default function Customer() {
                             <div
                               className="absolute inset-0 opacity-10"
                               style={{
-                                backgroundImage: 'repeating-conic-gradient(#666 0% 25%, #888 0% 50%)',
-                                backgroundSize: '24px 24px',
+                                backgroundImage:
+                                  "repeating-conic-gradient(#666 0% 25%, #888 0% 50%)",
+                                backgroundSize: "24px 24px",
                               }}
                             />
                             <span className="relative text-gray-500 text-xs font-bold tracking-widest uppercase">
@@ -143,7 +163,9 @@ export default function Customer() {
                         {/* gradient edge overlay for blend */}
                         <div
                           className={`absolute inset-y-0 w-12 from-[#3a3a3a] to-transparent ${
-                            isEven ? 'left-0 bg-gradient-to-r' : 'right-0 bg-gradient-to-l'
+                            isEven
+                              ? "left-0 bg-gradient-to-r"
+                              : "right-0 bg-gradient-to-l"
                           }`}
                         />
                       </div>
@@ -167,10 +189,10 @@ export default function Customer() {
                         <p
                           className="text-gray-300 text-[13px] md:text-sm leading-relaxed mb-4"
                           style={{
-                            display: '-webkit-box',
+                            display: "-webkit-box",
                             WebkitLineClamp: 4,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
                           }}
                         >
                           {item.review}
@@ -187,7 +209,9 @@ export default function Customer() {
                             <span className="text-pink-400">
                               <InstagramIcon />
                             </span>
-                            <span className="tracking-wide">@{item.instagram}</span>
+                            <span className="tracking-wide">
+                              @{item.instagram}
+                            </span>
                           </a>
                         )}
                       </div>

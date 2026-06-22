@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaUserCircle } from 'react-icons/fa';
-import headingImg from '../assets/Heading.webp';
+import headingImg from '../assets/headerRiderss.png';
 
 export default function ContactPopup() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +33,7 @@ export default function ContactPopup() {
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#292929] rounded-3xl overflow-hidden w-full max-w-4xl relative shadow-2xl"
+            className="bg-[#292929] rounded-3xl overflow-hidden w-full max-w-3xl relative shadow-2xl"
           >
             {/* Close Button */}
             <button
@@ -44,26 +44,26 @@ export default function ContactPopup() {
             </button>
 
             {/* Header with Image */}
-            <div className="relative h-48 flex items-center justify-center overflow-hidden">
+            <div className="relative h-32 md:h-40 flex items-center justify-center overflow-hidden">
               <img
                 src={headingImg}
                 alt="Heading"
                 className="absolute inset-0 w-full h-full object-cover opacity-90"
               />
               <div className="absolute inset-0 bg-black/60"></div>
-              <h2 className="relative z-10 font-oswald text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-widest text-center mt-2">
+              <h2 className="relative z-10 font-oswald text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-widest text-center mt-2 px-4">
                 GET IN TOUCH WITH OUR TEAM
               </h2>
             </div>
 
             {/* Content */}
-            <div className="p-8 md:p-16 text-center">
+            <div className="p-6 md:p-10 text-center">
               <p className="text-gray-200 mb-12 text-sm md:text-base tracking-wide max-w-3xl mx-auto leading-loose">
                 For inquiries, consultations, or custom requests, please contact our team through WhatsApp. Select one of our administrators below, and we will assist you as soon as possible.
               </p>
 
               {/* Admin Cards */}
-              <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12">
+              <div className="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-8">
                 {admins.map((admin) => (
                   <a
                     key={admin.name}
@@ -72,11 +72,11 @@ export default function ContactPopup() {
                     rel="noopener noreferrer"
                     className="flex items-center group cursor-pointer relative"
                   >
-                    <div className="bg-white rounded-full p-2 z-10 relative">
-                      <FaUserCircle className="text-[#444] text-7xl md:text-8xl" />
+                    <div className="bg-white rounded-full p-1.5 z-10 relative">
+                      <FaUserCircle className="text-[#444] text-5xl md:text-6xl" />
                     </div>
-                    <div className="bg-[#444] rounded-r-2xl -ml-8 pl-12 pr-8 py-3 md:py-4 shadow-lg group-hover:bg-[#555] transition duration-300">
-                      <span className="font-oswald text-xl md:text-2xl font-bold text-white tracking-widest">
+                    <div className="bg-[#444] rounded-r-2xl -ml-6 pl-10 pr-6 py-2.5 md:py-3 shadow-lg group-hover:bg-[#555] transition duration-300">
+                      <span className="font-oswald text-lg md:text-xl font-bold text-white tracking-widest">
                         {admin.name}
                       </span>
                     </div>

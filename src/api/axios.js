@@ -30,7 +30,7 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401 && !isLoginOrOtp) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      window.location.href = '/login?expired=true';
     }
     return Promise.reject(error);
   }

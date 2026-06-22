@@ -1,8 +1,10 @@
-import useDocumentTitle from '../../hooks/useDocumentTitle';
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import headingImg from '../../assets/Heading.webp';
-import volumeImg from '../../assets/volumeCalculate.webp';
+import headingImg from "../../assets/headerRiderss.png";
+import headerTransparanImg from "../../assets/headertranparan.png";
+import bercakPembatas from "../../assets/bercakPembatas.png";
+import volumeImg from "../../assets/volumeCalculate.webp";
 
 // ── Shape factors ──────────────────────────────────────────────────────────────
 const SHAPE_FACTORS = {
@@ -17,10 +19,43 @@ const SHAPE_FACTORS = {
 function getLengthCm(feetFloat) {
   const inches = Math.round(feetFloat * 12);
   const table = {
-    60: 152.4, 61: 155.0, 62: 157.5, 63: 160.0, 64: 162.5, 65: 165.0, 66: 167.6, 67: 170.0, 68: 172.7, 69: 175.3,
-    70: 178, 71: 180.5, 72: 183.0, 73: 185.4, 74: 188.0, 75: 190.5, 76: 193.0, 77: 195.6, 78: 198.0, 79: 200.7,
-    80: 203.2, 81: 205.7, 82: 208, 83: 210, 84: 213.4, 85: 215.9, 86: 218.4, 87: 220.1, 88: 223.5, 89: 226.0,
-    90: 228.6, 91: 231.1, 92: 233.7, 93: 236.2, 94: 238.5, 95: 240.5, 96: 243.8
+    60: 152.4,
+    61: 155.0,
+    62: 157.5,
+    63: 160.0,
+    64: 162.5,
+    65: 165.0,
+    66: 167.6,
+    67: 170.0,
+    68: 172.7,
+    69: 175.3,
+    70: 178,
+    71: 180.5,
+    72: 183.0,
+    73: 185.4,
+    74: 188.0,
+    75: 190.5,
+    76: 193.0,
+    77: 195.6,
+    78: 198.0,
+    79: 200.7,
+    80: 203.2,
+    81: 205.7,
+    82: 208,
+    83: 210,
+    84: 213.4,
+    85: 215.9,
+    86: 218.4,
+    87: 220.1,
+    88: 223.5,
+    89: 226.0,
+    90: 228.6,
+    91: 231.1,
+    92: 233.7,
+    93: 236.2,
+    94: 238.5,
+    95: 240.5,
+    96: 243.8,
   };
   return table[inches] || Math.round(inches * 2.54 * 10) / 10;
 }
@@ -28,10 +63,35 @@ function getLengthCm(feetFloat) {
 function getWidthCm(inchesFloat) {
   const eighths = Math.round(inchesFloat * 8);
   const table = {
-    136: 43.1, 138: 43.8, 140: 44.4, 142: 45, 144: 45.7, 146: 46.3, 148: 47.0, 150: 47.6,
-    152: 48.2, 154: 48.9, 156: 49.5, 158: 50.1, 160: 50.8, 162: 51.4, 164: 52.1, 166: 52.7,
-    168: 53.3, 170: 53.9, 172: 54.6, 174: 55.2, 176: 55.9, 178: 56.5, 180: 57.1, 182: 57.8,
-    184: 58.4, 186: 59, 188: 59.7, 190: 60.3, 192: 60.9
+    136: 43.1,
+    138: 43.8,
+    140: 44.4,
+    142: 45,
+    144: 45.7,
+    146: 46.3,
+    148: 47.0,
+    150: 47.6,
+    152: 48.2,
+    154: 48.9,
+    156: 49.5,
+    158: 50.1,
+    160: 50.8,
+    162: 51.4,
+    164: 52.1,
+    166: 52.7,
+    168: 53.3,
+    170: 53.9,
+    172: 54.6,
+    174: 55.2,
+    176: 55.9,
+    178: 56.5,
+    180: 57.1,
+    182: 57.8,
+    184: 58.4,
+    186: 59,
+    188: 59.7,
+    190: 60.3,
+    192: 60.9,
   };
   return table[eighths] || Math.round(inchesFloat * 2.54 * 10) / 10;
 }
@@ -39,8 +99,23 @@ function getWidthCm(inchesFloat) {
 function getThicknessCm(inchesFloat) {
   const eighths = Math.round(inchesFloat * 8);
   const table = {
-    16: 5.0, 17: 5.3, 18: 5.7, 19: 6.0, 20: 6.3, 21: 6.6, 22: 6.9, 23: 7.3,
-    24: 7.6, 25: 7.9, 26: 8.2, 27: 8.6, 28: 8.9, 29: 9.3, 30: 9.5, 31: 9.8, 32: 10.1
+    16: 5.0,
+    17: 5.3,
+    18: 5.7,
+    19: 6.0,
+    20: 6.3,
+    21: 6.6,
+    22: 6.9,
+    23: 7.3,
+    24: 7.6,
+    25: 7.9,
+    26: 8.2,
+    27: 8.6,
+    28: 8.9,
+    29: 9.3,
+    30: 9.5,
+    31: 9.8,
+    32: 10.1,
   };
   return table[eighths] || Math.round(inchesFloat * 2.54 * 10) / 10;
 }
@@ -77,10 +152,7 @@ function Slider({ label, min, max, step, value, onChange, display }) {
       </div>
 
       {/* Track */}
-      <div
-        className="relative h-[3px] rounded-full"
-        style={{ background: "rgba(255,255,255,0.12)" }}
-      >
+      <div className="relative h-[3px] rounded-full">
         {/* Fill */}
         <div
           className="absolute left-0 top-0 h-full rounded-full"
@@ -253,31 +325,10 @@ function SurfboardSVG() {
 }
 
 // ── Dimension label ────────────────────────────────────────────────────────────
-function DimLabel({ color, label, delay }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 16 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay, duration: 0.5 }}
-      className="flex items-center gap-2"
-    >
-      <div
-        className="w-7 h-[2px] rounded-full flex-shrink-0"
-        style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}` }}
-      />
-      <span
-        className="text-[11px] tracking-widest uppercase font-medium"
-        style={{ color }}
-      >
-        {label}
-      </span>
-    </motion.div>
-  );
-}
 
 // ── Main Component ─────────────────────────────────────────────────────────────
 export default function Volume() {
-  useDocumentTitle('Volume Calculator | FreePigMovement');
+  useDocumentTitle("Volume Calculator | FreePigMovement");
   const [length, setLength] = useState(6.5);
   const [width, setWidth] = useState(20.5);
   const [thickness, setThickness] = useState(2.75);
@@ -287,16 +338,16 @@ export default function Volume() {
 
   const calculate = () => {
     const factor = SHAPE_FACTORS[boardType];
-    
+
     // Convert all measurements to cm exactly as the original documentation explains
     const lengthCm = getLengthCm(length);
     const widthCm = getWidthCm(width);
     const thicknessCm = getThicknessCm(thickness);
-    
+
     // EXACT math from the old website's script.js
     const rawVal = (lengthCm * widthCm * thicknessCm * factor) / 100;
     const vol = Math.floor(rawVal) / 10;
-    
+
     setVolume(vol.toFixed(1));
     setCalculated(true);
   };
@@ -311,26 +362,42 @@ export default function Volume() {
     >
       {/* ══════════════════ HERO BANNER ══════════════════ */}
       <div
-        className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
-        style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
+        className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-hidden"
+        style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
       >
-        <div className="absolute inset-0 bg-black/50" />
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
+          }}
+        ></div>
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="relative z-10 font-oswald text-5xl sm:text-6xl md:text-7xl lg:text-[96px] font-black tracking-[0.1em] text-center uppercase text-white drop-shadow-2xl px-4"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 font-road-rage text-5xl sm:text-6xl md:text-7xl lg:text-[96px] text-black drop-shadow-2xl px-4 text-center"
         >
           VOLUME CALCULATE
         </motion.h1>
+        <div
+          className="absolute inset-0 bg-cover bg-[center_15%] pointer-events-none z-20"
+          style={{ backgroundImage: `url(${headerTransparanImg})` }}
+        ></div>
+        <img
+          src={bercakPembatas}
+          alt="Bercak pembatas banner"
+          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[63%]"
+        />
       </div>
 
       {/* ══════════════════ CALCULATOR SECTION ══════════════════ */}
       <div
-        className="w-full px-4 sm:px-6 md:px-12 py-8 md:py-10"
-        style={{ backgroundColor: "#1e1e1e" }}
+        className="w-full px-6 md:px-[70px] py-8 md:py-10"
+        style={{ backgroundColor: "#000000" }}
       >
-        <div className="max-w-6xl mx-auto flex flex-col lg:grid lg:grid-cols-3 gap-8 md:gap-10 items-start">
+        <div className="w-full mx-auto flex flex-col lg:grid lg:grid-cols-3 gap-[20px] items-start">
           {/* ─── LEFT: Controls ─── */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -375,10 +442,10 @@ export default function Volume() {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 mb-6 mt-2">
               {BOARD_TYPES.map((bt) => (
                 <label
-                    key={bt.id}
-                    className="flex items-center gap-2 cursor-pointer py-1"
-                    onClick={() => setBoardType(bt.id)}
-                  >
+                  key={bt.id}
+                  className="flex items-center gap-2 cursor-pointer py-1"
+                  onClick={() => setBoardType(bt.id)}
+                >
                   {/* Custom radio */}
                   <div
                     className="w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 transition-all"
@@ -420,13 +487,9 @@ export default function Volume() {
             >
               {/* Button kiri */}
               <motion.button
-                whileHover={{ background: "hsla(0, 0%, 100%, 1.00)" }}
                 whileTap={{ scale: 0.97 }}
                 onClick={calculate}
-                className="flex-shrink-0 px-6 py-2.5 text-xs font-bold tracking-widest uppercase text-white rounded-full transition-all"
-                style={{
-                  background: "rgba(255, 255, 255, 0.2)",
-                }}
+                className="flex-shrink-0 px-8 py-3 text-[11px] font-bold tracking-widest uppercase text-white bg-white/20 hover:bg-white hover:text-black transition-colors duration-300"
               >
                 Calculate
               </motion.button>
@@ -477,10 +540,8 @@ export default function Volume() {
             <p className="text-xs tracking-[0.3em] uppercase text-white mb-1">
               How To Calculate
             </p>
-            <h2 className="text-xl md:text-2xl font-bold mb-4 leading-snug text-white">
-              Surfboard
-              <br />
-              Volume
+            <h2 className="text-xl md:text-[22px]  mb-4 leading-snug text-white">
+              Surfboard Volume
             </h2>
 
             <div
@@ -499,7 +560,7 @@ export default function Volume() {
               board.
             </p>
 
-            <p className="text-[11px] text-gray-600 max-w-[220px] leading-relaxed">
+            <p className="text-xs text-gray-400 leading-relaxed max-w-[240px] mb-6">
               Length, width and thickness measured at widest point.
             </p>
           </motion.div>
@@ -512,19 +573,12 @@ export default function Volume() {
             className="flex items-center justify-center gap-4 sm:gap-6 order-first lg:order-last"
           >
             {/* Board image */}
-            <div className="w-[120px] sm:w-[160px] md:w-[180px] lg:w-[200px] flex-shrink-0">
+            <div className="w-[150px] sm:w-[200px] md:w-[240px] lg:w-[280px] flex-shrink-0">
               <img
                 src={volumeImg}
                 alt="Surfboard volume reference"
                 className="w-full h-auto object-contain drop-shadow-2xl"
               />
-            </div>
-
-            {/* Labels */}
-            <div className="flex flex-col gap-5 sm:gap-8 pt-4">
-              <DimLabel color="#FFD700" label="Width" delay={0.5} />
-              <DimLabel color="#FF3333" label="Length" delay={0.6} />
-              <DimLabel color="#22C55E" label="Thickness" delay={0.7} />
             </div>
           </motion.div>
         </div>

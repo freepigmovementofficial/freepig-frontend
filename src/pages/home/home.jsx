@@ -14,15 +14,18 @@ import videoLandingPage from "../../assets/videoLandingPage.mp4";
 import meetTheRiders from "../../assets/meetTheRiders.webp";
 import lovedCustomer from "../../assets/LovedHome.webp";
 import customresinTint from "../../assets/customresinTint.webp";
-import smallWavesImg from "../../assets/smallWave.png";
-import mediumWavesImg from "../../assets/mediumWave.png";
-import bigWavesImg from "../../assets/bigWave.png";
+import smallWavesImg from "../../assets/smallWave.png?v=2";
+import mediumWavesImg from "../../assets/mediumWave.png?v=2";
+import bigWavesImg from "../../assets/bigWave.png?v=2";
 import categoryAdvance from "../../assets/CategoryAdvance.webp";
 import categoryIntermediate from "../../assets/CategoryIntermediate.webp";
 import categoryBeginner from "../../assets/CategoryBeginner.webp";
 import categoryGroms from "../../assets/CategoryGroms.webp";
 import aboutUsImg from "../../assets/aboutUs.webp";
 import maskotBabi from "../../assets/maskotBabi.png";
+import maskotBabi2 from "../../assets/maskotBabi2.png";
+import FPWHITE from "../../assets/FPWHITE.png";
+import logoTransparan from "../../assets/logoTransparan.png";
 import bercakBercak from "../../assets/bercak-bercak.png";
 import bercakPembatas from "../../assets/bercakPembatas.png";
 import aksesoris2 from "../../assets/aksesoris2.png";
@@ -50,7 +53,7 @@ const FadeUp = ({ children, delay = 0, className = "" }) => (
 
 // Wrapper container konsisten di seluruh halaman
 const Container = ({ children, className = "" }) => (
-  <div className={`max-w-7xl mx-auto px-6 md:px-12 lg:px-16 ${className}`}>
+  <div className={`w-full mx-auto px-6 md:px-[70px] ${className}`}>
     {children}
   </div>
 );
@@ -338,7 +341,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* HERO SECTION */}
-      <section className="relative w-full h-screen flex flex-col justify-end pb-20 px-10 md:px-20 overflow-visible z-10">
+      <section className="relative w-full h-screen flex flex-col justify-end pb-20 px-6 md:px-[70px] overflow-visible z-10">
         {/* Video diperpanjang ke bawah sejauh 128px (seukuran mt-32) biar ngisi ruang kosong */}
         <div
           className="absolute top-0 left-0 w-full z-0"
@@ -376,9 +379,15 @@ export default function Home() {
         >
           {/* Stacked typographic hero title — layout matches Figma reference */}
           <h1 className="font-road-rage text-white drop-shadow-xl tracking-wide leading-none mb-4">
-            {hero?.title && hero.title.toUpperCase() !== "RIDE YOUR OWN WAVE" ? (
-              <span className="text-5xl md:text-7xl lg:text-8xl break-words max-w-2xl">
-                {hero.title}
+            {hero?.title &&
+            hero.title.toUpperCase() !== "RIDE YOUR OWN WAVE" ? (
+              <span className="text-5xl md:text-7xl lg:text-8xl break-words max-w-2xl block">
+                {hero.title.split("\n").map((line, i) => (
+                  <React.Fragment key={i}>
+                    {line}
+                    {i !== hero.title.split("\n").length - 1 && <br />}
+                  </React.Fragment>
+                ))}
               </span>
             ) : (
               <span className="relative flex flex-col items-start w-fit">
@@ -501,7 +510,7 @@ export default function Home() {
       {/* ACCESSORIES & SURFBOARD CARDS */}
       <section className="w-full text-white mb-24 mt-10 md:mt-20">
         <Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px]">
             {[
               {
                 label: "ACCESSORIES",
@@ -606,7 +615,7 @@ export default function Home() {
         <div className="absolute top-0 left-0 w-full h-32 md:h-48 bg-gradient-to-b from-[#0A0F13] to-transparent pointer-events-none z-[5]"></div>
 
         {/* LEFT — Text content */}
-        <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center px-8 md:px-14 lg:px-20 py-32 md:py-32">
+        <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center px-8 md:px-[70px] py-32 md:py-32">
           <FadeUp className="flex flex-col items-start gap-4 text-white">
             <h2 className="font-road-rage text-6xl md:text-8xl lg:text-[110px] leading-[0.9] text-white tracking-widest -rotate-[6deg] origin-left drop-shadow-md">
               NEW
@@ -675,13 +684,25 @@ export default function Home() {
       </section>
 
       {/* SHOP BY SKILL */}
-      <section className="w-full bg-[#1a1a1a] py-24">
-        <Container>
+      <section className="relative w-full pt-20 pb-16">
+        {/* Bercak Kiri Mengambang di antara dua section */}
+        <img
+          src={bercakBercak}
+          alt="Bercak Kiri"
+          className="absolute left-0 top-0 w-[400px] md:w-[700px] h-auto object-contain pointer-events-none mix-blend-screen opacity-70 -translate-x-[30%] -translate-y-[40%] z-[20]"
+        />
+        {/* Bercak Kanan Mengambang di antara dua section */}
+        <img
+          src={bercakBercak}
+          alt="Bercak Kanan"
+          className="absolute right-0 top-0 w-[400px] md:w-[700px] h-auto object-contain pointer-events-none mix-blend-screen opacity-70 translate-x-[20%] -translate-y-[30%] -scale-y-100 rotate-180 z-[20]"
+        />
+        <Container className="relative z-10">
           <FadeUp>
-            <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-gray-400 uppercase text-center mb-12">
-              find your level
+            <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-white uppercase text-center mb-12">
+              FIND YOUR <span className="text-[#4ADDDE]">LEVEL</span>
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-[20px]">
               {[
                 { title: "ADVANCED", img: categoryAdvance },
                 { title: "INTERMEDIATE", img: categoryIntermediate },
@@ -720,28 +741,36 @@ export default function Home() {
       </section>
 
       {/* SHOP BY WAVE */}
-      <section className="w-full bg-[#1a1a1a] py-24">
+      <section className="w-full py-24">
         <Container>
-          <FadeUp>
-            <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-gray-400 uppercase text-center mb-12">
-              find your wave
-            </h3>
-            <div className="flex flex-col md:flex-row justify-center items-center md:items-end gap-12 md:gap-24 text-center mt-12">
+          <FadeUp className="flex flex-col md:flex-row items-center justify-center gap-16 lg:gap-32">
+            {/* Title Section */}
+            <div className="flex flex-col items-start -rotate-[6deg] shrink-0 mb-8 md:mb-0">
+              <h2 className="font-road-rage text-[64px] md:text-[96px] tracking-widest text-[#4ADDDE] leading-[0.85] drop-shadow-md">
+                WAVE
+              </h2>
+              <h2 className="font-road-rage text-[42px] md:text-[64px] tracking-widest text-white leading-[0.85] drop-shadow-md ml-4 md:ml-8">
+                SELECTION
+              </h2>
+            </div>
+
+            {/* Wave Icons Section */}
+            <div className="flex flex-col md:flex-row items-center md:items-end gap-12 md:gap-20 text-center">
               {[
                 {
                   title: "SMALL WAVES",
                   img: smallWavesImg,
-                  imgClass: "w-28 md:w-40",
+                  imgClass: "w-28 md:w-36 lg:w-44",
                 },
                 {
                   title: "MEDIUM WAVES",
                   img: mediumWavesImg,
-                  imgClass: "w-28 md:w-40",
+                  imgClass: "w-28 md:w-36 lg:w-44",
                 },
                 {
                   title: "BIG WAVES",
                   img: bigWavesImg,
-                  imgClass: "w-28 md:w-40",
+                  imgClass: "w-28 md:w-36 lg:w-44",
                 },
               ].map((wave, idx) => (
                 <motion.div
@@ -753,18 +782,18 @@ export default function Home() {
                   onClick={() =>
                     navigate(`/store?filter=${encodeURIComponent(wave.title)}`)
                   }
-                  className="bg-[#222] border border-[#333] group cursor-pointer flex flex-col hover:bg-[#2a2a2a] hover:border-accent-teal transition duration-500 shadow-xl overflow-hidden w-full max-w-[280px]"
+                  className="group cursor-pointer flex flex-col items-center hover:-translate-y-2 transition duration-500"
                 >
-                  <div className="h-64 sm:h-72 w-full overflow-hidden">
+                  <div className="h-24 md:h-32 flex items-center justify-center mb-4">
                     <img
                       loading="lazy"
                       src={wave.img}
                       alt={wave.title}
-                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-700 ease-out"
+                      className={`${wave.imgClass} opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-700 ease-out drop-shadow-md`}
                     />
                   </div>
-                  <div className="bg-[#1f1f1f] border-t border-[#333] w-full py-5 text-center group-hover:bg-[#2a2a2a] transition duration-500 flex flex-col items-center justify-center min-h-[80px]">
-                    <h4 className="font-road-rage text-base md:text-xl tracking-wide text-gray-200 group-hover:text-accent-teal transition uppercase">
+                  <div className="w-full text-center mt-2">
+                    <h4 className="font-sans text-[10px] md:text-[11px] font-black tracking-widest text-white group-hover:text-[#4ADDDE] transition uppercase">
                       {wave.title}
                     </h4>
                   </div>
@@ -778,21 +807,16 @@ export default function Home() {
       {/* SURFBOARDS PRODUCTS */}
       <section className="w-full bg-[#151515] py-24">
         <Container>
-          <FadeUp className="flex flex-wrap items-center justify-between gap-3 mb-12">
-            <h3 className="font-road-rage text-4xl sm:text-5xl tracking-wide">
-              SURFBOARDS
+          <FadeUp className="flex items-center gap-4 sm:gap-6 mb-12">
+            <h3 className="font-poppins text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-wide text-white whitespace-nowrap">
+              FEATURED SURFBOARDS
             </h3>
-            <p
-              className="text-xs sm:text-sm font-bold tracking-widest text-gray-400 hover:text-accent-teal transition cursor-pointer flex items-center gap-2 shrink-0"
-              onClick={() => navigate("/store?tab=surfboard")}
-            >
-              VIEW ALL <span className="text-base sm:text-lg">&rarr;</span>
-            </p>
+            <div className="flex-grow h-[1px] bg-[#4ADDDD]" />
           </FadeUp>
 
           {/* Loading skeleton */}
           {surfboardsLoading && (
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-[20px]">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="flex flex-col animate-pulse">
                   <div className="bg-[#333] aspect-[3/4]" />
@@ -804,7 +828,7 @@ export default function Home() {
 
           {/* Actual products */}
           {!surfboardsLoading && surfboards.length > 0 && (
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-[20px]">
               {surfboards.map((product, idx) => {
                 const firstImage = getDisplayImage(product);
                 const category =
@@ -819,10 +843,10 @@ export default function Home() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.35, delay: idx * 0.08 }}
-                      className="flex flex-col cursor-pointer group"
+                      className="flex flex-col cursor-pointer group rounded-[30px] overflow-hidden bg-[#16181a] shadow-lg h-full"
                     >
                       {/* Image — full-frame, no padding, white bg */}
-                      <div className="bg-white overflow-hidden aspect-[3/4]">
+                      <div className="bg-white overflow-hidden aspect-[3/4] flex items-center justify-center">
                         <img
                           loading="lazy"
                           src={firstImage}
@@ -834,11 +858,11 @@ export default function Home() {
                         />
                       </div>
                       {/* Info bar */}
-                      <div className="bg-[#3a3a3a] px-4 py-3">
-                        <p className="text-[9px] text-gray-400 tracking-[0.18em] uppercase mb-0.5 font-semibold">
+                      <div className="bg-[#1A2127] px-5 py-4 md:py-6 flex-grow flex flex-col justify-center">
+                        <p className="text-[9px] text-gray-400 tracking-[0.18em] uppercase mb-1 font-bold">
                           {category}
                         </p>
-                        <p className="font-road-rage text-base tracking-wide uppercase text-white group-hover:text-accent-teal transition duration-300">
+                        <p className="font-poppins text-sm sm:text-base md:text-lg font-bold tracking-wide uppercase text-white transition duration-300">
                           {product.name}
                         </p>
                       </div>
@@ -861,63 +885,96 @@ export default function Home() {
       </section>
 
       {/* FOOTER IMAGES GRID */}
-      <section className="w-full">
-        <div className="grid grid-cols-1 md:grid-cols-3 h-[600px]">
-          {[
-            {
-              topTitle: "RIDERS",
-              bottomTitle: "SPOTLIGHT",
-              img: meetTheRiders,
-              link: "/riders",
-            },
-            {
-              topTitle: "LOVED BY",
-              bottomTitle: "SURFERS WORLDWIDE",
-              img: lovedCustomer,
-              link: "/customer",
-            },
-            {
-              bottomTitle: "GALLERY",
-              img: customresinTint,
-              link: "/gallery",
-            },
-          ].map((item, idx) => (
-            <div
-              key={idx}
-              onClick={() => item.link && navigate(item.link)}
-              className="relative group overflow-hidden cursor-pointer h-full"
-            >
-              <img
-                loading="lazy"
-                src={item.img}
-                alt={item.bottomTitle}
-                className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:grayscale"
-              />
-              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition duration-500"></div>
-              <div className="absolute bottom-0 left-0 right-0 p-10 pt-16 bg-transparent group-hover:bg-[#222] transition-colors duration-500 flex flex-col z-10">
-                <span className="font-poppins text-lg md:text-xl font-medium tracking-wide text-white drop-shadow-md">
-                  {item.topTitle}
-                </span>
-                <h3 className="font-road-rage text-5xl md:text-6xl tracking-wide leading-none text-white drop-shadow-lg transition duration-300">
-                  {item.bottomTitle}
-                </h3>
+      <section className="w-full bg-[#111] py-24">
+        <div className="w-full px-4 md:px-[70px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px]">
+            {[
+              {
+                topTitle: "rider",
+                bottomTitle: "spotlight",
+                img: meetTheRiders,
+                link: "/riders",
+                titleSize: "text-3xl md:text-[36px]",
+              },
+              {
+                topTitle: "LOVED BY",
+                bottomTitle: "SURFERS\nWORLDWIDE",
+                img: lovedCustomer,
+                link: "/customer",
+                titleSize: "text-3xl md:text-[36px]",
+              },
+              {
+                topTitle: "",
+                bottomTitle: "GALLERY",
+                img: customresinTint,
+                link: "/gallery",
+                titleSize: "text-4xl md:text-[48px]",
+                titleColor: "text-[#4ADDDD]",
+              },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                onClick={() => item.link && navigate(item.link)}
+                className="relative group overflow-hidden cursor-pointer aspect-[420/487] rounded-[30px] border border-[#4ADDDD] shadow-lg"
+              >
+                <img
+                  loading="lazy"
+                  src={item.img}
+                  alt={item.bottomTitle}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:grayscale"
+                />
+
+                {/* Bercak Pembatas Overlay */}
+                <div className="absolute inset-0 z-10 pointer-events-none opacity-40 mix-blend-overlay flex items-center justify-center overflow-hidden">
+                  <img
+                    src={bercakPembatas}
+                    className="w-full h-full object-cover"
+                    alt=""
+                  />
+                </div>
+
+                {/* Dark gradient overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/90 transition duration-500 z-10"></div>
+
+                {/* Text Container */}
+                <div className="absolute bottom-0 left-0 right-0 p-8 pb-10 z-20 flex flex-col transform -rotate-3 transition-transform duration-300 group-hover:-translate-y-2">
+                  {item.topTitle && (
+                    <span className="font-road-rage text-2xl md:text-3xl tracking-wide text-[#4ADDDD] drop-shadow-md leading-none mb-1">
+                      {item.topTitle}
+                    </span>
+                  )}
+                  <h3
+                    className={`font-road-rage ${item.titleSize || "text-[48px]"} tracking-wide leading-none ${item.titleColor || "text-white"} drop-shadow-lg`}
+                  >
+                    {item.bottomTitle.split("\n").map((line, i) => (
+                      <React.Fragment key={i}>
+                        {line}
+                        {i !== item.bottomTitle.split("\n").length - 1 && (
+                          <br />
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </h3>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* FAQ SECTION */}
-      <section className="w-full bg-[#1a1a1a] py-32">
-        <Container>
-          <div className="flex flex-col md:flex-row gap-16 border-t border-b border-gray-700 py-16">
-            <FadeUp className="w-full md:w-1/3">
-              <h2 className="font-road-rage text-5xl md:text-6xl tracking-wide leading-tight">
-                Frequently Asked Questions
+      <section className="w-full pt-32 pb-12">
+        <div className="w-full px-4 md:px-[70px]">
+          <div className="flex flex-col md:flex-row md:items-center gap-12 md:gap-24 border-t border-b border-[#143336] py-12 md:py-16">
+            <FadeUp className="w-full md:w-5/12">
+              <h2 className="font-road-rage text-4xl md:text-[47px] tracking-wide leading-none flex flex-col">
+                <span className="text-white drop-shadow-md">FREQUENTLY</span>
+                <span className="text-[#4ADDDD] drop-shadow-md">
+                  ASKED QUESTIONS
+                </span>
               </h2>
-              <div className="w-12 h-1 bg-accent-teal mt-4"></div>
             </FadeUp>
-            <div className="w-full md:w-2/3 flex flex-col">
+            <div className="w-full md:w-7/12 flex flex-col">
               {faqs.map((faq, idx) => (
                 <motion.div
                   key={idx}
@@ -925,14 +982,14 @@ export default function Home() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className="border-b border-gray-700 last:border-0 py-6 cursor-pointer group"
+                  className="py-3 md:py-4 cursor-pointer group"
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 >
-                  <div className="flex justify-between items-center">
-                    <h4 className="text-lg font-semibold group-hover:text-accent-teal transition duration-300">
+                  <div className="flex justify-between items-center gap-4">
+                    <h4 className="text-base md:text-[24px] font-poppins font-medium text-white transition duration-300 leading-snug">
                       {faq.q}
                     </h4>
-                    <span className="text-2xl text-gray-500 group-hover:text-accent-teal transition duration-300">
+                    <span className="text-xl md:text-2xl text-[#4ADDDD] transition duration-300 font-light">
                       {openFaq === idx ? "−" : "+"}
                     </span>
                   </div>
@@ -953,56 +1010,47 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </Container>
+        </div>
       </section>
 
       {/* CUSTOMER REVIEWS SECTION */}
-      <section className="w-full bg-[#151515] py-24">
+      <section className="w-full bg-[#0b1215] pt-28 pb-24">
         <Container>
           <FadeUp>
-            {/* Header + rating summary */}
-            <div className="text-center mb-16">
-              <h2 className="font-road-rage text-5xl md:text-6xl tracking-wide text-white mb-3">
+            {/* Header */}
+            <div className="text-center mb-12 border-b border-[#143336] pb-8">
+              <h2 className="font-road-rage text-5xl md:text-[56px] tracking-wide text-[#4ADDDD] uppercase mb-3 drop-shadow-md">
                 Voices From The Lineup
               </h2>
-              <p className="text-gray-400 text-sm tracking-widest mb-6">
+              <p className="text-white text-sm md:text-[15px] font-poppins tracking-widest">
                 Trusted by Riders. Proven in Every Wave.
               </p>
-              {reviewsMeta.totalReviews > 0 && (
-                <div className="flex items-center justify-center gap-3">
-                  <div className="flex">
-                    {renderStars(Math.round(reviewsMeta.avgRating), "text-xl")}
-                  </div>
-                  <span className="text-white font-bold text-lg">
-                    {reviewsMeta.avgRating.toFixed(1)}
-                  </span>
-                  <span className="text-gray-500 text-sm tracking-widest">
-                    ({reviewsMeta.totalReviews} reviews)
-                  </span>
-                </div>
-              )}
             </div>
 
-            {/* Reviews carousel */}
+            {/* Reviews Grid */}
             {reviewsLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl p-6 animate-pulse"
+                    className="w-full max-w-[447px] h-[200px] mx-auto bg-[#1a2127] rounded-[20px] p-6 animate-pulse flex flex-col"
                   >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-full bg-[#333]" />
-                      <div className="h-4 bg-[#333] rounded w-24" />
+                    <div className="flex items-center gap-4 mb-5">
+                      <div className="w-[70px] h-[70px] rounded-full bg-[#333] shrink-0" />
+                      <div className="flex flex-col gap-2">
+                        <div className="h-5 bg-[#333] rounded w-28" />
+                        <div className="h-4 bg-[#333] rounded w-20" />
+                      </div>
                     </div>
-                    <div className="h-3 bg-[#333] rounded w-full mb-2" />
-                    <div className="h-3 bg-[#333] rounded w-2/3" />
+                    <div className="h-3 bg-[#333] rounded w-full mb-2 mx-auto" />
+                    <div className="h-3 bg-[#333] rounded w-5/6 mb-2 mx-auto" />
+                    <div className="h-3 bg-[#333] rounded w-2/3 mx-auto" />
                   </div>
                 ))}
               </div>
             ) : reviews.length > 0 ? (
-              <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
-                {reviews.map((review, idx) => {
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {reviews.slice(0, 3).map((review, idx) => {
                   const isOwn = user && review.userId === user.id;
                   return (
                     <motion.div
@@ -1011,70 +1059,57 @@ export default function Home() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: idx * 0.08 }}
-                      className={`min-w-[300px] md:min-w-[340px] snap-start rounded-xl p-6 flex flex-col transition duration-500 group border ${
+                      className={`w-full max-w-[447px] h-[200px] mx-auto rounded-[20px] p-6 flex flex-col transition duration-500 group border ${
                         isOwn
-                          ? "bg-accent-teal/5 border-accent-teal/30"
-                          : "bg-[#1e1e1e] border-[#2a2a2a] hover:border-accent-teal/40"
+                          ? "bg-[#1a2127] border-accent-teal/50 shadow-[0_0_15px_rgba(74,221,221,0.2)]"
+                          : "bg-[#1a2127] border-transparent hover:border-[#4ADDDD]/30"
                       }`}
                     >
                       {/* User info + rating */}
-                      <div className="flex items-center justify-between gap-3 mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-teal/30 to-[#333] flex items-center justify-center text-white font-bold text-sm uppercase">
-                            {review.user?.name?.[0] || "?"}
-                          </div>
-                          <div>
-                            <p className="text-white font-semibold text-sm tracking-wide flex items-center gap-2">
-                              {review.user?.name || "Anonymous"}
-                              {isOwn && (
-                                <span className="text-[9px] font-bold text-accent-teal tracking-widest bg-accent-teal/10 px-1.5 py-0.5 rounded">
-                                  YOU
-                                </span>
-                              )}
-                            </p>
-                            <div className="flex">
-                              {renderStars(review.rating, "text-sm")}
-                            </div>
-                          </div>
-                        </div>
-                        {/* Edit/Delete for own review */}
+                      <div className="flex items-center gap-5 mb-6 relative">
                         {isOwn && (
-                          <div className="flex gap-1.5 shrink-0">
+                          <div className="absolute top-0 right-0 flex gap-2 shrink-0 -mt-4 -mr-2">
                             <button
                               onClick={handleStartEdit}
-                              className="px-2 py-1 text-[9px] font-bold tracking-widest border border-gray-600 rounded-full text-gray-400 hover:border-white hover:text-white transition"
+                              className="text-gray-400 hover:text-[#4ADDDD] transition"
                             >
-                              EDIT
+                              ✎
                             </button>
                             <button
                               onClick={() => setDeleteReviewConfirmOpen(true)}
-                              className="px-2 py-1 text-[9px] font-bold tracking-widest border border-red-500/40 rounded-full text-red-400 hover:bg-red-500/10 transition"
+                              className="text-red-400 hover:text-red-300 transition"
                             >
-                              DEL
+                              ✕
                             </button>
                           </div>
                         )}
+                        <div className="w-[70px] h-[70px] shrink-0 rounded-full bg-[#4ADDDD] flex items-center justify-center text-white font-bold text-2xl uppercase shadow-lg">
+                          {review.user?.name?.[0] || ""}
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-white font-poppins font-bold text-lg md:text-xl tracking-wide">
+                            {review.user?.name || "Anonymous"}
+                          </p>
+                          <div className="flex text-[#4ADDDD] text-xl mt-1">
+                            {Array.from({ length: 5 }, (_, i) => (
+                              <span
+                                key={i}
+                                className={
+                                  i < review.rating
+                                    ? "opacity-100"
+                                    : "opacity-30"
+                                }
+                              >
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       </div>
 
                       {/* Comment */}
-                      <p className="text-gray-400 text-sm leading-relaxed flex-1">
-                        {review.comment || (
-                          <span className="italic text-gray-600">
-                            No comment
-                          </span>
-                        )}
-                      </p>
-
-                      {/* Date */}
-                      <p className="text-[10px] text-gray-600 tracking-widest mt-4 pt-3 border-t border-[#2a2a2a]">
-                        {new Date(review.createdAt).toLocaleDateString(
-                          "en-GB",
-                          {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          },
-                        )}
+                      <p className="text-[10px] md:text-[13px] text-gray-300 text-center leading-relaxed overflow-hidden text-ellipsis line-clamp-3">
+                        {review.comment || "No comment"}
                       </p>
                     </motion.div>
                   );
@@ -1091,134 +1126,145 @@ export default function Home() {
 
           {/* RATE & REVIEW FORM */}
           <FadeUp delay={0.2}>
-            <div className="mt-20 max-w-lg mx-auto">
-              <h3 className="font-road-rage text-4xl tracking-wide text-white text-center mb-2">
-                {isEditMode ? "Edit Your Review" : "Rate & Review"}
-              </h3>
-              <p className="text-gray-500 text-xs tracking-widest text-center mb-8">
-                Share your experience with Freepig Movement
-              </p>
+            <div className="mt-16 flex flex-col md:flex-row items-center gap-12">
+              {/* Left Side: Graphic */}
+              <div className="w-full md:w-5/12 relative flex flex-col items-center justify-center min-h-[350px] z-0">
+                {/* Huge Pig Logo overflowing to the right */}
+                <div className="absolute top-1/2 left-[30%] transform -translate-x-1/2 -translate-y-1/2 w-[140%] md:w-[160%] max-w-[650px] pointer-events-none z-0">
+                  <img
+                    src={maskotBabi2}
+                    alt=""
+                    className="w-full h-auto object-contain opacity-60 mix-blend-screen"
+                    style={{
+                      filter:
+                        "brightness(0) saturate(100%) invert(80%) sepia(50%) saturate(1000%) hue-rotate(130deg)",
+                    }}
+                  />
+                </div>
 
-              {/* If user already reviewed and NOT editing — show their review summary */}
-              {token && user && hasReviewed && !isEditMode ? (
-                <div className="bg-accent-teal/5 border border-accent-teal/20 rounded-2xl p-6 text-center">
-                  <p className="text-accent-teal text-xs font-bold tracking-widest mb-3">
-                    ✓ YOU HAVE ALREADY REVIEWED
-                  </p>
-                  <div className="flex justify-center mb-3">
-                    {renderStars(myReview?.rating ?? 0, "text-2xl")}
-                  </div>
-                  {myReview?.comment && (
-                    <p className="text-gray-300 text-sm italic mb-4">
-                      "{myReview.comment}"
-                    </p>
-                  )}
-                  <div className="flex gap-3 justify-center">
-                    <button
-                      onClick={handleStartEdit}
-                      className="px-6 py-2.5 border border-white/40 rounded-full text-white text-xs font-bold tracking-widest hover:bg-white hover:text-black transition"
-                    >
-                      EDIT REVIEW
-                    </button>
-                    <button
-                      onClick={() => setDeleteReviewConfirmOpen(true)}
-                      className="px-6 py-2.5 border border-red-500/40 rounded-full text-red-400 text-xs font-bold tracking-widest hover:bg-red-500/10 transition"
-                    >
-                      DELETE
-                    </button>
+                {/* Text & Stars overlaid on Pig */}
+                <div className="relative z-10 flex flex-col items-center  mt-4">
+                  <h3 className="font-road-rage text-6xl md:text-[60px] tracking-wide text-white drop-shadow-lg mb-0 leading-none text-center">
+                    RATE & REVIEW
+                  </h3>
+                  {/* Interactive Star Rating */}
+                  <div className="flex gap-2 mt-4 drop-shadow-md">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setReviewRating(i + 1)}
+                        onMouseEnter={() => setReviewHover(i + 1)}
+                        onMouseLeave={() => setReviewHover(0)}
+                        className={`text-4xl transition-all duration-200 ${
+                          i < (reviewHover || reviewRating)
+                            ? "text-[#4ADDDD] scale-110"
+                            : "text-[#4ADDDD]/30 hover:text-[#4ADDDD]/60"
+                        }`}
+                      >
+                        ★
+                      </button>
+                    ))}
                   </div>
                 </div>
-              ) : (
-                <div className="relative">
-                  {(!token || !user) && (
-                    <div
-                      className="absolute inset-0 z-10 cursor-pointer"
-                      onClick={() => setShowLoginPrompt(true)}
-                    />
-                  )}
-                  <form
-                    onSubmit={handleReviewSubmit}
-                    className={`flex flex-col gap-6 ${!token || !user ? "opacity-70" : ""}`}
-                  >
-                    {/* Star rating */}
-                    <div className="flex justify-center gap-2">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          onClick={() => setReviewRating(i + 1)}
-                          onMouseEnter={() => setReviewHover(i + 1)}
-                          onMouseLeave={() => setReviewHover(0)}
-                          className={`text-4xl transition-all duration-200 ${
-                            i < (reviewHover || reviewRating)
-                              ? "text-yellow-400 scale-110"
-                              : "text-gray-600 hover:text-yellow-400/60"
-                          }`}
-                        >
-                          ★
-                        </button>
-                      ))}
+              </div>
+
+              {/* Right Side: Form Box */}
+              <div className="w-full md:w-7/12 relative z-10">
+                <div className="bg-[#1a2127] rounded-[20px] p-6 md:p-8 relative min-h-[300px] flex flex-col border border-transparent hover:border-[#4ADDDD]/30 transition duration-300">
+                  {token && user && hasReviewed && !isEditMode ? (
+                    <div className="flex flex-col items-center justify-center h-full text-center py-6">
+                      <p className="text-accent-teal text-xs font-bold tracking-widest mb-3">
+                        ✓ YOU HAVE ALREADY REVIEWED
+                      </p>
+                      <div className="flex justify-center mb-3 text-[#4ADDDD]">
+                        {renderStars(myReview?.rating ?? 0, "text-2xl")}
+                      </div>
+                      {myReview?.comment && (
+                        <p className="text-gray-300 text-sm italic mb-6">
+                          "{myReview.comment}"
+                        </p>
+                      )}
+                      <button
+                        onClick={handleStartEdit}
+                        className="bg-[#111] text-[#4ADDDD] px-8 py-3 rounded-full font-bold text-xs tracking-widest hover:bg-[#222] transition duration-300 shadow-md"
+                      >
+                        EDIT REVIEW
+                      </button>
                     </div>
+                  ) : (
+                    <div className="relative flex-grow flex flex-col">
+                      {(!token || !user) && (
+                        <div
+                          className="absolute inset-0 z-10 cursor-pointer bg-black/10 rounded-lg"
+                          onClick={() => setShowLoginPrompt(true)}
+                        />
+                      )}
+                      <form
+                        onSubmit={handleReviewSubmit}
+                        className={`flex flex-col flex-grow ${!token || !user ? "opacity-70" : ""}`}
+                      >
+                        <textarea
+                          rows={4}
+                          value={reviewComment}
+                          onChange={(e) => setReviewComment(e.target.value)}
+                          placeholder="Halo..."
+                          className="w-full flex-grow bg-transparent text-white font-poppins text-sm resize-none focus:outline-none placeholder-gray-500 mb-16"
+                        />
 
-                    {/* Comment textarea */}
-                    <textarea
-                      rows={4}
-                      value={reviewComment}
-                      onChange={(e) => setReviewComment(e.target.value)}
-                      placeholder="Share your experience with Freepig Movement..."
-                      className="w-full bg-[#222] border border-[#333] rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none placeholder-gray-600"
-                    />
-
-                    {/* Error / success messages */}
-                    {reviewError && (
-                      <div className="px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs text-center">
-                        {reviewError}
-                      </div>
-                    )}
-                    {reviewSuccess && (
-                      <div className="px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-xs text-center">
-                        {reviewSuccess}
-                      </div>
-                    )}
-
-                    {/* User info + buttons */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-teal/30 to-[#333] flex items-center justify-center text-white font-bold text-xs uppercase">
-                          {user?.name?.[0] || "?"}
-                        </div>
-                        <span className="text-sm text-gray-300 tracking-wide">
-                          {user?.name || "Guest"}
-                        </span>
-                      </div>
-                      <div className="flex gap-2">
-                        {isEditMode && (
-                          <button
-                            type="button"
-                            onClick={handleCancelEdit}
-                            className="px-4 py-2.5 border border-gray-600 rounded-full text-gray-400 text-[11px] font-bold tracking-[0.15em] uppercase hover:border-white hover:text-white transition"
-                          >
-                            CANCEL
-                          </button>
+                        {/* Error / success messages */}
+                        {(reviewError || reviewSuccess) && (
+                          <div className="absolute top-0 right-0 max-w-[200px]">
+                            {reviewError && (
+                              <p className="text-red-400 text-[10px] text-right">
+                                {reviewError}
+                              </p>
+                            )}
+                            {reviewSuccess && (
+                              <p className="text-green-400 text-[10px] text-right">
+                                {reviewSuccess}
+                              </p>
+                            )}
+                          </div>
                         )}
-                        <motion.button
-                          type="submit"
-                          disabled={reviewSubmitting}
-                          className="px-6 py-2.5 bg-transparent border border-white/60 rounded-full hover:bg-white hover:border-white hover:text-black transition duration-300 text-white text-[11px] font-bold tracking-[0.15em] uppercase disabled:opacity-50"
-                          whileHover={{ scale: 1.04 }}
-                          whileTap={{ scale: 0.97 }}
-                        >
-                          {reviewSubmitting
-                            ? "SAVING..."
-                            : isEditMode
-                              ? "UPDATE"
-                              : "SUBMIT"}
-                        </motion.button>
-                      </div>
+
+                        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center border-t border-[#2a2a2a] pt-6">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-[#111] flex items-center justify-center text-[#4ADDDD] text-sm uppercase font-bold shadow-inner">
+                              {user?.name?.[0] || "?"}
+                            </div>
+                            <span className="text-[#4ADDDD] font-poppins font-bold text-sm">
+                              {user?.name || "Guest"}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            {isEditMode && (
+                              <button
+                                type="button"
+                                onClick={handleCancelEdit}
+                                className="text-gray-500 hover:text-white font-bold text-[10px] tracking-widest transition"
+                              >
+                                CANCEL
+                              </button>
+                            )}
+                            <button
+                              type="submit"
+                              disabled={reviewSubmitting}
+                              className="bg-[#111] text-[#4ADDDD] px-8 py-3 rounded-full font-bold text-xs tracking-widest hover:bg-[#222] transition duration-300 shadow-md disabled:opacity-50"
+                            >
+                              {reviewSubmitting
+                                ? "SAVING..."
+                                : isEditMode
+                                  ? "UPDATE"
+                                  : "SUBMIT"}
+                            </button>
+                          </div>
+                        </div>
+                      </form>
                     </div>
-                  </form>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </FadeUp>
         </Container>

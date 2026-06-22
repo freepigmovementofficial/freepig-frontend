@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { productService } from '../../api/products';
-import headingImg from '../../assets/Heading.webp';
-import PigLoader from '../../components/PigLoader';
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { productService } from "../../api/products";
+import headingImg from "../../assets/headerRiderss.png";
+import bercakPembatas from "../../assets/bercakPembatas.png";
+import PigLoader from "../../components/PigLoader";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -18,7 +19,10 @@ export default function ProductDetail() {
   const scrollCarousel = (dir) => {
     if (carouselRef.current) {
       const scrollAmount = carouselRef.current.offsetWidth * 0.5;
-      carouselRef.current.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
+      carouselRef.current.scrollBy({
+        left: dir * scrollAmount,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -31,12 +35,17 @@ export default function ProductDetail() {
         if (res.data?.images?.length > 0) {
           const imgs = res.data.images;
           // Prefer full-body DECK photo (not logo) as the default displayed image
-          const deckFull = imgs.findIndex(img => img.type === 'DECK' && !img.url.toLowerCase().includes('logo'));
-          const anyFull = imgs.findIndex(img => !img.url.toLowerCase().includes('logo'));
+          const deckFull = imgs.findIndex(
+            (img) =>
+              img.type === "DECK" && !img.url.toLowerCase().includes("logo"),
+          );
+          const anyFull = imgs.findIndex(
+            (img) => !img.url.toLowerCase().includes("logo"),
+          );
           setActiveIndex(deckFull >= 0 ? deckFull : anyFull >= 0 ? anyFull : 0);
         }
       } catch (err) {
-        setError('Product not found.');
+        setError("Product not found.");
       } finally {
         setLoading(false);
       }
@@ -47,8 +56,14 @@ export default function ProductDetail() {
 
   const images = product?.images || [];
   const totalImages = images.length;
-  const goNext = useCallback(() => setActiveIndex(i => (i + 1) % totalImages), [totalImages]);
-  const goPrev = useCallback(() => setActiveIndex(i => (i - 1 + totalImages) % totalImages), [totalImages]);
+  const goNext = useCallback(
+    () => setActiveIndex((i) => (i + 1) % totalImages),
+    [totalImages],
+  );
+  const goPrev = useCallback(
+    () => setActiveIndex((i) => (i - 1 + totalImages) % totalImages),
+    [totalImages],
+  );
 
   if (loading) {
     return (
@@ -61,63 +76,105 @@ export default function ProductDetail() {
   if (error || !product) {
     return (
       <div className="min-h-screen bg-[#1c1c1c] flex flex-col items-center justify-center font-poppins text-white">
-        <h2 className="text-2xl font-bold mb-4">{error || 'Product not found'}</h2>
-        <Link to="/store" className="text-accent-teal hover:underline">Back to Store</Link>
+        <h2 className="text-2xl font-bold mb-4">
+          {error || "Product not found"}
+        </h2>
+        <Link to="/store" className="text-accent-teal hover:underline">
+          Back to Store
+        </Link>
       </div>
     );
   }
 
-  const categoryName = product.category?.name || 'SURFBOARD';
+  const categoryName = product.category?.name || "SURFBOARD";
   const waveLevels = product.waveLevels || [];
-  const isAccessory = product.productType === 'ACCESSORY';
-  
+  const isAccessory = product.productType === "ACCESSORY";
+
   // Format description with paragraphs
   const renderDescription = () => {
     if (!product.description) {
-      return <p className="text-gray-400 text-sm leading-relaxed">No description available for this product.</p>;
+      return (
+        <p className="text-gray-400 text-sm leading-relaxed">
+          No description available for this product.
+        </p>
+      );
     }
-    return product.description.split('\n').map((line, idx) => {
-      if (line.trim().startsWith('*')) {
-        return <li key={idx} className="ml-4 list-disc text-sm text-gray-300 mb-1 leading-relaxed">{line.replace('*', '').trim()}</li>;
+    return product.description.split("\n").map((line, idx) => {
+      if (line.trim().startsWith("*")) {
+        return (
+          <li
+            key={idx}
+            className="ml-4 list-disc text-sm text-gray-300 mb-1 leading-relaxed"
+          >
+            {line.replace("*", "").trim()}
+          </li>
+        );
       }
-      if (line.trim() === '') return <br key={idx} />;
-      return <p key={idx} className="text-sm text-gray-300 mb-3 leading-relaxed">{line}</p>;
+      if (line.trim() === "") return <br key={idx} />;
+      return (
+        <p key={idx} className="text-sm text-gray-300 mb-3 leading-relaxed">
+          {line}
+        </p>
+      );
     });
   };
 
-  const skillLevels = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
-  let activeSkillLevels = product.skillLevel 
-    ? product.skillLevel.split(",").map(s => s.trim().toUpperCase())
+  const skillLevels = ["BEGINNER", "INTERMEDIATE", "ADVANCED"];
+  let activeSkillLevels = product.skillLevel
+    ? product.skillLevel.split(",").map((s) => s.trim().toUpperCase())
     : [];
-    
+
   // Map legacy GROMS to INTERMEDIATE and ADVANCED
-  if (activeSkillLevels.includes('GROMS')) {
-    activeSkillLevels = activeSkillLevels.filter(s => s !== 'GROMS');
-    if (!activeSkillLevels.includes('INTERMEDIATE')) activeSkillLevels.push('INTERMEDIATE');
-    if (!activeSkillLevels.includes('ADVANCED')) activeSkillLevels.push('ADVANCED');
+  if (activeSkillLevels.includes("GROMS")) {
+    activeSkillLevels = activeSkillLevels.filter((s) => s !== "GROMS");
+    if (!activeSkillLevels.includes("INTERMEDIATE"))
+      activeSkillLevels.push("INTERMEDIATE");
+    if (!activeSkillLevels.includes("ADVANCED"))
+      activeSkillLevels.push("ADVANCED");
   }
 
-  const waveMin = product.waveHeightMin !== undefined ? product.waveHeightMin : 0;
-  const waveMax = product.waveHeightMax !== undefined ? product.waveHeightMax : 0;
-  
+  const waveMin =
+    product.waveHeightMin !== undefined ? product.waveHeightMin : 0;
+  const waveMax =
+    product.waveHeightMax !== undefined ? product.waveHeightMax : 0;
+
   const waveLeftPercent = (waveMin / 10) * 100;
   const waveWidthPercent = waveMax > 0 ? ((waveMax - waveMin) / 10) * 100 : 0;
 
   return (
-    <div className="bg-[#222] min-h-screen font-poppins text-white pb-24">
+    <div className="bg-[#000000] min-h-screen font-poppins text-white pb-24">
       {/* ── HERO BANNER ── */}
       {product.videoUrl ? (
-        <div className="relative w-full overflow-hidden bg-black" style={{ height: '350px' }}>
+        <div
+          className="relative w-full overflow-hidden bg-black"
+          style={{ height: "500px" }}
+        >
           <iframe
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-full min-h-full"
-            style={{ width: '100vw', height: '56.25vw', minHeight: '350px', minWidth: '622px' }}
-            src={`${product.videoUrl}?autoplay=1&mute=1&loop=1&playlist=${product.videoUrl.split('/').pop()?.split('?')[0]}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`}
+            style={{
+              width: "100vw",
+              height: "56.25vw",
+              minHeight: "500px",
+              minWidth: "622px",
+            }}
+            src={`${product.videoUrl}?autoplay=1&mute=1&loop=1&playlist=${product.videoUrl.split("/").pop()?.split("?")[0]}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`}
             title="YouTube Video Hero"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-black/50" />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
+            }}
+          ></div>
+          <img
+            src={bercakPembatas}
+            alt="Bercak pembatas banner"
+            className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[63%]"
+          />
           <div className="absolute bottom-3 right-4 md:right-8 z-10 pointer-events-none">
             <span className="text-[8px] sm:text-[9px] text-white/40 tracking-[0.15em] uppercase font-medium drop-shadow-md">
               Video playback quality adapts to your connection speed
@@ -126,22 +183,32 @@ export default function ProductDetail() {
         </div>
       ) : (
         <div
-          className="relative w-full flex items-center justify-center bg-cover bg-center overflow-hidden"
-          style={{ backgroundImage: `url(${headingImg})`, height: '350px' }}
+          className="relative w-full bg-cover bg-[center_15%] overflow-hidden"
+          style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
         >
-          <div className="absolute inset-0 bg-black/50" />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
+            }}
+          ></div>
+          <img
+            src={bercakPembatas}
+            alt="Bercak pembatas banner"
+            className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[63%]"
+          />
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 mt-8 sm:mt-12">
-        <button 
-          onClick={() => navigate(-1)} 
+      <div className="w-full mx-auto px-6 md:px-[70px] mt-8 sm:mt-12">
+        <button
+          onClick={() => navigate(-1)}
           className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-6 transition-all font-bold tracking-widest text-xs uppercase drop-shadow-lg"
         >
           <FiChevronLeft size={16} /> BACK
         </button>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-[20px]">
           {/* Left Column: Images */}
           <div className="flex flex-col gap-3 sm:gap-4">
             {/* Main image with arrow buttons */}
@@ -154,12 +221,12 @@ export default function ProductDetail() {
                 <motion.img
                   key={activeIndex}
                   loading="lazy"
-                  src={images[activeIndex]?.url || '/black_surfboard.png'}
+                  src={images[activeIndex]?.url || "/black_surfboard.png"}
                   alt={product.name}
                   initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
                   className="w-full h-full object-cover"
                 />
               </AnimatePresence>
@@ -188,7 +255,7 @@ export default function ProductDetail() {
                         key={i}
                         onClick={() => setActiveIndex(i)}
                         className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${
-                          i === activeIndex ? 'bg-black w-3' : 'bg-black/30'
+                          i === activeIndex ? "bg-black w-3" : "bg-black/30"
                         }`}
                       />
                     ))}
@@ -208,8 +275,8 @@ export default function ProductDetail() {
                     <FiChevronLeft size={18} />
                   </button>
                 )}
-                
-                <div 
+
+                <div
                   ref={carouselRef}
                   className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 pt-2 scrollbar-hide snap-x snap-mandatory px-1"
                 >
@@ -218,10 +285,17 @@ export default function ProductDetail() {
                       key={img.id}
                       onClick={() => setActiveIndex(i)}
                       className={`shrink-0 w-[28%] sm:w-[22%] bg-white rounded-lg overflow-hidden aspect-[3/4] transition-all duration-300 snap-start ${
-                        i === activeIndex ? 'ring-2 ring-accent-teal shadow-lg scale-105' : 'opacity-70 hover:opacity-100 hover:scale-105'
+                        i === activeIndex
+                          ? "ring-2 ring-accent-teal shadow-lg scale-105"
+                          : "opacity-70 hover:opacity-100 hover:scale-105"
                       }`}
                     >
-                      <img loading="lazy" src={img.url} alt={`${product.name} thumbnail`} className="w-full h-full object-cover" />
+                      <img
+                        loading="lazy"
+                        src={img.url}
+                        alt={`${product.name} thumbnail`}
+                        className="w-full h-full object-cover"
+                      />
                     </button>
                   ))}
                 </div>
@@ -242,16 +316,21 @@ export default function ProductDetail() {
               <div className="flex flex-col gap-10 mt-8 lg:mt-12">
                 {/* Ability Level */}
                 <div>
-                  <h3 className="text-center font-bold text-sm tracking-widest mb-3">Ability Level</h3>
+                  <h3 className="text-center font-bold text-sm tracking-widest mb-3">
+                    Ability Level
+                  </h3>
                   <div className="w-full h-[21px] bg-[#333] border border-gray-500 relative flex">
                     {skillLevels.map((level, idx) => {
                       const isActive = activeSkillLevels.includes(level);
                       return (
-                        <div 
+                        <div
                           key={level}
-                          className={`h-full flex-1 transition-colors duration-1000 ${isActive ? 'bg-white' : 'bg-transparent'}`}
+                          className={`h-full flex-1 transition-colors duration-1000 ${isActive ? "bg-white" : "bg-transparent"}`}
                           style={{
-                            borderRight: idx < skillLevels.length - 1 ? '1px solid #555' : 'none'
+                            borderRight:
+                              idx < skillLevels.length - 1
+                                ? "1px solid #555"
+                                : "none",
                           }}
                         />
                       );
@@ -266,20 +345,34 @@ export default function ProductDetail() {
 
                 {/* Wave Height */}
                 <div>
-                  <h3 className="text-center font-bold text-sm tracking-widest mb-3">Wave Height (Feet)</h3>
+                  <h3 className="text-center font-bold text-sm tracking-widest mb-3">
+                    Wave Height (Feet)
+                  </h3>
                   <div className="w-full h-[21px] bg-[#333] border border-gray-500 relative">
                     {waveMax > 0 && (
-                      <div 
+                      <div
                         className="absolute top-0 h-full bg-white transition-all duration-1000"
-                        style={{ left: `${waveLeftPercent}%`, width: `${waveWidthPercent}%` }}
+                        style={{
+                          left: `${waveLeftPercent}%`,
+                          width: `${waveWidthPercent}%`,
+                        }}
                       />
                     )}
                     {/* Ruler Marks */}
                     <div className="absolute top-full left-0 w-full flex justify-between">
-                      {[0,1,2,3,4,5,6,7,8,9,10].map(n => (
-                        <div key={n} className="flex flex-col items-center w-4" style={{ marginLeft: n === 0 ? '-8px' : 0, marginRight: n === 10 ? '-8px' : 0 }}>
+                      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                        <div
+                          key={n}
+                          className="flex flex-col items-center w-4"
+                          style={{
+                            marginLeft: n === 0 ? "-8px" : 0,
+                            marginRight: n === 10 ? "-8px" : 0,
+                          }}
+                        >
                           <div className="w-[1px] h-2 bg-gray-500"></div>
-                          <span className="text-[8px] text-gray-400 mt-0.5">{n}</span>
+                          <span className="text-[8px] text-gray-400 mt-0.5">
+                            {n}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -290,7 +383,7 @@ export default function ProductDetail() {
           </div>
 
           {/* Right Column: Details */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col"
@@ -298,7 +391,7 @@ export default function ProductDetail() {
             <h1 className="font-oswald text-4xl sm:text-5xl md:text-6xl font-bold uppercase tracking-wider mb-2">
               {product.name}
             </h1>
-            
+
             <div className="flex items-center gap-4 flex-wrap mb-8 text-xs font-bold tracking-[0.2em] uppercase text-gray-400">
               <span className="text-white">{categoryName}</span>
               {!isAccessory && waveLevels.length > 0 && (
@@ -307,7 +400,9 @@ export default function ProductDetail() {
                   {waveLevels.map((w, i) => (
                     <React.Fragment key={w}>
                       <span className="text-white">{w} WAVES</span>
-                      {i < waveLevels.length - 1 && <span className="text-gray-600">|</span>}
+                      {i < waveLevels.length - 1 && (
+                        <span className="text-gray-600">|</span>
+                      )}
                     </React.Fragment>
                   ))}
                 </>
@@ -320,27 +415,32 @@ export default function ProductDetail() {
 
             {/* Bottom Section: Dimensions */}
             <div className="mt-auto border-t border-[#444] pt-8">
-
               {/* Dimensions Grid */}
               {product.dimensions && product.dimensions.length > 0 && (
                 <div>
-                  <h3 className="text-center font-bold text-lg tracking-widest mb-2">DIMENSIONS</h3>
-                  <p className="text-center text-[9px] text-gray-500 tracking-widest mb-6 uppercase">Tap a size to order</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <h3 className="text-center font-bold text-lg tracking-widest mb-2">
+                    DIMENSIONS
+                  </h3>
+                  <p className="text-center text-[9px] text-gray-500 tracking-widest mb-6 uppercase">
+                    Tap a size to order
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-[20px]">
                     {product.dimensions.map((dim) => (
                       <button
                         key={dim.id}
-                        onClick={() => window.dispatchEvent(new Event("openContactPopup"))}
+                        onClick={() =>
+                          window.dispatchEvent(new Event("openContactPopup"))
+                        }
                         className="bg-white text-black py-2.5 px-4 rounded-full text-center text-xs font-bold tracking-widest hover:bg-accent-teal hover:text-black transition-all duration-300 cursor-pointer active:scale-95"
                       >
-                        {dim.size} x {dim.width} x {dim.thickness} {dim.volume ? `${dim.volume}` : ''}
+                        {dim.size} x {dim.width} x {dim.thickness}{" "}
+                        {dim.volume ? `${dim.volume}` : ""}
                       </button>
                     ))}
                   </div>
                 </div>
               )}
             </div>
-
           </motion.div>
         </div>
       </div>
