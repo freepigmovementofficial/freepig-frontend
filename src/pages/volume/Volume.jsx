@@ -489,7 +489,7 @@ export default function Volume() {
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 onClick={calculate}
-                className="flex-shrink-0 px-8 py-3 text-[11px] font-bold tracking-widest uppercase text-white bg-white/20 hover:bg-white hover:text-black transition-colors duration-300"
+                className="flex-shrink-0 px-8 py-3 text-[11px] font-bold tracking-widest uppercase text-black bg-white hover:bg-gray-200 transition-colors duration-300"
               >
                 Calculate
               </motion.button>
