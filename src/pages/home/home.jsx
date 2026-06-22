@@ -14,22 +14,22 @@ import videoLandingPage from "../../assets/videoLandingPage.mp4";
 import meetTheRiders from "../../assets/meetTheRiders.webp";
 import lovedCustomer from "../../assets/LovedHome.webp";
 import customresinTint from "../../assets/customresinTint.webp";
-import smallWavesImg from "../../assets/smallWave.png?v=2";
-import mediumWavesImg from "../../assets/mediumWave.png?v=2";
-import bigWavesImg from "../../assets/bigWave.png?v=2";
+import smallWavesImg from "../../assets/smallWave.webp";
+import mediumWavesImg from "../../assets/mediumWave.webp";
+import bigWavesImg from "../../assets/bigWave.webp";
 import categoryAdvance from "../../assets/CategoryAdvance.webp";
 import categoryIntermediate from "../../assets/CategoryIntermediate.webp";
 import categoryBeginner from "../../assets/CategoryBeginner.webp";
 import categoryGroms from "../../assets/CategoryGroms.webp";
 import aboutUsImg from "../../assets/aboutUs.webp";
-import maskotBabi from "../../assets/maskotBabi.png";
-import maskotBabi2 from "../../assets/maskotBabi2.png";
-import FPWHITE from "../../assets/FPWHITE.png";
-import logoTransparan from "../../assets/logoTransparan.png";
-import bercakBercak from "../../assets/bercak-bercak.png";
-import bercakPembatas from "../../assets/bercakPembatas.png";
-import aksesoris2 from "../../assets/aksesoris2.png";
-import surfboard2 from "../../assets/surfboard2.png";
+import maskotBabi from "../../assets/maskotBabi.webp";
+import maskotBabi2 from "../../assets/maskotBabi2.webp";
+import FPWHITE from "../../assets/FPWHITE.webp";
+import logoTransparan from "../../assets/logoTransparan.webp";
+import bercakBercak from "../../assets/bercak-bercak.webp";
+import bercakPembatas from "../../assets/bercakPembatas.webp";
+import aksesoris2 from "../../assets/aksesoris2.webp";
+import surfboard2 from "../../assets/surfboard2.webp";
 import CTAPopup from "../../components/CTAPopup";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { newReleaseService } from "../../api/newReleases";
@@ -39,17 +39,39 @@ import { storeReviewService } from "../../api/storeReviews";
 import { heroService } from "../../api/hero";
 import toast from "react-hot-toast";
 
-const FadeUp = ({ children, delay = 0, className = "" }) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.2 }}
-    transition={{ duration: 0.7, ease: "easeOut", delay }}
-  >
-    {children}
-  </motion.div>
-);
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return isMobile;
+};
+
+const FadeUp = ({ children, delay = 0, className = "" }) => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <div className={className}>{children}</div>;
+  }
+
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.7, ease: "easeOut", delay }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 // Wrapper container konsisten di seluruh halaman
 const Container = ({ children, className = "" }) => (
@@ -66,6 +88,7 @@ export default function Home() {
     offset: ["start end", "end start"],
   });
   const bgY = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
+  const isMobile = useIsMobile();
 
   const [openFaq, setOpenFaq] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -390,23 +413,23 @@ export default function Home() {
                 ))}
               </span>
             ) : (
-              <span className="relative flex flex-col items-start w-fit">
+              <span className="relative flex flex-col items-start w-fit max-w-[100vw]">
                 {/* RIDE */}
-                <span className="block whitespace-nowrap text-[110px] md:text-[145px] lg:text-[128px] leading-[0.75] ml-[20px] md:ml-[90px] lg:ml-[72px] relative z-20 lg:mb-[65px]">
+                <span className="block whitespace-nowrap text-[clamp(70px,20vw,145px)] lg:text-[128px] leading-[0.75] ml-[clamp(10px,4vw,90px)] lg:ml-[72px] relative z-20 lg:mb-[65px]">
                   RIDE
                 </span>
                 {/* YOUR OWN */}
-                <span className="absolute whitespace-nowrap text-[42px] md:text-[55px] lg:text-[53px] leading-[1] left-[180px] md:left-[250px] lg:left-[158px] top-[75px] md:top-[100px] lg:top-[115px] z-30 drop-shadow-md">
+                <span className="absolute whitespace-nowrap text-[clamp(24px,7vw,55px)] lg:text-[53px] leading-[1] left-[clamp(110px,32vw,250px)] lg:left-[158px] top-[clamp(45px,12vw,100px)] lg:top-[115px] z-30 drop-shadow-md">
                   YOUR OWN
                 </span>
                 {/* W and AVE container */}
-                <span className="relative flex items-end -mt-[20px] md:-mt-[30px] lg:-mt-[40px] z-10">
+                <span className="relative flex items-end -mt-[clamp(15px,4vw,30px)] lg:-mt-[40px] z-10">
                   {/* W — rotated just like in Figma */}
-                  <span className="block text-[110px] md:text-[145px] lg:text-[200px] leading-[0.75] -rotate-[10deg] origin-bottom transform">
+                  <span className="block text-[clamp(70px,20vw,145px)] lg:text-[200px] leading-[0.75] -rotate-[10deg] origin-bottom transform">
                     W
                   </span>
                   {/* AVE */}
-                  <span className="block text-[110px] md:text-[145px] lg:text-[128px] leading-[0.75] ml-[10px] md:ml-[15px] lg:ml-[-30px] lg:mt-[60px]">
+                  <span className="block text-[clamp(70px,20vw,145px)] lg:text-[128px] leading-[0.75] ml-[clamp(5px,2vw,15px)] lg:ml-[-30px] lg:mt-[60px]">
                     AVE
                   </span>
                 </span>
@@ -570,7 +593,7 @@ export default function Home() {
         {/* Video background — full section */}
         <motion.div
           className="absolute inset-0 w-full h-[130%] -top-[15%]"
-          style={{ y: bgY }}
+          style={{ y: isMobile ? 0 : bgY }}
         >
           <video
             src={newRelease?.videoUrl || videoLandingPage}

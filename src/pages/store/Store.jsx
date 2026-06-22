@@ -326,7 +326,7 @@ export default function Store() {
               <div className="flex justify-center items-center py-8">
                 <PigLoader />
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-[20px] mt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[20px] mt-2">
                 {Array.from({ length: 8 }).map((_, idx) => (
                   <div
                     key={idx}
@@ -348,7 +348,7 @@ export default function Store() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.35 }}
-              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-[20px] mt-8"
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[20px] mt-8"
             >
               {products.length === 0 ? (
                 <div className="col-span-4 py-24 text-center text-gray-500 tracking-widest text-sm">

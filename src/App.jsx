@@ -26,67 +26,69 @@ import { Toaster } from 'react-hot-toast';
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: '#1a1a1a',
-            color: '#fff',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '12px',
-            fontSize: '12px',
-            fontWeight: '600',
-            letterSpacing: '0.05em',
-            padding: '12px 16px',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-          },
-          success: {
-            iconTheme: { primary: '#00e5ff', secondary: '#000' },
+      <div className="overflow-x-hidden flex flex-col min-h-screen w-full relative">
+        <ScrollToTop />
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            duration: 3000,
             style: {
               background: '#1a1a1a',
-              border: '1px solid rgba(0,229,255,0.2)',
               color: '#fff',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '12px',
+              fontSize: '12px',
+              fontWeight: '600',
+              letterSpacing: '0.05em',
+              padding: '12px 16px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
             },
-          },
-          error: {
-            iconTheme: { primary: '#ef4444', secondary: '#fff' },
-            style: {
-              background: '#1a1a1a',
-              border: '1px solid rgba(239,68,68,0.3)',
-              color: '#fff',
+            success: {
+              iconTheme: { primary: '#00e5ff', secondary: '#000' },
+              style: {
+                background: '#1a1a1a',
+                border: '1px solid rgba(0,229,255,0.2)',
+                color: '#fff',
+              },
             },
-          },
-        }}
-      />
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
-        <Route path="/store" element={<PublicRoute><Store /></PublicRoute>} />
-        <Route path="/product/:slug" element={<PublicRoute><ProductDetail /></PublicRoute>} />
-        <Route path="/custom" element={<PublicRoute><Custom /></PublicRoute>} />
-        <Route path="/volume" element={<PublicRoute><Volume /></PublicRoute>} />
-        <Route path="/contact" element={<PublicRoute><Contact /></PublicRoute>} />
-        <Route path="/about" element={<PublicRoute><About /></PublicRoute>} />
-        <Route path="/location/:shopId?" element={<PublicRoute><Location /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/gallery" element={<PublicRoute><Gallery /></PublicRoute>} />
-        <Route path="/customer" element={<PublicRoute><Customer /></PublicRoute>} />
-        <Route path="/riders" element={<PublicRoute><Riders /></PublicRoute>} />
-        <Route path="/riders/:id" element={<PublicRoute><RiderDetail /></PublicRoute>} />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute adminOnly={true}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
+            error: {
+              iconTheme: { primary: '#ef4444', secondary: '#fff' },
+              style: {
+                background: '#1a1a1a',
+                border: '1px solid rgba(239,68,68,0.3)',
+                color: '#fff',
+              },
+            },
+          }}
         />
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
-      <Footer />
-      <ContactPopup />
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
+          <Route path="/store" element={<PublicRoute><Store /></PublicRoute>} />
+          <Route path="/product/:slug" element={<PublicRoute><ProductDetail /></PublicRoute>} />
+          <Route path="/custom" element={<PublicRoute><Custom /></PublicRoute>} />
+          <Route path="/volume" element={<PublicRoute><Volume /></PublicRoute>} />
+          <Route path="/contact" element={<PublicRoute><Contact /></PublicRoute>} />
+          <Route path="/about" element={<PublicRoute><About /></PublicRoute>} />
+          <Route path="/location/:shopId?" element={<PublicRoute><Location /></PublicRoute>} />
+          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/gallery" element={<PublicRoute><Gallery /></PublicRoute>} />
+          <Route path="/customer" element={<PublicRoute><Customer /></PublicRoute>} />
+          <Route path="/riders" element={<PublicRoute><Riders /></PublicRoute>} />
+          <Route path="/riders/:id" element={<PublicRoute><RiderDetail /></PublicRoute>} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+        <Footer />
+        <ContactPopup />
+      </div>
     </BrowserRouter>
   );
 }

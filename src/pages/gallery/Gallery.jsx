@@ -50,10 +50,10 @@ export default function Gallery() {
       <Container>
         <div className="text-center mb-16">
           <FadeUp>
-            <p className="text-sm font-bold tracking-[0.4em] text-accent-teal mb-3">
+            <p className="font-road-rage text-3xl md:text-5xl tracking-widest text-[#4ADDDE]">
               MOMENTS
             </p>
-            <h1 className="font-oswald text-5xl md:text-7xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+            <h1 className="font-road-rage text-6xl md:text-8xl lg:text-[100px] leading-[0.9] text-white tracking-wide drop-shadow-md">
               GALLERY
             </h1>
           </FadeUp>
