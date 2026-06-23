@@ -858,7 +858,7 @@ export default function Home() {
       </section>
 
       {/* SURFBOARDS PRODUCTS */}
-      <section className="w-full bg-[#151515] py-24">
+      <section className="w-full bg-[#000000] py-24">
         <Container>
           <FadeUp className="flex items-center gap-4 sm:gap-6 mb-12">
             <h3 className="font-poppins text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-wide text-white whitespace-nowrap">
@@ -938,7 +938,7 @@ export default function Home() {
       </section>
 
       {/* FOOTER IMAGES GRID */}
-      <section className="w-full bg-[#111] py-24">
+      <section className="w-full bg-[#000000] py-24">
         <div className="w-full px-4 md:px-[70px]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px]">
             {[
@@ -1017,7 +1017,7 @@ export default function Home() {
 
       {/* WALL MAGAZINE SECTION */}
       {wallMagazine && (
-        <section className="w-full relative -mt-8 mb-24 z-10">
+        <section className="w-full relative -mt-20 mb-24 z-10">
           {/* Background yang ukurannya dipotong atas-bawah biar fotonya nembus */}
           <div className="absolute top-14 bottom-[-40px] left-0 w-full bg-[#1A2127] z-0 border-t border-b border-white/5"></div>
 
@@ -1133,7 +1133,7 @@ export default function Home() {
       </section>
 
       {/* CUSTOMER REVIEWS SECTION */}
-      <section className="w-full bg-[#0b1215] pt-28 pb-24">
+      <section className="w-full bg-[#000000] pt-28 pb-24">
         <Container>
           <FadeUp>
             {/* Header */}

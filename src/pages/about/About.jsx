@@ -59,7 +59,8 @@ export default function About() {
         <div
           className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
           style={{
-            background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
           }}
         ></div>
 
@@ -190,7 +191,7 @@ export default function About() {
 
         {/* ── TAGLINE HIGHLIGHT ── */}
         <FadeUp delay={0.1}>
-          <div className="relative border border-white/10 rounded-2xl px-8 md:px-16 py-14 text-center overflow-hidden bg-[#1e1e1e]">
+          <div className="relative border border-white/10 rounded-2xl px-8 md:px-16 py-14 text-center overflow-hidden bg-[#000000]">
             {/* Decorative glow */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/3 to-transparent pointer-events-none" />
             <div className="absolute -top-6 -left-6 w-32 h-32 bg-white/4 rounded-full blur-3xl pointer-events-none" />
