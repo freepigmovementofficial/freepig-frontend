@@ -1017,9 +1017,9 @@ export default function Home() {
 
       {/* WALL MAGAZINE SECTION */}
       {wallMagazine && (
-        <section className="w-full relative -mt-20 mb-24 z-10">
+        <section className="w-full relative -mt-55 mb-24 z-10">
           {/* Background yang ukurannya dipotong atas-bawah biar fotonya nembus */}
-          <div className="absolute top-14 bottom-[-40px] left-0 w-full bg-[#1A2127] z-0 border-t border-b border-white/5"></div>
+          <div className="absolute top-20 bottom-[-40px] left-0 w-full bg-[#1A2127] z-0 border-t border-b border-white/5"></div>
 
           <Container className="relative z-10">
             <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-16 py-4">
