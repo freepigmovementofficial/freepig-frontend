@@ -44,22 +44,21 @@ export default function Riders() {
     <div className="bg-[#000000] min-h-screen font-poppins text-white pb-24">
       {/* ── HERO BANNER ── */}
       <div
-        className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-hidden"
+        className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-visible z-10"
         style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
       >
-
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
+              "radial-gradient(150% 100% at 50% 0%, rgba(1, 14, 25, 0) 44%, rgba(1, 14, 25, 0.25) 68%, rgba(1, 14, 25, 1) 100%)",
           }}
         ></div>
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 font-road-rage text-5xl sm:text-6xl md:text-7xl lg:text-[96px] text-black drop-shadow-2xl px-4 text-center"
+          className="relative z-10 font-road-rage text-5xl sm:text-6xl md:text-7xl lg:text-[96px] text-white drop-shadow-2xl px-4 text-center"
         >
           RIDERS
         </motion.h1>
@@ -76,7 +75,11 @@ export default function Riders() {
           }}
         ></div>
 
-
+        <img
+          src={bercakPembatas}
+          alt="Bercak pembatas banner"
+          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[60%] brightness-0"
+        />
       </div>
 
       <div className="w-full mx-auto px-6 md:px-[70px] mt-12 sm:mt-16">

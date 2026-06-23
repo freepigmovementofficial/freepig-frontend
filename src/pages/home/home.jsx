@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { FaChevronRight } from "react-icons/fa";
 import { Star } from "lucide-react";
 import { getDisplayImage } from "../../utils/productImage";
-import Rectangle94 from "../../assets/Rectangle94.webp";
+
 import {
   motion,
   useScroll,
@@ -15,9 +15,9 @@ import videoLandingPage from "../../assets/videoLandingPage.mp4";
 import riders2 from "../../assets/riders2.webp";
 import customer2 from "../../assets/customer2.webp";
 import galery2 from "../../assets/galery2.webp";
-import smallWavesImg from "../../assets/smallWave.webp";
-import mediumWavesImg from "../../assets/mediumWave.webp";
-import bigWavesImg from "../../assets/bigWave.webp";
+import smallWavesImg from "../../assets/smallWaveBlue.webp";
+import mediumWavesImg from "../../assets/mediumWaveBlue.webp";
+import bigWavesImg from "../../assets/bigWaveBlue.webp";
 import categoryAdvance from "../../assets/advanced.webp";
 import categoryIntermediate from "../../assets/intermediate.webp";
 import categoryBeginner from "../../assets/beginner.webp";
@@ -26,8 +26,7 @@ import boardGroms from "../../assets/boardGroms.webp";
 import aboutUsImg from "../../assets/aboutUs.webp";
 import maskotBabi from "../../assets/maskotBabi.webp";
 import maskotBabi2 from "../../assets/maskotBabi2.webp";
-import FPWHITE from "../../assets/FPWHITE.webp";
-import logoTransparan from "../../assets/logoTransparan.webp";
+
 import bercakBercak from "../../assets/bercak-bercak.webp";
 import bercakPembatas from "../../assets/bercakPembatas.webp";
 import aksesoris3 from "../../assets/accessories3.webp";
@@ -818,7 +817,9 @@ export default function Home() {
                 >
                   {/* Inner wrapper for background and text, handles the rounded corners and borders */}
                   <div
-                    className={`absolute inset-0 overflow-hidden rounded-[30px] md:rounded-l-none ${idx === 3 ? "md:rounded-r-none md:border-r-0" : "md:rounded-r-[30px]"} border border-[#4ADDDE] md:border-l-0`}
+                    className={`absolute inset-0 overflow-hidden rounded-[30px] border border-[#4ADDDE] ${
+                      idx !== 0 ? "md:rounded-l-none md:border-l-0" : ""
+                    }`}
                   >
                     <img
                       loading="lazy"
@@ -832,7 +833,7 @@ export default function Home() {
                   <img
                     src={boardGroms}
                     alt="Surfboard"
-                    className="absolute bottom-0 right-0 w-auto h-[115%] object-contain object-bottom pointer-events-none drop-shadow-md z-20 origin-bottom-right group-hover:scale-110 transition-transform duration-700 ease-out"
+                    className="absolute bottom-0 right-0 w-auto h-[115%] object-contain object-bottom pointer-events-none drop-shadow-md z-20 origin-bottom-right group-hover:scale-110 transition-transform duration-700 ease-out rounded-br-[30px]"
                   />
 
                   {/* Text Overlay - Placed outside to render ABOVE the surfboard */}
@@ -904,7 +905,7 @@ export default function Home() {
                     />
                   </div>
                   <div className="w-full text-center mt-2">
-                    <h4 className="font-sans text-[10px] md:text-[11px] font-black tracking-widest text-white group-hover:text-[#4ADDDE] transition uppercase">
+                    <h4 className="font-sans text-[10px] md:text-[11px] font-black tracking-widest text-[#4ADDDD] uppercase transition duration-300">
                       {wave.title}
                     </h4>
                   </div>
