@@ -365,7 +365,6 @@ export default function Volume() {
         className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-hidden"
         style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
       >
-
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -390,14 +389,15 @@ export default function Volume() {
         <div
           className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
           style={{
-            background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
           }}
         ></div>
 
         <img
           src={bercakPembatas}
           alt="Bercak pembatas banner"
-          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
+          className="absolute bottom-[-290px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
         />
       </div>
 
