@@ -138,15 +138,23 @@ export default function Store() {
     <div className="bg-[#000000] min-h-screen font-poppins text-white pb-24">
       {/* ── HERO BANNER ── */}
       <div
-        className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-hidden"
+        className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-visible z-10"
         style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
       >
+        {/* Efek Radial Gradient Figma: Pusat transparan di atas, gelap di bawah */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(150% 100% at 50% 0%, rgba(1, 14, 25, 0) 44%, rgba(1, 14, 25, 0.25) 68%, rgba(1, 14, 25, 1) 100%)",
+          }}
+        ></div>
         <motion.h1
           key={activeTab} // ensure animation triggers on tab change
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 font-road-rage text-5xl sm:text-6xl md:text-7xl lg:text-[96px] text-black drop-shadow-2xl px-4 text-center"
+          className="relative z-10 font-road-rage text-5xl sm:text-6xl md:text-7xl lg:text-[96px] text-white drop-shadow-2xl px-4 text-center"
         >
           {activeTab}
         </motion.h1>
@@ -167,12 +175,12 @@ export default function Store() {
         <img
           src={bercakPembatas}
           alt="Bercak pembatas banner"
-          className="absolute bottom-[-320px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
+          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[60%]"
         />
       </div>
 
       {/* ── FILTER + TOGGLE BAR ── */}
-      <div className="w-full mx-auto px-6 md:px-[70px] mt-24 sm:mt-10">
+      <div className="w-full mx-auto px-6 md:px-[70px] mt-40 sm:mt-24 relative z-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
