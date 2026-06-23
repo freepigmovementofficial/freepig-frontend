@@ -397,7 +397,7 @@ export default function Volume() {
         <img
           src={bercakPembatas}
           alt="Bercak pembatas banner"
-          className="absolute bottom-[-290px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
+          className="absolute bottom-[-10px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
         />
       </div>
 
