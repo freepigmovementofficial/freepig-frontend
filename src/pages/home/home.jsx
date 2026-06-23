@@ -22,6 +22,7 @@ import categoryAdvance from "../../assets/advanced.webp";
 import categoryIntermediate from "../../assets/intermediate.webp";
 import categoryBeginner from "../../assets/beginner.webp";
 import categoryGroms from "../../assets/groms.webp";
+import boardGroms from "../../assets/boardGroms.webp";
 import aboutUsImg from "../../assets/aboutUs.webp";
 import maskotBabi from "../../assets/maskotBabi.webp";
 import maskotBabi2 from "../../assets/maskotBabi2.webp";
@@ -745,7 +746,7 @@ export default function Home() {
         />
         <Container className="relative z-10">
           <FadeUp>
-            <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-white uppercase text-center mb-12">
+            <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-white uppercase text-center mb-20 md:mb-24">
               FIND YOUR <span className="text-[#4ADDDE]">LEVEL</span>
             </h3>
           </FadeUp>
@@ -753,31 +754,55 @@ export default function Home() {
 
         <div className="w-full relative z-30 px-4 md:px-0">
           <FadeUp>
-            <div className="flex flex-col md:flex-row justify-center w-full gap-4 md:gap-0">
+            <div className="flex flex-col md:flex-row justify-center w-full gap-12 md:gap-0">
               {[
-                { 
-                  title: "ADVANCED", 
-                  subtitle: "For experience and powerful surfers.",
+                {
+                  title: "ADVANCED",
+                  subtitle: (
+                    <>
+                      For experience
+                      <br />
+                      and powerful surfers.
+                    </>
+                  ),
                   img: categoryAdvance,
-                  zIndex: "z-40"
+                  zIndex: "z-40",
                 },
-                { 
-                  title: "INTERMEDIATE", 
-                  subtitle: "For progressing surfers building their skills.",
+                {
+                  title: "INTERMEDIATE",
+                  subtitle: (
+                    <>
+                      For progressing surfers
+                      <br />
+                      building their skills.
+                    </>
+                  ),
                   img: categoryIntermediate,
-                  zIndex: "z-30"
+                  zIndex: "z-30",
                 },
-                { 
-                  title: "BEGINNER", 
-                  subtitle: "For first timers and easy progression.",
+                {
+                  title: "BEGINNER",
+                  subtitle: (
+                    <>
+                      For first times
+                      <br />
+                      and easy progression.
+                    </>
+                  ),
                   img: categoryBeginner,
-                  zIndex: "z-20"
+                  zIndex: "z-20",
                 },
-                { 
-                  title: "GROMS", 
-                  subtitle: "For young shredders and future legends.",
+                {
+                  title: "GROMS",
+                  subtitle: (
+                    <>
+                      For young shredders
+                      <br />
+                      and future legends.
+                    </>
+                  ),
                   img: categoryGroms,
-                  zIndex: "z-10"
+                  zIndex: "z-10",
                 },
               ].map((level, idx) => (
                 <motion.div
@@ -789,20 +814,33 @@ export default function Home() {
                   onClick={() =>
                     navigate(`/store?filter=${encodeURIComponent(level.title)}`)
                   }
-                  className={`relative w-full md:flex-1 h-64 md:h-80 rounded-[30px] md:rounded-l-none ${idx === 3 ? 'md:rounded-r-none md:border-r-0' : 'md:rounded-r-[30px]'} border border-[#4ADDDE] md:border-l-0 group cursor-pointer overflow-hidden shadow-2xl ${level.zIndex} ${idx !== 0 ? 'md:-ml-5' : ''}`}
+                  className={`relative w-full md:flex-1 h-64 md:h-80 group cursor-pointer ${level.zIndex} ${idx !== 0 ? "md:-ml-5" : ""}`}
                 >
+                  {/* Inner wrapper for background and text, handles the rounded corners and borders */}
+                  <div
+                    className={`absolute inset-0 overflow-hidden rounded-[30px] md:rounded-l-none ${idx === 3 ? "md:rounded-r-none md:border-r-0" : "md:rounded-r-[30px]"} border border-[#4ADDDE] md:border-l-0`}
+                  >
+                    <img
+                      loading="lazy"
+                      src={level.img}
+                      alt={level.title}
+                      className="absolute inset-0 w-full h-full object-cover scale-[1.25] group-hover:scale-[1.30] transition-transform duration-700 ease-out z-0"
+                    />
+                  </div>
+
+                  {/* Surfing Board Popping Out */}
                   <img
-                    loading="lazy"
-                    src={level.img}
-                    alt={level.title}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out z-0"
+                    src={boardGroms}
+                    alt="Surfboard"
+                    className="absolute bottom-0 right-0 w-auto h-[115%] object-contain object-bottom pointer-events-none drop-shadow-md z-20 origin-bottom-right group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
-                  {/* Text Overlay */}
-                  <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-between z-10 pointer-events-none">
-                    <h4 className="font-road-rage text-2xl md:text-3xl tracking-wide text-white drop-shadow-md">
+
+                  {/* Text Overlay - Placed outside to render ABOVE the surfboard */}
+                  <div className="absolute inset-0 py-5 pr-5 pl-8 md:py-6 md:pr-6 md:pl-10 flex flex-col justify-between z-30 pointer-events-none">
+                    <h4 className="font-road-rage text-xl md:text-2xl tracking-wide text-white drop-shadow-md">
                       {level.title}
                     </h4>
-                    <p className="font-poppins text-xs text-gray-300 pr-2 leading-tight drop-shadow-lg max-w-[85%]">
+                    <p className="font-poppins text-sm font-medium italic text-gray-300 pr-2 leading-tight drop-shadow-lg">
                       {level.subtitle}
                     </p>
                   </div>
@@ -932,7 +970,7 @@ export default function Home() {
                       </div>
                       {/* Info bar */}
                       <div className="bg-[#1A2127] px-5 py-4 md:py-6 flex-grow flex flex-col justify-center">
-                        <p className="text-[9px] text-gray-400 tracking-[0.18em] uppercase mb-1 font-bold">
+                        <p className="text-[9px] text-[#4ADDDE] tracking-[0.18em] uppercase mb-1 font-bold">
                           {category}
                         </p>
                         <p className="font-poppins text-sm sm:text-base md:text-lg font-bold tracking-wide uppercase text-white transition duration-300">
