@@ -12,9 +12,9 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import videoLandingPage from "../../assets/videoLandingPage.mp4";
-import meetTheRiders from "../../assets/meetTheRiders.webp";
-import lovedCustomer from "../../assets/LovedHome.webp";
-import customresinTint from "../../assets/customresinTint.webp";
+import riders2 from "../../assets/riders2.png";
+import customer2 from "../../assets/customer2.png";
+import galery2 from "../../assets/galery2.png";
 import smallWavesImg from "../../assets/smallWave.webp";
 import mediumWavesImg from "../../assets/mediumWave.webp";
 import bigWavesImg from "../../assets/bigWave.webp";
@@ -29,8 +29,8 @@ import FPWHITE from "../../assets/FPWHITE.webp";
 import logoTransparan from "../../assets/logoTransparan.webp";
 import bercakBercak from "../../assets/bercak-bercak.webp";
 import bercakPembatas from "../../assets/bercakPembatas.webp";
-import aksesoris2 from "../../assets/aksesoris2.webp";
-import surfboard2 from "../../assets/surfboard2.webp";
+import aksesoris3 from "../../assets/accessories3.png";
+import surfboard3 from "../../assets/surfboard3.png";
 import CTAPopup from "../../components/CTAPopup";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { newReleaseService } from "../../api/newReleases";
@@ -560,12 +560,12 @@ export default function Home() {
             {[
               {
                 label: "ACCESSORIES",
-                img: aksesoris2,
+                img: aksesoris3,
                 link: "/store?tab=accessories",
               },
               {
                 label: "SURFBOARD",
-                img: surfboard2,
+                img: surfboard3,
                 link: "/store?tab=surfboard",
               },
             ].map((item, idx) => (
@@ -588,13 +588,6 @@ export default function Home() {
 
                 {/* Overlay for text readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
-
-                {/* Efek tekstur bercak di batas bawah card */}
-                <img
-                  src={bercakPembatas}
-                  alt="Bercak pembatas card"
-                  className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-[5] mix-blend-normal opacity-80"
-                />
 
                 {/* Label (Bottom Left) */}
                 <div className="absolute inset-x-0 bottom-0 px-8 pb-10 md:px-12 md:pb-14 flex items-end">
@@ -945,21 +938,21 @@ export default function Home() {
               {
                 topTitle: "rider",
                 bottomTitle: "spotlight",
-                img: meetTheRiders,
+                img: riders2,
                 link: "/riders",
                 titleSize: "text-3xl md:text-[36px]",
               },
               {
                 topTitle: "LOVED BY",
                 bottomTitle: "SURFERS\nWORLDWIDE",
-                img: lovedCustomer,
+                img: customer2,
                 link: "/customer",
                 titleSize: "text-3xl md:text-[36px]",
               },
               {
                 topTitle: "",
                 bottomTitle: "GALLERY",
-                img: customresinTint,
+                img: galery2,
                 link: "/gallery",
                 titleSize: "text-4xl md:text-[48px]",
                 titleColor: "text-[#4ADDDD]",
@@ -977,17 +970,8 @@ export default function Home() {
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:grayscale"
                 />
 
-                {/* Bercak Pembatas Overlay */}
-                <div className="absolute inset-0 z-10 pointer-events-none opacity-40 mix-blend-overlay flex items-center justify-center overflow-hidden">
-                  <img
-                    src={bercakPembatas}
-                    className="w-full h-full object-cover"
-                    alt=""
-                  />
-                </div>
-
                 {/* Dark gradient overlay for text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/90 transition duration-500 z-10"></div>
+                {/* <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/90 transition duration-500 z-10"></div> */}
 
                 {/* Text Container */}
                 <div className="absolute bottom-0 left-0 right-0 p-8 pb-10 z-20 flex flex-col transform -rotate-3 transition-transform duration-300 group-hover:-translate-y-2">

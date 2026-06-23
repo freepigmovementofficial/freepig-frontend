@@ -185,7 +185,7 @@ export default function Store() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.1 }}
-          className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 pb-5 border-b border-[#333]"
+          className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 pb-5 border-b border-[#4ADDDE]"
         >
           {/* Filters (Left Side) */}
           <div className="flex-1 w-full overflow-hidden">
@@ -383,7 +383,7 @@ export default function Store() {
                         />
                       </div>
                       <div className="bg-[#1A2127] px-5 py-4 md:py-6 flex-grow flex flex-col justify-center">
-                        <p className="text-[9px] text-gray-400 tracking-[0.18em] uppercase mb-1 font-bold">
+                        <p className="text-[9px] text-[#4ADDDE] tracking-[0.18em] uppercase mb-1 font-bold">
                           {getProductCategory(product)}
                         </p>
                         <p className="font-poppins text-sm sm:text-base md:text-lg font-bold tracking-wide uppercase text-white transition duration-300">
