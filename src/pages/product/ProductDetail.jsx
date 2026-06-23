@@ -170,6 +170,15 @@ export default function ProductDetail() {
                 "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
             }}
           ></div>
+
+          {/* Gradient tambahan untuk fade-out banner ke warna hitam #000000 agar menyatu tanpa garis pembatas */}
+          <div
+            className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
+            style={{
+              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
+            }}
+          ></div>
+
           <img
             src={bercakPembatas}
             alt="Bercak pembatas banner"
@@ -193,6 +202,15 @@ export default function ProductDetail() {
                 "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
             }}
           ></div>
+
+          {/* Gradient tambahan untuk fade-out banner ke warna hitam #000000 agar menyatu tanpa garis pembatas */}
+          <div
+            className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
+            style={{
+              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
+            }}
+          ></div>
+
           <img
             src={bercakPembatas}
             alt="Bercak pembatas banner"
