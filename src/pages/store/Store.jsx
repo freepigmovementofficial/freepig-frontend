@@ -141,13 +141,6 @@ export default function Store() {
         className="relative w-full flex items-center justify-center bg-cover bg-[center_15%] overflow-hidden"
         style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
       >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
-          }}
-        ></div>
         <motion.h1
           key={activeTab} // ensure animation triggers on tab change
           initial={{ opacity: 0, y: -30 }}
