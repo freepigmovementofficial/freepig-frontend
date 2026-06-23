@@ -751,9 +751,9 @@ export default function Home() {
           </FadeUp>
         </Container>
 
-        <div className="w-full relative z-10">
+        <div className="w-full relative z-10 px-4 md:px-0">
           <FadeUp>
-            <div className="flex flex-col md:flex-row justify-center w-full">
+            <div className="flex flex-col md:flex-row justify-center w-full gap-4 md:gap-0">
               {[
                 { 
                   title: "ADVANCED", 
@@ -789,7 +789,7 @@ export default function Home() {
                   onClick={() =>
                     navigate(`/store?filter=${encodeURIComponent(level.title)}`)
                   }
-                  className={`relative w-full md:w-1/4 h-64 md:h-80 rounded-l-none rounded-r-[30px] border border-[#4ADDDE] border-l-0 group cursor-pointer overflow-hidden shadow-2xl ${level.zIndex} ${idx !== 0 ? 'md:-ml-5 -mt-6 md:mt-0' : ''}`}
+                  className={`relative w-full md:flex-1 h-64 md:h-80 rounded-[30px] md:rounded-l-none ${idx === 3 ? 'md:rounded-r-none md:border-r-0' : 'md:rounded-r-[30px]'} border border-[#4ADDDE] md:border-l-0 group cursor-pointer overflow-hidden shadow-2xl ${level.zIndex} ${idx !== 0 ? 'md:-ml-5' : ''}`}
                 >
                   <img
                     loading="lazy"
