@@ -404,7 +404,8 @@ export default function Home() {
           <div
             className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
             style={{
-              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
             }}
           ></div>
 
@@ -412,7 +413,7 @@ export default function Home() {
           <img
             src={bercakPembatas}
             alt="Bercak pembatas video"
-            className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[55%]"
+            className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[45%]"
           />
         </div>
 
