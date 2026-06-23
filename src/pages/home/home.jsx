@@ -2,6 +2,7 @@ import useDocumentTitle from "../../hooks/useDocumentTitle";
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaChevronRight } from "react-icons/fa";
+import { Star } from "lucide-react";
 import { getDisplayImage } from "../../utils/productImage";
 import Rectangle94 from "../../assets/Rectangle94.webp";
 import {
@@ -298,14 +299,14 @@ export default function Home() {
   };
 
   // Star rendering helper
-  const renderStars = (rating, size = "text-lg") => {
+  const renderStars = (rating, className = "w-5 h-5") => {
     return Array.from({ length: 5 }, (_, i) => (
-      <span
+      <Star
         key={i}
-        className={`${size} ${i < rating ? "text-yellow-400" : "text-gray-600"}`}
-      >
-        ★
-      </span>
+        fill="currentColor"
+        strokeWidth={1.5}
+        className={`${className} ${i < rating ? "opacity-100" : "opacity-30"} mx-0.5`}
+      />
     ));
   };
 
@@ -398,6 +399,15 @@ export default function Home() {
                 "radial-gradient(150% 100% at 50% 0%, rgba(1, 14, 25, 0) 44%, rgba(1, 14, 25, 0.25) 68%, rgba(1, 14, 25, 1) 100%)",
             }}
           ></div>
+
+          {/* Gradient tambahan untuk fade-out video ke warna hitam #000000 agar menyatu tanpa garis pembatas */}
+          <div
+            className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
+            style={{
+              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
+            }}
+          ></div>
+
           {/* Efek tekstur bercak di batas bawah video */}
           <img
             src={bercakPembatas}
@@ -459,7 +469,7 @@ export default function Home() {
               <p className="text-[clamp(14px,2vw,20px)] text-[#4ADDDE] font-bold tracking-[0.4em] md:tracking-[0.5em] mb-1 md:mb-3 relative z-20">
                 FREEPIGMOVEMENT
               </p>
-              <h2 className="font-road-rage text-[clamp(20px,5vw,48px)] tracking-wider md:tracking-widest mb-6 text-white whitespace-normal md:whitespace-nowrap drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] relative z-20">
+              <h2 className="font-road-rage text-[clamp(18px,4vw,36px)] tracking-wider md:tracking-widest mb-6 text-white whitespace-normal leading-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] relative z-20 px-4 max-w-full">
                 SHAPED WITH PASSION, SHARED WITH TRUST.
               </h2>
             </FadeUp>
@@ -1198,18 +1208,18 @@ export default function Home() {
                           <p className="text-white font-poppins font-bold text-lg md:text-xl tracking-wide">
                             {review.user?.name || "Anonymous"}
                           </p>
-                          <div className="flex text-[#4ADDDD] text-xl mt-1">
+                          <div className="flex text-[#4ADDDD] mt-1 gap-1">
                             {Array.from({ length: 5 }, (_, i) => (
-                              <span
+                              <Star
                                 key={i}
-                                className={
+                                fill="currentColor"
+                                strokeWidth={1.5}
+                                className={`w-[18px] h-[18px] md:w-5 md:h-5 ${
                                   i < review.rating
                                     ? "opacity-100"
                                     : "opacity-30"
-                                }
-                              >
-                                ★
-                              </span>
+                                }`}
+                              />
                             ))}
                           </div>
                         </div>
@@ -1256,7 +1266,7 @@ export default function Home() {
                     RATE & REVIEW
                   </h3>
                   {/* Interactive Star Rating */}
-                  <div className="flex gap-2 mt-4 drop-shadow-md">
+                  <div className="flex gap-4 md:gap-5 mt-4 drop-shadow-md">
                     {Array.from({ length: 5 }, (_, i) => (
                       <button
                         key={i}
@@ -1264,13 +1274,17 @@ export default function Home() {
                         onClick={() => setReviewRating(i + 1)}
                         onMouseEnter={() => setReviewHover(i + 1)}
                         onMouseLeave={() => setReviewHover(0)}
-                        className={`text-4xl transition-all duration-200 ${
+                        className={`transition-all duration-200 text-[#4ADDDD] ${
                           i < (reviewHover || reviewRating)
-                            ? "text-[#4ADDDD] scale-110"
-                            : "text-[#4ADDDD]/30 hover:text-[#4ADDDD]/60"
+                            ? "scale-110 opacity-100"
+                            : "opacity-30 hover:opacity-60"
                         }`}
                       >
-                        ★
+                        <Star
+                          fill="currentColor"
+                          strokeWidth={1.5}
+                          className="w-[50px] h-[50px] md:w-[60px] md:h-[60px]"
+                        />
                       </button>
                     ))}
                   </div>
@@ -1286,7 +1300,7 @@ export default function Home() {
                         ✓ YOU HAVE ALREADY REVIEWED
                       </p>
                       <div className="flex justify-center mb-3 text-[#4ADDDD]">
-                        {renderStars(myReview?.rating ?? 0, "text-2xl")}
+                        {renderStars(myReview?.rating ?? 0, "w-8 h-8")}
                       </div>
                       {myReview?.comment && (
                         <p className="text-gray-300 text-sm italic mb-6">
