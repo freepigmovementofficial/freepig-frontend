@@ -175,7 +175,7 @@ export default function Store() {
         <img
           src={bercakPembatas}
           alt="Bercak pembatas banner"
-          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[60%]"
+          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[60%] brightness-0"
         />
       </div>
 
