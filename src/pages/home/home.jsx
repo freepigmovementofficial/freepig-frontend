@@ -746,7 +746,7 @@ export default function Home() {
         />
         <Container className="relative z-10">
           <FadeUp>
-            <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-white uppercase text-center mb-20 md:mb-24">
+            <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-white uppercase text-center mb-32 md:mb-40">
               FIND YOUR <span className="text-[#4ADDDE]">LEVEL</span>
             </h3>
           </FadeUp>
