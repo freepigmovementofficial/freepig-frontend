@@ -93,11 +93,7 @@ export default function Customer() {
           }}
         ></div>
 
-        <img
-          src={bercakPembatas}
-          alt="Bercak pembatas banner"
-          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
-        />
+
       </div>
 
       {/* ── SUBTITLE ── */}

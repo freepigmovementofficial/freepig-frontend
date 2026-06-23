@@ -76,11 +76,7 @@ export default function Riders() {
           }}
         ></div>
 
-        <img
-          src={bercakPembatas}
-          alt="Bercak pembatas banner"
-          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
-        />
+
       </div>
 
       <div className="w-full mx-auto px-6 md:px-[70px] mt-12 sm:mt-16">

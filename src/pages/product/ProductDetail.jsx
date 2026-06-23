@@ -179,11 +179,7 @@ export default function ProductDetail() {
             }}
           ></div>
 
-          <img
-            src={bercakPembatas}
-            alt="Bercak pembatas banner"
-            className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
-          />
+
           <div className="absolute bottom-3 right-4 md:right-8 z-10 pointer-events-none">
             <span className="text-[8px] sm:text-[9px] text-white/40 tracking-[0.15em] uppercase font-medium drop-shadow-md">
               Video playback quality adapts to your connection speed
@@ -211,11 +207,7 @@ export default function ProductDetail() {
             }}
           ></div>
 
-          <img
-            src={bercakPembatas}
-            alt="Bercak pembatas banner"
-            className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
-          />
+
         </div>
       )}
 
