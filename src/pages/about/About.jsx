@@ -1,9 +1,9 @@
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import React from "react";
 import { motion } from "framer-motion";
-import headingImg from "../../assets/headerRiderss.png";
-import headerTransparanImg from "../../assets/headertranparan.png";
-import bercakPembatas from "../../assets/bercakPembatas.png";
+import headingImg from "../../assets/headerRiderss.webp";
+import headerTransparanImg from "../../assets/headertranparan.webp";
+import bercakPembatas from "../../assets/bercakPembatas.webp";
 import ourCustomer from "../../assets/ourCustomer.webp";
 import aboutUsImg from "../../assets/aboutUs.webp";
 import logoPutih from "../../assets/logoPutih.webp";

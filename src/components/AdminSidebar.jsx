@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronLeft, FiChevronRight, FiLogOut, FiChevronDown, FiChevronUp } from "react-icons/fi";
-import fpWhiteLogo from "../assets/FPWHITE.png";
+import fpWhiteLogo from "../assets/FPWHITE.webp";
 
 export default function AdminSidebar({
   menuItems,

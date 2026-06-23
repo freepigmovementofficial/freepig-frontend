@@ -1,9 +1,9 @@
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import headingImg from "../../assets/headerRiderss.png";
-import headerTransparanImg from "../../assets/headertranparan.png";
-import bercakPembatas from "../../assets/bercakPembatas.png";
+import headingImg from "../../assets/headerRiderss.webp";
+import headerTransparanImg from "../../assets/headertranparan.webp";
+import bercakPembatas from "../../assets/bercakPembatas.webp";
 import volumeImg from "../../assets/volumeCalculate.webp";
 
 // ── Shape factors ──────────────────────────────────────────────────────────────
@@ -354,9 +354,8 @@ export default function Volume() {
 
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen text-white bg-[#000000]"
       style={{
-        backgroundColor: "#1a1a1a",
         fontFamily: "'Poppins', sans-serif",
       }}
     >
@@ -397,7 +396,7 @@ export default function Volume() {
         <img
           src={bercakPembatas}
           alt="Bercak pembatas banner"
-          className="absolute bottom-[-10px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[60%] brightness-0"
+          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[60%] brightness-0"
         />
       </div>
 

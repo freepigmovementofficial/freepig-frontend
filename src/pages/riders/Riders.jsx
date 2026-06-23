@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { riderService } from "../../api/riders";
-import headingImg from "../../assets/headerRiderss.png";
-import headerTransparanImg from "../../assets/headertranparan.png";
-import bercakPembatas from "../../assets/bercakPembatas.png";
+import headingImg from "../../assets/headerRiderss.webp";
+import headerTransparanImg from "../../assets/headertranparan.webp";
+import bercakPembatas from "../../assets/bercakPembatas.webp";
 import PigLoader from "../../components/PigLoader";
 
 const FadeUp = ({ children, delay = 0, className = "" }) => (

@@ -2,9 +2,9 @@ import useDocumentTitle from "../../hooks/useDocumentTitle";
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, Link } from "react-router-dom";
-import headingImg from "../../assets/headerRiderss.png";
-import headerTransparanImg from "../../assets/headertranparan.png";
-import bercakPembatas from "../../assets/bercakPembatas.png";
+import headingImg from "../../assets/headerRiderss.webp";
+import headerTransparanImg from "../../assets/headertranparan.webp";
+import bercakPembatas from "../../assets/bercakPembatas.webp";
 import { productService } from "../../api/products";
 import { getDisplayImage } from "../../utils/productImage";
 

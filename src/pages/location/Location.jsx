@@ -8,9 +8,9 @@ import {
   FiGlobe,
   FiInstagram,
 } from "react-icons/fi";
-import headingImg from "../../assets/headerRiderss.png";
-import headerTransparanImg from "../../assets/headertranparan.png";
-import bercakPembatas from "../../assets/bercakPembatas.png";
+import headingImg from "../../assets/headerRiderss.webp";
+import headerTransparanImg from "../../assets/headertranparan.webp";
+import bercakPembatas from "../../assets/bercakPembatas.webp";
 const shopsData = {
   rpm: {
     name: "RPM Surf Shop",

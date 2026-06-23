@@ -3,8 +3,8 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { productService } from "../../api/products";
-import headingImg from "../../assets/headerRiderss.png";
-import bercakPembatas from "../../assets/bercakPembatas.png";
+import headingImg from "../../assets/headerRiderss.webp";
+import bercakPembatas from "../../assets/bercakPembatas.webp";
 import PigLoader from "../../components/PigLoader";
 
 export default function ProductDetail() {

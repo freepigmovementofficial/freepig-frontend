@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaUserCircle } from 'react-icons/fa';
-import headingImg from '../assets/headerRiderss.png';
+import headingImg from '../assets/headerRiderss.webp';
 
 export default function ContactPopup() {
   const [isOpen, setIsOpen] = useState(false);

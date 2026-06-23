@@ -12,16 +12,16 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import videoLandingPage from "../../assets/videoLandingPage.mp4";
-import riders2 from "../../assets/riders2.png";
-import customer2 from "../../assets/customer2.png";
-import galery2 from "../../assets/galery2.png";
+import riders2 from "../../assets/riders2.webp";
+import customer2 from "../../assets/customer2.webp";
+import galery2 from "../../assets/galery2.webp";
 import smallWavesImg from "../../assets/smallWave.webp";
 import mediumWavesImg from "../../assets/mediumWave.webp";
 import bigWavesImg from "../../assets/bigWave.webp";
-import categoryAdvance from "../../assets/CategoryAdvance.webp";
-import categoryIntermediate from "../../assets/CategoryIntermediate.webp";
-import categoryBeginner from "../../assets/CategoryBeginner.webp";
-import categoryGroms from "../../assets/CategoryGroms.webp";
+import categoryAdvance from "../../assets/advanced.webp";
+import categoryIntermediate from "../../assets/intermediate.webp";
+import categoryBeginner from "../../assets/beginner.webp";
+import categoryGroms from "../../assets/groms.webp";
 import aboutUsImg from "../../assets/aboutUs.webp";
 import maskotBabi from "../../assets/maskotBabi.webp";
 import maskotBabi2 from "../../assets/maskotBabi2.webp";
@@ -29,8 +29,8 @@ import FPWHITE from "../../assets/FPWHITE.webp";
 import logoTransparan from "../../assets/logoTransparan.webp";
 import bercakBercak from "../../assets/bercak-bercak.webp";
 import bercakPembatas from "../../assets/bercakPembatas.webp";
-import aksesoris3 from "../../assets/accessories3.png";
-import surfboard3 from "../../assets/surfboard3.png";
+import aksesoris3 from "../../assets/accessories3.webp";
+import surfboard3 from "../../assets/surfboard3.webp";
 import CTAPopup from "../../components/CTAPopup";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { newReleaseService } from "../../api/newReleases";
@@ -748,42 +748,69 @@ export default function Home() {
             <h3 className="font-road-rage text-4xl md:text-5xl tracking-wide text-white uppercase text-center mb-12">
               FIND YOUR <span className="text-[#4ADDDE]">LEVEL</span>
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-[20px]">
+          </FadeUp>
+        </Container>
+
+        <div className="w-full relative z-10">
+          <FadeUp>
+            <div className="flex flex-col md:flex-row justify-center w-full">
               {[
-                { title: "ADVANCED", img: categoryAdvance },
-                { title: "INTERMEDIATE", img: categoryIntermediate },
-                { title: "BEGINNER", img: categoryBeginner },
-                { title: "GROMS", img: categoryGroms },
+                { 
+                  title: "ADVANCED", 
+                  subtitle: "For experience and powerful surfers.",
+                  img: categoryAdvance,
+                  zIndex: "z-40"
+                },
+                { 
+                  title: "INTERMEDIATE", 
+                  subtitle: "For progressing surfers building their skills.",
+                  img: categoryIntermediate,
+                  zIndex: "z-30"
+                },
+                { 
+                  title: "BEGINNER", 
+                  subtitle: "For first timers and easy progression.",
+                  img: categoryBeginner,
+                  zIndex: "z-20"
+                },
+                { 
+                  title: "GROMS", 
+                  subtitle: "For young shredders and future legends.",
+                  img: categoryGroms,
+                  zIndex: "z-10"
+                },
               ].map((level, idx) => (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                   onClick={() =>
                     navigate(`/store?filter=${encodeURIComponent(level.title)}`)
                   }
-                  className="bg-[#222] border border-[#333] group cursor-pointer flex flex-col hover:bg-[#2a2a2a] hover:border-accent-teal transition duration-500 shadow-xl overflow-hidden"
+                  className={`relative w-full md:w-1/4 h-64 md:h-80 rounded-l-none rounded-r-[30px] border border-[#4ADDDE] border-l-0 group cursor-pointer overflow-hidden shadow-2xl ${level.zIndex} ${idx !== 0 ? 'md:-ml-5 -mt-6 md:mt-0' : ''}`}
                 >
-                  <div className="h-72 w-full overflow-hidden">
-                    <img
-                      loading="lazy"
-                      src={level.img}
-                      alt={level.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out"
-                    />
-                  </div>
-                  <div className="bg-[#1f1f1f] border-t border-[#333] w-full py-5 text-center group-hover:bg-[#2a2a2a] transition duration-500">
-                    <h4 className="font-road-rage text-sm sm:text-base md:text-2xl tracking-wide text-gray-200 group-hover:text-accent-teal transition">
+                  <img
+                    loading="lazy"
+                    src={level.img}
+                    alt={level.title}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out z-0"
+                  />
+                  {/* Text Overlay */}
+                  <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-between z-10 pointer-events-none">
+                    <h4 className="font-road-rage text-2xl md:text-3xl tracking-wide text-white drop-shadow-md">
                       {level.title}
                     </h4>
+                    <p className="font-poppins text-xs text-gray-300 pr-2 leading-tight drop-shadow-lg max-w-[85%]">
+                      {level.subtitle}
+                    </p>
                   </div>
                 </motion.div>
               ))}
             </div>
           </FadeUp>
-        </Container>
+        </div>
       </section>
 
       {/* SHOP BY WAVE */}
