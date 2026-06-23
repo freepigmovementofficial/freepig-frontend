@@ -159,14 +159,15 @@ export default function Store() {
         <div
           className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
           style={{
-            background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
           }}
         ></div>
 
         <img
           src={bercakPembatas}
           alt="Bercak pembatas banner"
-          className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[63%]"
+          className="absolute bottom-[-320px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
         />
       </div>
 

@@ -413,7 +413,7 @@ export default function Home() {
           <img
             src={bercakPembatas}
             alt="Bercak pembatas video"
-            className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[45%]"
+            className="absolute bottom-[-250px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal"
           />
         </div>
 
