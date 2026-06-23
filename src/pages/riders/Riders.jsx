@@ -82,7 +82,7 @@ export default function Riders() {
         />
       </div>
 
-      <div className="w-full mx-auto px-6 md:px-[70px] mt-12 sm:mt-16">
+      <div className="w-full mx-auto px-6 md:px-[70px] mt-12 sm:mt-16 relative z-20">
         {error ? (
           <div className="text-center py-20 text-red-400 text-sm tracking-widest uppercase">
             <p>{error}</p>

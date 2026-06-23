@@ -104,7 +104,7 @@ export default function Customer() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="text-center pt-10 pb-6 px-4"
+        className="text-center pt-10 pb-6 px-4 relative z-20"
       >
         <p className="text-gray-400 text-sm md:text-base tracking-[0.3em] uppercase font-medium">
           Loved By Surfers Worldwide
@@ -112,8 +112,8 @@ export default function Customer() {
         <div className="w-16 h-0.5 bg-white/20 mx-auto mt-4" />
       </motion.div>
 
-      {/* ── TESTIMONIALS LIST ── */}
-      <div className="w-full mx-auto px-6 md:px-[70px] pb-24 pt-8">
+      {/* ── CUSTOMER REVIEWS GRID ── */}
+      <div className="w-full mx-auto px-6 md:px-[70px] pb-24 relative z-20">
         {error ? (
           <div className="text-center py-20 text-red-400 text-sm tracking-widest uppercase">
             <p>{error}</p>
