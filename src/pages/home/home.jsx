@@ -751,7 +751,7 @@ export default function Home() {
           </FadeUp>
         </Container>
 
-        <div className="w-full relative z-10 px-4 md:px-0">
+        <div className="w-full relative z-30 px-4 md:px-0">
           <FadeUp>
             <div className="flex flex-col md:flex-row justify-center w-full gap-4 md:gap-0">
               {[
