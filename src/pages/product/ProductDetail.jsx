@@ -188,26 +188,8 @@ export default function ProductDetail() {
         </div>
       ) : (
         <div
-          className="relative w-full bg-cover bg-[center_15%] overflow-hidden"
-          style={{ backgroundImage: `url(${headingImg})`, height: "500px" }}
+          className="relative w-full overflow-hidden pt-32"
         >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(150% 100% at 50% 0%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.25) 68%, rgba(0, 0, 0, 1) 100%)",
-            }}
-          ></div>
-
-          {/* Gradient tambahan untuk fade-out banner ke warna hitam #000000 agar menyatu tanpa garis pembatas */}
-          <div
-            className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
-            style={{
-              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
-            }}
-          ></div>
-
-
         </div>
       )}
 

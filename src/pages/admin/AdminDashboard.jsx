@@ -5081,9 +5081,9 @@ function HeroTable() {
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Subtitle *</label>
-                  <input required value={form.subtitle} onChange={(e) => setForm(p => ({ ...p, subtitle: e.target.value }))}
+                  <textarea required rows={3} value={form.subtitle} onChange={(e) => setForm(p => ({ ...p, subtitle: e.target.value }))}
                     placeholder="e.g. BUILD DIFFERENT, RIDE DIFFERENT"
-                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none" />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Description</label>

@@ -7,6 +7,7 @@ import { authService } from "../../api/auth";
 import logotr from "../../assets/logoPutihh.webp";
 import videoLandingPage from "../../assets/videoLandingPage.mp4";
 import { toast } from "react-hot-toast";
+import { heroService } from "../../api/hero";
 
 const inputClass =
   "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-white/40 focus:bg-white/8 transition duration-300";
@@ -28,6 +29,8 @@ export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
+  const [hero, setHero] = useState(null);
+
   useEffect(() => {
     if (searchParams.get("expired") === "true") {
       const msg = "Sesi Anda sudah habis. Harap login kembali.";
@@ -38,6 +41,20 @@ export default function Login() {
       });
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    const fetchHero = async () => {
+      try {
+        const res = await heroService.getActive();
+        if (res?.data) {
+          setHero(res.data);
+        }
+      } catch (err) {
+        // Silently ignore if no active hero is found
+      }
+    };
+    fetchHero();
+  }, []);
 
   const handleAuthSuccess = (res) => {
     const { user, token } = res.data;
@@ -99,7 +116,8 @@ export default function Login() {
       <div className="hidden lg:flex relative w-[52%] flex-shrink-0 flex-col items-start justify-end p-16 overflow-hidden">
         {/* Video background */}
         <video
-          src={videoLandingPage}
+          key={hero?.videoUrl || "default"}
+          src={hero?.videoUrl || videoLandingPage}
           autoPlay
           muted
           loop

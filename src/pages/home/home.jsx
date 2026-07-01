@@ -22,6 +22,9 @@ import categoryAdvance from "../../assets/advanced.webp";
 import categoryIntermediate from "../../assets/intermediate.webp";
 import categoryBeginner from "../../assets/beginner.webp";
 import categoryGroms from "../../assets/groms.webp";
+import boardAdvance from "../../assets/boardAdvanced.png";
+import boardIntermediate from "../../assets/boardIntermediate.png";
+import boardBeginner from "../../assets/boardBeginner.png";
 import boardGroms from "../../assets/boardGroms.webp";
 import aboutUsImg from "../../assets/aboutUs.webp";
 import maskotBabi from "../../assets/maskotBabi.webp";
@@ -377,7 +380,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* HERO SECTION */}
-      <section className="relative w-full h-screen flex flex-col justify-end pb-20 px-6 md:px-[70px] overflow-visible z-10">
+      <section className="relative w-full h-screen flex flex-col justify-end pb-0 px-6 md:px-[70px] overflow-visible z-10">
         {/* Video diperpanjang ke bawah sejauh 128px (seukuran mt-32) biar ngisi ruang kosong */}
         <div
           className="absolute top-0 left-0 w-full z-0"
@@ -424,7 +427,7 @@ export default function Home() {
           transition={{ duration: 0.9, ease: "easeOut" }}
         >
           {/* Stacked typographic hero title — layout matches Figma reference */}
-          <h1 className="font-road-rage text-white drop-shadow-xl tracking-wide leading-none mb-4">
+          <h1 className="font-road-rage text-white drop-shadow-xl tracking-wide leading-none mb-0">
             {hero?.title &&
             hero.title.toUpperCase() !== "RIDE YOUR OWN WAVE" ? (
               <span className="text-5xl md:text-7xl lg:text-8xl break-words max-w-2xl block">
@@ -459,6 +462,24 @@ export default function Home() {
               </span>
             )}
           </h1>
+
+          <p className="text-white/90 text-sm md:text-base lg:text-lg max-w-xl font-poppins mt-2 leading-relaxed drop-shadow-md whitespace-pre-line">
+            {hero?.subtitle || "Surfboards handcrafted by local artisans\nfor every wave and every rider."}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4 mt-8">
+            <Link to="/store">
+              <button className="px-5 md:px-6 py-2.5 bg-white text-black font-bold text-[10px] md:text-xs tracking-[0.15em] uppercase rounded-md hover:bg-gray-200 transition duration-300 flex items-center gap-2 shadow-lg">
+                EXPLORE BOARDS <span>→</span>
+              </button>
+            </Link>
+            <button
+              onClick={() => window.dispatchEvent(new Event('openContactPopup'))}
+              className="px-5 md:px-6 py-2.5 bg-transparent border border-white text-white font-bold text-[10px] md:text-xs tracking-[0.15em] uppercase rounded-md hover:bg-white/10 transition duration-300 shadow-lg"
+            >
+              CUSTOM BOARD
+            </button>
+          </div>
         </motion.div>
       </section>
 
@@ -765,6 +786,7 @@ export default function Home() {
                     </>
                   ),
                   img: categoryAdvance,
+                  boardImg: boardAdvance,
                   zIndex: "z-40",
                 },
                 {
@@ -777,6 +799,7 @@ export default function Home() {
                     </>
                   ),
                   img: categoryIntermediate,
+                  boardImg: boardIntermediate,
                   zIndex: "z-30",
                 },
                 {
@@ -789,6 +812,7 @@ export default function Home() {
                     </>
                   ),
                   img: categoryBeginner,
+                  boardImg: boardBeginner,
                   zIndex: "z-20",
                 },
                 {
@@ -801,6 +825,7 @@ export default function Home() {
                     </>
                   ),
                   img: categoryGroms,
+                  boardImg: boardGroms,
                   zIndex: "z-10",
                 },
               ].map((level, idx) => (
@@ -831,7 +856,7 @@ export default function Home() {
 
                   {/* Surfing Board Popping Out */}
                   <img
-                    src={boardGroms}
+                    src={level.boardImg}
                     alt="Surfboard"
                     className="absolute bottom-0 right-0 w-auto h-[115%] object-contain object-bottom pointer-events-none drop-shadow-md z-20 origin-bottom-right group-hover:scale-110 transition-transform duration-700 ease-out rounded-br-[30px]"
                   />
