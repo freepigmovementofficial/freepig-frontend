@@ -20,20 +20,12 @@ const FadeUp = ({ children, delay = 0, className = "" }) => (
   </motion.div>
 );
 
-const stats = [
-  { value: "2001", label: "Founded in Bali" },
-  { value: "100%", label: "Handcrafted Boards" },
-  { value: "∞", label: "Waves Ridden Worldwide" },
-];
-
 export default function About() {
   useDocumentTitle("About Us | FreePigMovement");
   return (
     <div className="bg-[#000000] min-h-screen font-poppins text-white overflow-x-hidden">
       {/* ── HERO BANNER ── */}
-      <div
-        className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12"
-      >
+      <div className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12">
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -42,22 +34,6 @@ export default function About() {
         >
           ABOUT US
         </motion.h1>
-      </div>
-
-      {/* ── STATS BAR ── */}
-      <div className="border-b border-white/5 mt-16 sm:mt-24 relative z-20">
-        <div className="w-full mx-auto px-6 md:px-[70px] py-12 grid grid-cols-1 md:grid-cols-3 gap-[20px]">
-          {stats.map((s, i) => (
-            <FadeUp key={i} delay={i * 0.1} className="text-center">
-              <p className="font-oswald text-4xl md:text-5xl font-black text-white mb-1">
-                {s.value}
-              </p>
-              <p className="text-[11px] text-gray-500 tracking-[0.25em] uppercase font-medium">
-                {s.label}
-              </p>
-            </FadeUp>
-          ))}
-        </div>
       </div>
 
       {/* ── MAIN CONTENT ── */}
@@ -100,22 +76,15 @@ export default function About() {
           <div className="lg:col-span-7 flex flex-col gap-[20px]">
             <FadeUp delay={0.3}>
               <p className="text-gray-300 text-[17px] md:text-[19px] leading-[1.8] font-light">
-                <strong className="text-white font-medium">Back in 2001</strong>{" "}
-                with a simple, uncompromising mission: to build surfboards that
-                we would actually want to paddle out on ourselves. No shortcuts.
-                No compromises.
-              </p>
-            </FadeUp>
-
-            <FadeUp delay={0.4}>
-              <p className="text-gray-300 text-[17px] md:text-[19px] leading-[1.8] font-light">
-                Over two decades later, our obsession with detail hasn't
-                changed. We believe a great board isn't just manufactured—it's
-                handcrafted. From sourcing genuine premium materials to chasing
-                precision through every step of the shaping and glassing
-                process, it's the human touch and years of refined instinct that
-                give our boards their soul. For us, it's about reliability, peak
-                performance, and durability that stands the test of time.
+                <strong className="text-white font-medium">Since 2001</strong> ,
+                we’ve been shaping more than just surfboards <br />
+                we’re crafting pure stoke. Every board is a slice of Bali’s
+                soul, <br />
+                fueled by two decades of ocean love. Whether you’re paddling{" "}
+                <br /> out for your first wave or dropping into a perfect
+                barrel, we’ve got <br /> your back—no shortcuts, just pure,
+                hand-shaped magic. Ready to ride
+                <br /> your dream board? Let’s roll
               </p>
             </FadeUp>
           </div>

@@ -306,9 +306,10 @@ export default function Home() {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        fill="currentColor"
+        fill={i < rating ? "currentColor" : "none"}
+        stroke={i < rating ? "currentColor" : "rgba(255,255,255,0.4)"}
         strokeWidth={1.5}
-        className={`${className} ${i < rating ? "opacity-100" : "opacity-30"} mx-0.5`}
+        className={`${className} ${i < rating ? "opacity-100 text-[#4ADDDD]" : "opacity-100"} mx-0.5`}
       />
     ));
   };
@@ -463,21 +464,24 @@ export default function Home() {
             )}
           </h1>
 
-          <p className="text-white/90 text-sm md:text-base lg:text-lg max-w-xl font-poppins mt-2 leading-relaxed drop-shadow-md whitespace-pre-line">
-            {hero?.subtitle || "Surfboards handcrafted by local artisans\nfor every wave and every rider."}
+          <p className="text-white/90 text-sm md:text-base lg:text-lg max-w-2xl font-poppins mt-2 leading-relaxed drop-shadow-md whitespace-pre-line">
+            {hero?.subtitle ||
+              "Surfboards handcrafted by local artisans\nfor every wave and every rider."}
           </p>
 
           <div className="flex flex-wrap items-center gap-4 mt-8">
             <Link to="/store">
               <button className="px-5 md:px-6 py-2.5 bg-white text-black font-bold text-[10px] md:text-xs tracking-[0.15em] uppercase rounded-md hover:bg-gray-200 transition duration-300 flex items-center gap-2 shadow-lg">
-                EXPLORE BOARDS <span>→</span>
+                See the Quiver <span>→</span>
               </button>
             </Link>
             <button
-              onClick={() => window.dispatchEvent(new Event('openContactPopup'))}
+              onClick={() =>
+                window.dispatchEvent(new Event("openContactPopup"))
+              }
               className="px-5 md:px-6 py-2.5 bg-transparent border border-white text-white font-bold text-[10px] md:text-xs tracking-[0.15em] uppercase rounded-md hover:bg-white/10 transition duration-300 shadow-lg"
             >
-              CUSTOM BOARD
+              Build A Custom
             </button>
           </div>
         </motion.div>
@@ -1353,7 +1357,7 @@ export default function Home() {
                         className={`transition-all duration-200 text-[#4ADDDD] ${
                           i < (reviewHover || reviewRating)
                             ? "scale-110 opacity-100"
-                            : "opacity-30 hover:opacity-60"
+                            : "text-gray-300"
                         }`}
                       >
                         <Star
@@ -1367,101 +1371,98 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Right Side: Form Box */}
-              <div className="w-full md:w-7/12 relative z-10">
-                <div className="bg-[#1a2127] rounded-[20px] p-6 md:p-8 relative min-h-[300px] flex flex-col border border-transparent hover:border-[#4ADDDD]/30 transition duration-300">
-                  {token && user && hasReviewed && !isEditMode ? (
-                    <div className="flex flex-col items-center justify-center h-full text-center py-6">
-                      <p className="text-accent-teal text-xs font-bold tracking-widest mb-3">
-                        ✓ YOU HAVE ALREADY REVIEWED
-                      </p>
-                      <div className="flex justify-center mb-3 text-[#4ADDDD]">
-                        {renderStars(myReview?.rating ?? 0, "w-8 h-8")}
-                      </div>
-                      {myReview?.comment && (
-                        <p className="text-gray-300 text-sm italic mb-6">
-                          "{myReview.comment}"
-                        </p>
-                      )}
-                      <button
-                        onClick={handleStartEdit}
-                        className="bg-[#111] text-[#4ADDDD] px-8 py-3 rounded-full font-bold text-xs tracking-widest hover:bg-[#222] transition duration-300 shadow-md"
-                      >
-                        EDIT REVIEW
-                      </button>
+              <div className="w-full md:w-7/12 relative z-10 flex flex-col">
+                {token && user && hasReviewed && !isEditMode ? (
+                  <div className="bg-[#1a2127] rounded-[20px] p-6 md:p-8 relative min-h-[300px] flex flex-col items-center justify-center border border-transparent transition duration-300 text-center">
+                    <p className="text-accent-teal text-xs font-bold tracking-widest mb-3">
+                      ✓ YOU HAVE ALREADY REVIEWED
+                    </p>
+                    <div className="flex justify-center mb-3 text-[#4ADDDD]">
+                      {renderStars(myReview?.rating ?? 0, "w-8 h-8")}
                     </div>
-                  ) : (
-                    <div className="relative flex-grow flex flex-col">
+                    {myReview?.comment && (
+                      <p className="text-gray-300 text-sm italic mb-6">
+                        "{myReview.comment}"
+                      </p>
+                    )}
+                    <button
+                      onClick={handleStartEdit}
+                      className="bg-[#1A2127] text-[#4ADDDD] px-8 py-3 rounded-full font-bold text-xs tracking-widest hover:bg-[#243038] transition duration-300 shadow-md"
+                    >
+                      EDIT REVIEW
+                    </button>
+                  </div>
+                ) : (
+                  <form
+                    onSubmit={handleReviewSubmit}
+                    className={`flex flex-col flex-grow ${!token || !user ? "opacity-70" : ""}`}
+                  >
+                    <div className="bg-[#1a2127] rounded-[20px] p-6 md:p-8 relative flex-grow min-h-[220px] flex flex-col border border-transparent hover:border-[#4ADDDD]/30 transition duration-300 mb-6">
                       {(!token || !user) && (
                         <div
-                          className="absolute inset-0 z-10 cursor-pointer bg-black/10 rounded-lg"
+                          className="absolute inset-0 z-10 cursor-pointer bg-transparent rounded-[20px]"
                           onClick={() => setShowLoginPrompt(true)}
                         />
                       )}
-                      <form
-                        onSubmit={handleReviewSubmit}
-                        className={`flex flex-col flex-grow ${!token || !user ? "opacity-70" : ""}`}
-                      >
-                        <textarea
-                          rows={4}
-                          value={reviewComment}
-                          onChange={(e) => setReviewComment(e.target.value)}
-                          placeholder="Halo..."
-                          className="w-full flex-grow bg-transparent text-white font-poppins text-sm resize-none focus:outline-none placeholder-gray-500 mb-16"
-                        />
+                      <textarea
+                        rows={6}
+                        value={reviewComment}
+                        onChange={(e) => setReviewComment(e.target.value)}
+                        placeholder="share your experience here..."
+                        className="w-full flex-grow bg-transparent text-white font-poppins text-sm resize-none focus:outline-none placeholder-gray-500"
+                      />
 
-                        {/* Error / success messages */}
-                        {(reviewError || reviewSuccess) && (
-                          <div className="absolute top-0 right-0 max-w-[200px]">
-                            {reviewError && (
-                              <p className="text-red-400 text-[10px] text-right">
-                                {reviewError}
-                              </p>
-                            )}
-                            {reviewSuccess && (
-                              <p className="text-green-400 text-[10px] text-right">
-                                {reviewSuccess}
-                              </p>
-                            )}
-                          </div>
-                        )}
-
-                        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center border-t border-[#2a2a2a] pt-6">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-[#111] flex items-center justify-center text-[#4ADDDD] text-sm uppercase font-bold shadow-inner">
-                              {user?.name?.[0] || "?"}
-                            </div>
-                            <span className="text-[#4ADDDD] font-poppins font-bold text-sm">
-                              {user?.name || "Guest"}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            {isEditMode && (
-                              <button
-                                type="button"
-                                onClick={handleCancelEdit}
-                                className="text-gray-500 hover:text-white font-bold text-[10px] tracking-widest transition"
-                              >
-                                CANCEL
-                              </button>
-                            )}
-                            <button
-                              type="submit"
-                              disabled={reviewSubmitting}
-                              className="bg-[#111] text-[#4ADDDD] px-8 py-3 rounded-full font-bold text-xs tracking-widest hover:bg-[#222] transition duration-300 shadow-md disabled:opacity-50"
-                            >
-                              {reviewSubmitting
-                                ? "SAVING..."
-                                : isEditMode
-                                  ? "UPDATE"
-                                  : "SUBMIT"}
-                            </button>
-                          </div>
+                      {/* Error / success messages */}
+                      {(reviewError || reviewSuccess) && (
+                        <div className="absolute top-4 right-6 max-w-[200px]">
+                          {reviewError && (
+                            <p className="text-red-400 text-[10px] text-right">
+                              {reviewError}
+                            </p>
+                          )}
+                          {reviewSuccess && (
+                            <p className="text-green-400 text-[10px] text-right">
+                              {reviewSuccess}
+                            </p>
+                          )}
                         </div>
-                      </form>
+                      )}
                     </div>
-                  )}
-                </div>
+
+                    <div className="flex justify-between items-center px-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-[#1A2127] flex items-center justify-center text-[#4ADDDD] text-sm uppercase font-bold shadow-inner">
+                          {user?.name?.[0] || "?"}
+                        </div>
+                        <span className="text-[#4ADDDD] font-poppins font-bold text-sm">
+                          {user?.name || "Guest"}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {isEditMode && (
+                          <button
+                            type="button"
+                            onClick={handleCancelEdit}
+                            className="text-gray-500 hover:text-white font-bold text-[10px] tracking-widest transition"
+                          >
+                            CANCEL
+                          </button>
+                        )}
+                        <button
+                          type="submit"
+                          disabled={reviewSubmitting}
+                          className="bg-[#1A2127] text-[#4ADDDD] px-8 py-3 rounded-full font-bold text-xs tracking-widest hover:bg-[#222] transition duration-300 shadow-md disabled:opacity-50"
+                        >
+                          {reviewSubmitting
+                            ? "SAVING..."
+                            : isEditMode
+                              ? "UPDATE"
+                              : "SUBMIT"}
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           </FadeUp>

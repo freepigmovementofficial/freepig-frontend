@@ -360,9 +360,7 @@ export default function Volume() {
       }}
     >
       {/* ══════════════════ HERO BANNER ══════════════════ */}
-      <div
-        className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12"
-      >
+      <div className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12">
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -534,11 +532,9 @@ export default function Volume() {
             />
 
             <p className="text-xs text-gray-400 leading-relaxed max-w-[240px] mb-6">
-              To calculate the volume of a surfboard, you will need to measure
-              the <span className="text-white font-medium">length</span>,{" "}
-              <span className="text-white font-medium">width</span>, and{" "}
-              <span className="text-white font-medium">thickness</span> of the
-              board.
+              The final volume is still tentative it really depends on how the
+              foil holds its thickness through the rails, nose, and tail in
+              reality
             </p>
 
             <p className="text-xs text-gray-400 leading-relaxed max-w-[240px] mb-6">
@@ -551,10 +547,10 @@ export default function Volume() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="flex items-center justify-center gap-4 sm:gap-6 order-first lg:order-last"
+            className="w-full flex items-center justify-center gap-4 sm:gap-6 order-first lg:order-last"
           >
             {/* Board image */}
-            <div className="w-[150px] sm:w-[200px] md:w-[240px] lg:w-[280px] flex-shrink-0">
+            <div className="w-[240px] sm:w-[280px] md:w-[320px] lg:w-[400px] flex-shrink-0 mb-6 lg:mb-0">
               <img
                 src={volumeImg}
                 alt="Surfboard volume reference"

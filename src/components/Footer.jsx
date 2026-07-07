@@ -22,12 +22,15 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#121212] border-t border-white/10 pt-16 pb-8 font-poppins text-gray-400">
+    <footer className="bg-[#000000] border-t border-white/10 pt-16 pb-8 font-poppins text-gray-400">
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
           {/* Column 1: Brand */}
           <div className="flex flex-col items-start">
-            <Link to="/" className="mb-4 hover:opacity-80 transition duration-300">
+            <Link
+              to="/"
+              className="mb-4 hover:opacity-80 transition duration-300"
+            >
               <img
                 src={logotr}
                 alt="FreePig Movement"
