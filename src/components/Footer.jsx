@@ -22,7 +22,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#000000] border-t border-white/10 pt-16 pb-8 font-poppins text-gray-400">
+    <footer className="bg-[#1A2127] border-t border-white/10 pt-16 pb-8 font-poppins text-gray-400">
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
           {/* Column 1: Brand */}

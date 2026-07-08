@@ -60,9 +60,7 @@ export default function Customer() {
   return (
     <div className="bg-[#000000] min-h-screen font-poppins text-white overflow-x-hidden">
       {/* ── HERO HEADER ── */}
-      <div
-        className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12"
-      >
+      <div className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12">
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -116,7 +114,7 @@ export default function Customer() {
                     <div
                       className={`group flex flex-col ${
                         isEven ? "md:flex-row-reverse" : "md:flex-row"
-                      } bg-[#3a3a3a] rounded-2xl overflow-hidden border border-white/5 shadow-xl hover:border-white/15 hover:shadow-2xl transition-all duration-300 md:h-[230px]`}
+                      } bg-[#1A2127] rounded-2xl overflow-hidden border border-white/5 shadow-xl hover:border-white/15 hover:shadow-2xl transition-all duration-300 md:h-[230px]`}
                     >
                       {/* ── Photo ── */}
                       <div className="relative w-full md:w-[220px] shrink-0 h-[200px] md:h-full bg-[#2a2a2a] overflow-hidden">

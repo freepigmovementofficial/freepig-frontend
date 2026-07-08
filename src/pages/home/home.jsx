@@ -433,6 +433,7 @@ export default function Home() {
             src={bercakPembatas}
             alt="Bercak pembatas video"
             className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[60%]"
+            style={{ filter: "brightness(0)" }}
           />
         </div>
 

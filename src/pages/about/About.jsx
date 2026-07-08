@@ -24,20 +24,8 @@ export default function About() {
   useDocumentTitle("About Us | FreePigMovement");
   return (
     <div className="bg-[#000000] min-h-screen font-poppins text-white overflow-x-hidden">
-      {/* ── HERO BANNER ── */}
-      <div className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12">
-        <motion.h1
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 font-poppins font-bold tracking-wider text-4xl sm:text-5xl md:text-6xl lg:text-[72px] leading-none text-white drop-shadow-2xl px-4 text-center uppercase"
-        >
-          ABOUT US
-        </motion.h1>
-      </div>
-
       {/* ── MAIN CONTENT ── */}
-      <div className="w-full mx-auto px-6 md:px-[70px] py-24">
+      <div className="w-full mx-auto px-6 md:px-[70px] pt-44 pb-24">
         {/* Section label */}
         <FadeUp>
           <p className="text-[11px] text-gray-500 tracking-[0.35em] uppercase font-bold mb-5">
