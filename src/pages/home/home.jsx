@@ -1,7 +1,7 @@
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { FaChevronRight } from "react-icons/fa";
+import { FaChevronRight, FaChevronLeft, FaChevronUp } from "react-icons/fa";
 import { Star } from "lucide-react";
 import { getDisplayImage } from "../../utils/productImage";
 
@@ -102,6 +102,7 @@ export default function Home() {
   const [surfboards, setSurfboards] = useState([]);
   const [surfboardsLoading, setSurfboardsLoading] = useState(true);
   const [hero, setHero] = useState(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Store Reviews state
   const [reviews, setReviews] = useState([]);
@@ -123,6 +124,9 @@ export default function Home() {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [deleteReviewConfirmOpen, setDeleteReviewConfirmOpen] = useState(false);
 
+  const [reviewPage, setReviewPage] = useState(1);
+  const reviewsPerPage = 5;
+
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const token = localStorage.getItem("token");
@@ -139,6 +143,18 @@ export default function Home() {
       }
     }
   }, [token, user]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchRelease = async () => {
@@ -1226,11 +1242,11 @@ export default function Home() {
 
             {/* Reviews Grid */}
             {reviewsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[1, 2, 3].map((i) => (
+              <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-6 pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                {[1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
-                    className="w-full max-w-[447px] h-[200px] mx-auto bg-[#1a2127] rounded-[20px] p-6 animate-pulse flex flex-col"
+                    className="w-[85%] md:w-full shrink-0 snap-center max-w-[447px] min-h-[230px] mx-auto bg-[#1a2127] rounded-[20px] p-6 animate-pulse flex flex-col"
                   >
                     <div className="flex items-center gap-4 mb-5">
                       <div className="w-[70px] h-[70px] rounded-full bg-[#333] shrink-0" />
@@ -1246,71 +1262,132 @@ export default function Home() {
                 ))}
               </div>
             ) : reviews.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {reviews.slice(0, 3).map((review, idx) => {
-                  const isOwn = user && review.userId === user.id;
-                  return (
-                    <motion.div
-                      key={review.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: idx * 0.08 }}
-                      className={`w-full max-w-[447px] h-[200px] mx-auto rounded-[20px] p-6 flex flex-col transition duration-500 group border ${
-                        isOwn
-                          ? "bg-[#1a2127] border-accent-teal/50 shadow-[0_0_15px_rgba(74,221,221,0.2)]"
-                          : "bg-[#1a2127] border-transparent hover:border-[#4ADDDD]/30"
-                      }`}
-                    >
-                      {/* User info + rating */}
-                      <div className="flex items-center gap-5 mb-6 relative">
-                        {isOwn && (
-                          <div className="absolute top-0 right-0 flex gap-2 shrink-0 -mt-4 -mr-2">
-                            <button
-                              onClick={handleStartEdit}
-                              className="text-gray-400 hover:text-[#4ADDDD] transition"
-                            >
-                              ✎
-                            </button>
-                            <button
-                              onClick={() => setDeleteReviewConfirmOpen(true)}
-                              className="text-red-400 hover:text-red-300 transition"
-                            >
-                              ✕
-                            </button>
+              <div className="relative">
+                <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-6 pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                  {reviews
+                    .slice(
+                      (reviewPage - 1) * reviewsPerPage,
+                      reviewPage * reviewsPerPage,
+                    )
+                    .map((review, idx) => {
+                      const isOwn = user && review.userId === user.id;
+                      return (
+                        <motion.div
+                          key={review.id}
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: idx * 0.08 }}
+                          className={`w-[85%] md:w-full shrink-0 snap-center max-w-[447px] min-h-[230px] mx-auto rounded-[20px] p-6 flex flex-col transition duration-500 group border ${
+                            isOwn
+                              ? "bg-[#1a2127] border-accent-teal/50 shadow-[0_0_15px_rgba(74,221,221,0.2)]"
+                              : "bg-[#1a2127] border-transparent hover:border-[#4ADDDD]/30"
+                          }`}
+                        >
+                          {/* User info + rating */}
+                          <div className="flex items-center gap-5 mb-6 relative">
+                            {isOwn && (
+                              <div className="absolute top-0 right-0 flex gap-2 shrink-0 -mt-4 -mr-2">
+                                <button
+                                  onClick={handleStartEdit}
+                                  className="text-gray-400 hover:text-[#4ADDDD] transition"
+                                >
+                                  ✎
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    setDeleteReviewConfirmOpen(true)
+                                  }
+                                  className="text-red-400 hover:text-red-300 transition"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            )}
+                            <div className="w-[70px] h-[70px] shrink-0 rounded-full bg-[#4ADDDD] flex items-center justify-center text-white font-bold text-2xl uppercase shadow-lg">
+                              {review.user?.name?.[0] || ""}
+                            </div>
+                            <div className="flex flex-col">
+                              <p className="text-white font-poppins font-bold text-lg md:text-xl tracking-wide">
+                                {review.user?.name || "Anonymous"}
+                              </p>
+                              <div className="flex text-[#4ADDDD] mt-1 gap-1">
+                                {Array.from({ length: 5 }, (_, i) => (
+                                  <Star
+                                    key={i}
+                                    fill="currentColor"
+                                    strokeWidth={1.5}
+                                    className={`w-[18px] h-[18px] md:w-5 md:h-5 ${
+                                      i < review.rating
+                                        ? "opacity-100"
+                                        : "opacity-30"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
                           </div>
-                        )}
-                        <div className="w-[70px] h-[70px] shrink-0 rounded-full bg-[#4ADDDD] flex items-center justify-center text-white font-bold text-2xl uppercase shadow-lg">
-                          {review.user?.name?.[0] || ""}
-                        </div>
-                        <div className="flex flex-col">
-                          <p className="text-white font-poppins font-bold text-lg md:text-xl tracking-wide">
-                            {review.user?.name || "Anonymous"}
-                          </p>
-                          <div className="flex text-[#4ADDDD] mt-1 gap-1">
-                            {Array.from({ length: 5 }, (_, i) => (
-                              <Star
-                                key={i}
-                                fill="currentColor"
-                                strokeWidth={1.5}
-                                className={`w-[18px] h-[18px] md:w-5 md:h-5 ${
-                                  i < review.rating
-                                    ? "opacity-100"
-                                    : "opacity-30"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
 
-                      {/* Comment */}
-                      <p className="text-[10px] md:text-[13px] text-gray-300 text-center leading-relaxed overflow-hidden text-ellipsis line-clamp-3">
-                        {review.comment || "No comment"}
-                      </p>
-                    </motion.div>
-                  );
-                })}
+                          {/* Comment */}
+                          <p className="text-[10px] md:text-[13px] text-gray-300 text-center leading-relaxed">
+                            {review.comment
+                              ? review.comment.length > 150
+                                ? review.comment.substring(0, 150) + "..."
+                                : review.comment
+                              : "No comment"}
+                          </p>
+                        </motion.div>
+                      );
+                    })}
+                </div>
+
+                {/* Numbered Pagination (Screenshot matched) */}
+                {Math.ceil(reviews.length / reviewsPerPage) > 1 && (
+                  <div className="flex justify-center items-center gap-2 mt-8 bg-white p-2 md:p-3 rounded-xl shadow-xl mx-auto w-fit">
+                    <button
+                      onClick={() => setReviewPage(Math.max(1, reviewPage - 1))}
+                      disabled={reviewPage === 1}
+                      className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-[#F4F4F4] hover:bg-gray-200 text-black rounded transition disabled:opacity-50"
+                    >
+                      <FaChevronLeft className="text-[10px] md:text-xs" />
+                    </button>
+
+                    {Array.from(
+                      { length: Math.ceil(reviews.length / reviewsPerPage) },
+                      (_, i) => i + 1,
+                    ).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setReviewPage(page)}
+                        className={`w-8 h-8 md:w-10 md:h-10 flex items-center justify-center font-poppins text-xs md:text-sm font-semibold rounded transition ${
+                          reviewPage === page
+                            ? "border border-gray-300 text-black bg-white shadow-sm"
+                            : "bg-[#F4F4F4] hover:bg-gray-200 text-gray-500"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+
+                    <button
+                      onClick={() =>
+                        setReviewPage(
+                          Math.min(
+                            Math.ceil(reviews.length / reviewsPerPage),
+                            reviewPage + 1,
+                          ),
+                        )
+                      }
+                      disabled={
+                        reviewPage ===
+                        Math.ceil(reviews.length / reviewsPerPage)
+                      }
+                      className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-[#282B30] hover:bg-black text-white rounded transition disabled:opacity-50"
+                    >
+                      <FaChevronRight className="text-[10px] md:text-xs" />
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="text-center py-12 text-gray-500">
@@ -1483,6 +1560,24 @@ export default function Home() {
         loading={reviewSubmitting}
         loadingText="DELETING..."
       />
+
+      {/* SCROLL TO TOP BUTTON */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            key="scrollTopBtn"
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[9999] w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#4ADDDD] text-black shadow-[0_0_15px_rgba(74,221,221,0.5)] hover:shadow-[0_0_25px_rgba(74,221,221,0.8)] flex items-center justify-center transition-shadow duration-300 cursor-pointer"
+          >
+            <FaChevronUp className="text-lg md:text-xl" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
