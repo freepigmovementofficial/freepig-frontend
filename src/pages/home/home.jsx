@@ -1572,9 +1572,9 @@ export default function Home() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[9999] w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#4ADDDD] text-black shadow-[0_0_15px_rgba(74,221,221,0.5)] hover:shadow-[0_0_25px_rgba(74,221,221,0.8)] flex items-center justify-center transition-shadow duration-300 cursor-pointer"
+            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[9999] w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4ADDDD] text-black shadow-[0_0_12px_rgba(74,221,221,0.5)] hover:shadow-[0_0_20px_rgba(74,221,221,0.8)] flex items-center justify-center transition-shadow duration-300 cursor-pointer"
           >
-            <FaChevronUp className="text-lg md:text-xl" />
+            <FaChevronUp className="text-sm md:text-base" />
           </motion.button>
         )}
       </AnimatePresence>
