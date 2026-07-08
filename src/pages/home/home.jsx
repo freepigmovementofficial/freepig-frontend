@@ -1242,11 +1242,11 @@ export default function Home() {
 
             {/* Reviews Grid */}
             {reviewsLoading ? (
-              <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-6 pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-4 md:px-0">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
-                    className="w-[85%] md:w-full shrink-0 snap-center max-w-[447px] min-h-[230px] mx-auto bg-[#1a2127] rounded-[20px] p-6 animate-pulse flex flex-col"
+                    className="w-[85%] sm:w-[300px] md:w-[350px] lg:w-[400px] shrink-0 snap-center min-h-[230px] mx-auto bg-[#1a2127] rounded-[20px] p-6 animate-pulse flex flex-col"
                   >
                     <div className="flex items-center gap-4 mb-5">
                       <div className="w-[70px] h-[70px] rounded-full bg-[#333] shrink-0" />
@@ -1263,7 +1263,7 @@ export default function Home() {
               </div>
             ) : reviews.length > 0 ? (
               <div className="relative">
-                <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-6 pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-4 md:px-0">
                   {reviews
                     .slice(
                       (reviewPage - 1) * reviewsPerPage,
@@ -1278,7 +1278,7 @@ export default function Home() {
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
                           transition={{ duration: 0.5, delay: idx * 0.08 }}
-                          className={`w-[85%] md:w-full shrink-0 snap-center max-w-[447px] min-h-[230px] mx-auto rounded-[20px] p-6 flex flex-col transition duration-500 group border ${
+                          className={`w-[85%] sm:w-[300px] md:w-[350px] lg:w-[400px] shrink-0 snap-center min-h-[230px] mx-auto rounded-[20px] p-6 flex flex-col transition duration-500 group border ${
                             isOwn
                               ? "bg-[#1a2127] border-accent-teal/50 shadow-[0_0_15px_rgba(74,221,221,0.2)]"
                               : "bg-[#1a2127] border-transparent hover:border-[#4ADDDD]/30"
