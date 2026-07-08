@@ -147,11 +147,17 @@ export default function Login() {
             FreePigMovement
           </p>
           <h1 className="font-road-rage font-normal text-[40px] xl:text-[54px] text-white leading-none mb-5">
-            BUILD DIFFERENT,
-            <br /> RIDE DIFFERENT
+            {hero?.title
+              ? hero.title.split("\n").map((line, i) => (
+                  <React.Fragment key={i}>
+                    {line}
+                    {i !== hero.title.split("\n").length - 1 && <br />}
+                  </React.Fragment>
+                ))
+              : <>BUILD DIFFERENT,<br /> RIDE DIFFERENT</>}
           </h1>
           <p className="text-gray-300 text-base leading-relaxed font-light">
-            Handcrafted surfboards shaped for your identity. Quality since 2001.
+            {hero?.subtitle || "Handcrafted surfboards shaped for your identity. Quality since 2001."}
           </p>
 
           {/* Decorative divider */}

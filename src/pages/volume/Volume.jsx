@@ -134,6 +134,55 @@ function formatFeet(value) {
   return inches === 0 ? `${feet}'0"` : `${feet}'${inches}"`;
 }
 
+// Format Width: kelipatan 0.25 → pecahan 1/4
+function formatWidth(value) {
+  const whole = Math.floor(value);
+  const dec = Math.round((value - whole) * 4); // 0,1,2,3,4
+  const fracs = ["", "\u00bc", "\u00bd", "\u00be", ""];
+  const frac = [
+    { num: 0, den: 4 },
+    { num: 1, den: 4 },
+    { num: 2, den: 4 },
+    { num: 3, den: 4 },
+    { num: 4, den: 4 },
+  ];
+  if (dec === 0) return `${whole}"`;
+  if (dec === 4) return `${whole + 1}"`;
+  const { num, den } = frac[dec];
+  // simplify
+  const g = num % 2 === 0 ? 2 : 1;
+  return { whole, num: num / g, den: den / g, suffix: '"' };
+}
+
+// Format Thickness: kelipatan 0.125 → pecahan /8 atau /16
+function formatThickness(value) {
+  const whole = Math.floor(value);
+  const rem = value - whole;
+  const sixteenths = Math.round(rem * 16);
+  if (sixteenths === 0) return `${whole}"`;
+  if (sixteenths === 16) return `${whole + 1}"`;
+  // simplify fraction
+  const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+  const g = gcd(sixteenths, 16);
+  return { whole, num: sixteenths / g, den: 16 / g, suffix: '"' };
+}
+
+// Render fraction JSX inline
+function FractionDisplay({ value }) {
+  if (typeof value === "string") return <span>{value}</span>;
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
+      {value.whole > 0 && <span>{value.whole}</span>}
+      <span style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", fontSize: "0.85em", fontWeight: 600, lineHeight: 1.1, margin: "0 1px" }}>
+        <span style={{ display: "block", textAlign: "center" }}>{value.num}</span>
+        <span style={{ borderTop: "1.5px solid currentColor", display: "block", width: "100%", textAlign: "center" }}>{value.den}</span>
+      </span>
+      <span>{value.suffix}</span>
+    </span>
+  );
+}
+
+
 // ── Custom Slider ──────────────────────────────────────────────────────────────
 function Slider({ label, min, max, step, value, onChange, display }) {
   const pct = ((value - min) / (max - min)) * 100;
@@ -143,7 +192,9 @@ function Slider({ label, min, max, step, value, onChange, display }) {
         <span className="text-xs tracking-widest text-gray-400 uppercase">
           {label}
         </span>
-        <span className="text-[11px] font-semibold text-white">{display}</span>
+        <span className="text-[11px] font-semibold text-white">
+          <FractionDisplay value={display} />
+        </span>
       </div>
       <div className="text-[9px] text-gray-600 mb-1.5">
         {label === "Length"
@@ -405,7 +456,7 @@ export default function Volume() {
               step={0.25}
               value={width}
               onChange={setWidth}
-              display={`${width}"`}
+              display={formatWidth(width)}
             />
             <Slider
               label="Thickness"
@@ -414,7 +465,7 @@ export default function Volume() {
               step={0.125}
               value={thickness}
               onChange={setThickness}
-              display={`${thickness}"`}
+              display={formatThickness(thickness)}
             />
 
             {/* Radio buttons — bigger tap targets on mobile */}

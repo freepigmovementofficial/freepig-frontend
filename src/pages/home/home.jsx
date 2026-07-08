@@ -445,8 +445,7 @@ export default function Home() {
         >
           {/* Stacked typographic hero title — layout matches Figma reference */}
           <h1 className="font-road-rage text-white drop-shadow-xl tracking-wide leading-none mb-0">
-            {hero?.title &&
-            hero.title.toUpperCase() !== "RIDE YOUR OWN WAVE" ? (
+            {hero?.title && hero.title.toUpperCase() ? (
               <span className="text-5xl md:text-7xl lg:text-8xl break-words max-w-2xl block">
                 {hero.title.split("\n").map((line, i) => (
                   <React.Fragment key={i}>
@@ -459,21 +458,21 @@ export default function Home() {
               <span className="relative flex flex-col items-start w-fit max-w-[100vw]">
                 {/* RIDE */}
                 <span className="block whitespace-nowrap text-[clamp(70px,20vw,145px)] lg:text-[128px] leading-[0.75] ml-[clamp(10px,4vw,90px)] lg:ml-[72px] relative z-20 lg:mb-[65px]">
-                  RIDE
+                  FREEPIG
                 </span>
                 {/* YOUR OWN */}
                 <span className="absolute whitespace-nowrap text-[clamp(24px,7vw,55px)] lg:text-[53px] leading-[1] left-[clamp(110px,32vw,250px)] lg:left-[158px] top-[clamp(45px,12vw,100px)] lg:top-[115px] z-30 drop-shadow-md">
-                  YOUR OWN
+                  MOVEMENT
                 </span>
                 {/* W and AVE container */}
                 <span className="relative flex items-end -mt-[clamp(15px,4vw,30px)] lg:-mt-[40px] z-10">
                   {/* W — rotated just like in Figma */}
                   <span className="block text-[clamp(70px,20vw,145px)] lg:text-[200px] leading-[0.75] -rotate-[10deg] origin-bottom transform">
-                    W
+                    B
                   </span>
                   {/* AVE */}
                   <span className="block text-[clamp(70px,20vw,145px)] lg:text-[128px] leading-[0.75] ml-[clamp(5px,2vw,15px)] lg:ml-[-30px] lg:mt-[60px]">
-                    AVE
+                    ALI
                   </span>
                 </span>
               </span>
