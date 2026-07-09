@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaUserCircle } from 'react-icons/fa';
-import headingImg from '../assets/headerRiderss.webp';
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaUserCircle } from "react-icons/fa";
+import headingImg from "../assets/headerRiderss.webp";
 
 export default function ContactPopup() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handleOpen = () => setIsOpen(true);
-    window.addEventListener('openContactPopup', handleOpen);
-    return () => window.removeEventListener('openContactPopup', handleOpen);
+    window.addEventListener("openContactPopup", handleOpen);
+    return () => window.removeEventListener("openContactPopup", handleOpen);
   }, []);
 
   const admins = [
-    { name: 'FOZZ', phone: '6281338506556' },
-    { name: 'GONZO', phone: '6287839119590' },
-    { name: 'DANY', phone: '6281224222380' }
+    { name: "FOZZ", phone: "6281338506556" },
+    { name: "GONZO", phone: "6287839119590" },
+    { name: "DANY", phone: "6281224222380" },
   ];
 
   return (
@@ -57,9 +57,11 @@ export default function ContactPopup() {
             </div>
 
             {/* Content */}
-            <div className="p-6 md:p-10 text-center">
+            <div className="p-6 md:p-10 text-center bg-[#010E19]">
               <p className="text-gray-200 mb-12 text-sm md:text-base tracking-wide max-w-3xl mx-auto leading-loose">
-                For inquiries, consultations, or custom requests, please contact our team through WhatsApp. Select one of our administrators below, and we will assist you as soon as possible.
+                For inquiries, consultations, or custom requests, please contact
+                our team through WhatsApp. Select one of our administrators
+                below, and we will assist you as soon as possible.
               </p>
 
               {/* Admin Cards */}
