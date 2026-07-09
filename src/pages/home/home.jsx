@@ -668,14 +668,14 @@ export default function Home() {
         </motion.div>
 
         {/* Base dark overlay */}
-        <div className="absolute inset-0 bg-[#010E19]/10"></div>
+        <div className="absolute inset-0 bg-[#010E19]/40"></div>
 
         {/* Shadow Kanan Atas (Hanya fokus di pojok) */}
         <div
           className="absolute inset-0 pointer-events-none z-[2]"
           style={{
             background:
-              "radial-gradient(circle at top right, rgba(1, 14, 25, 0.85) 0%, transparent 50%)",
+              "radial-gradient(circle at top right, rgba(1, 14, 25, 1) 0%, transparent 60%)",
           }}
         ></div>
 
@@ -684,7 +684,7 @@ export default function Home() {
           className="absolute inset-0 pointer-events-none z-[2]"
           style={{
             background:
-              "radial-gradient(circle at bottom left, rgba(1, 14, 25, 0.85) 0%, transparent 60%)",
+              "radial-gradient(circle at bottom left, rgba(1, 14, 25, 1) 0%, transparent 70%)",
           }}
         ></div>
 
@@ -693,7 +693,7 @@ export default function Home() {
           className="absolute inset-0 pointer-events-none z-[2]"
           style={{
             background:
-              "linear-gradient(to top, rgba(1, 14, 25, 0.9) 0%, transparent 25%)",
+              "linear-gradient(to top, rgba(1, 14, 25, 1) 0%, transparent 35%)",
           }}
         ></div>
         {/* Top gradient transition to blend with background */}
