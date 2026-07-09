@@ -146,14 +146,18 @@ export default function Login() {
           <p className="text-[11px] font-bold tracking-[0.35em] text-gray-400 uppercase mb-3">
             FreePigMovement
           </p>
-          <h1 className="font-road-rage font-normal text-[40px] xl:text-[54px] leading-none mb-5">
+          <h1 className="font-road-rage font-normal leading-none mb-5">
             {hero?.titlePrimary || hero?.titleSecondary ? (
               <>
                 {hero.titlePrimary && (
-                  <span className="block text-[#4ADDDE] uppercase">{hero.titlePrimary}</span>
+                  <span className="block text-[#35BDBD] uppercase text-[28px] lg:text-[36px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                    {hero.titlePrimary}
+                  </span>
                 )}
                 {hero.titleSecondary && (
-                  <span className="block text-white uppercase mt-1">{hero.titleSecondary}</span>
+                  <span className="block text-white uppercase mt-1 text-[48px] lg:text-[64px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                    {hero.titleSecondary}
+                  </span>
                 )}
               </>
             ) : (
