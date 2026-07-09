@@ -881,7 +881,7 @@ export default function Home() {
                   <img
                     src={level.boardImg}
                     alt="Surfboard"
-                    className="absolute bottom-0 right-0 w-auto h-[115%] object-contain object-bottom pointer-events-none drop-shadow-md z-20 origin-bottom-right group-hover:scale-110 transition-transform duration-700 ease-out rounded-br-[30px]"
+                    className="absolute bottom-0 right-0 w-auto h-[115%] object-contain object-bottom pointer-events-none z-20 origin-bottom-right group-hover:scale-110 transition-transform duration-700 ease-out rounded-br-[30px]"
                   />
 
                   {/* Text Overlay - Placed outside to render ABOVE the surfboard */}
