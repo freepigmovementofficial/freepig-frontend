@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
-  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend,
-  RadialBarChart, RadialBar,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+  RadialBarChart,
+  RadialBar,
 } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -66,8 +76,10 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
           ? product.waveLevels
           : ["SMALL"],
         videoUrl: product.videoUrl || "",
-        waveHeightMin: product.waveHeightMin !== undefined ? product.waveHeightMin : 1,
-        waveHeightMax: product.waveHeightMax !== undefined ? product.waveHeightMax : 10,
+        waveHeightMin:
+          product.waveHeightMin !== undefined ? product.waveHeightMin : 1,
+        waveHeightMax:
+          product.waveHeightMax !== undefined ? product.waveHeightMax : 10,
         images: [],
         dimensions: [{ size: "", width: "", thickness: "", volume: "" }],
       });
@@ -369,7 +381,10 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
                           ...p,
                           waveHeightMin: Number(e.target.value),
                           // Ensure max is not less than min
-                          waveHeightMax: Math.max(Number(e.target.value), p.waveHeightMax)
+                          waveHeightMax: Math.max(
+                            Number(e.target.value),
+                            p.waveHeightMax,
+                          ),
                         }))
                       }
                       className="w-full accent-accent-teal"
@@ -390,7 +405,10 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
                           ...p,
                           waveHeightMax: Number(e.target.value),
                           // Ensure min is not greater than max
-                          waveHeightMin: Math.min(Number(e.target.value), p.waveHeightMin)
+                          waveHeightMin: Math.min(
+                            Number(e.target.value),
+                            p.waveHeightMin,
+                          ),
                         }))
                       }
                       className="w-full accent-accent-teal"
@@ -581,7 +599,8 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
   const handleFileChange = (e) => {
     const selected = Array.from(e.target.files);
     setFiles(selected);
-    const defaultType = product.productType === "ACCESSORY" ? "GENERAL" : "DECK";
+    const defaultType =
+      product.productType === "ACCESSORY" ? "GENERAL" : "DECK";
     setTypes(selected.map(() => defaultType));
   };
 
@@ -674,8 +693,8 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
           {/* Info banner */}
           <div className="mb-5 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] text-gray-400 tracking-wide">
             ★ = the image shown on the product card. Click{" "}
-            <span className="text-accent-teal font-bold">SET AS MAIN</span>{" "}
-            to change it.
+            <span className="text-accent-teal font-bold">SET AS MAIN</span> to
+            change it.
           </div>
 
           {error && (
@@ -775,7 +794,9 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
                       {product.productType !== "ACCESSORY" && (
                         <select
                           value={types[idx] || "DECK"}
-                          onChange={(e) => handleTypeChange(idx, e.target.value)}
+                          onChange={(e) =>
+                            handleTypeChange(idx, e.target.value)
+                          }
                           className="bg-[#333] border border-gray-600 rounded px-2 py-1 text-xs text-white focus:border-accent-teal transition"
                         >
                           {IMAGE_TYPES.map((t) => (
@@ -1091,7 +1112,13 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
 
 // ─── Products Table ──────────────────────────────────────────────────────────
 // ─── Table Pagination ────────────────────────────────────────────────────────
-function TablePagination({ currentPage, totalPages, totalItems, itemsPerPage, onPageChange }) {
+function TablePagination({
+  currentPage,
+  totalPages,
+  totalItems,
+  itemsPerPage,
+  onPageChange,
+}) {
   if (totalItems === 0) return null;
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
@@ -1099,7 +1126,9 @@ function TablePagination({ currentPage, totalPages, totalItems, itemsPerPage, on
   return (
     <div className="flex items-center justify-between mt-4 shrink-0 border-t border-white/5 pt-4">
       <div className="text-[10px] text-gray-500 tracking-widest uppercase hidden sm:block">
-        Showing <span className="text-white font-bold">{startItem}</span> to <span className="text-white font-bold">{endItem}</span> of <span className="text-white font-bold">{totalItems}</span> entries
+        Showing <span className="text-white font-bold">{startItem}</span> to{" "}
+        <span className="text-white font-bold">{endItem}</span> of{" "}
+        <span className="text-white font-bold">{totalItems}</span> entries
       </div>
       <div className="flex gap-1 overflow-x-auto custom-scrollbar pb-1 w-full sm:w-auto justify-between sm:justify-end">
         <button
@@ -1110,7 +1139,7 @@ function TablePagination({ currentPage, totalPages, totalItems, itemsPerPage, on
           PREV
         </button>
         <div className="flex gap-1">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
             if (
               totalPages > 7 &&
               page !== 1 &&
@@ -1118,7 +1147,14 @@ function TablePagination({ currentPage, totalPages, totalItems, itemsPerPage, on
               Math.abs(currentPage - page) > 1
             ) {
               if (page === 2 || page === totalPages - 1) {
-                return <span key={page} className="px-1 py-1.5 text-gray-500 text-[10px]">...</span>;
+                return (
+                  <span
+                    key={page}
+                    className="px-1 py-1.5 text-gray-500 text-[10px]"
+                  >
+                    ...
+                  </span>
+                );
               }
               return null;
             }
@@ -1174,7 +1210,7 @@ function ProductsTable({ categories }) {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const currentProducts = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const load = async () => {
@@ -1453,7 +1489,7 @@ function ProductsTable({ categories }) {
           </table>
         )}
       </div>
-      <TablePagination 
+      <TablePagination
         currentPage={currentPage}
         totalPages={totalPages}
         totalItems={filteredProducts.length}
@@ -1484,13 +1520,17 @@ function AccessoryFormModal({ open, onClose, accessory, categories, onSaved }) {
       setForm({
         name: accessory.name || "",
         description: accessory.description || "",
-        categoryId: accessory.categoryId || accessory.category?.id || (accessoryCategories[0]?.id || ""),
+        categoryId:
+          accessory.categoryId ||
+          accessory.category?.id ||
+          accessoryCategories[0]?.id ||
+          "",
       });
     } else {
-      setForm({ 
-        name: "", 
-        description: "", 
-        categoryId: accessoryCategories[0]?.id || "" 
+      setForm({
+        name: "",
+        description: "",
+        categoryId: accessoryCategories[0]?.id || "",
       });
     }
     setError("");
@@ -1584,7 +1624,9 @@ function AccessoryFormModal({ open, onClose, accessory, categories, onSaved }) {
                 }
                 className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition appearance-none"
               >
-                <option value="" disabled>Select a category</option>
+                <option value="" disabled>
+                  Select a category
+                </option>
                 {accessoryCategories.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name.toUpperCase()}
@@ -1662,7 +1704,7 @@ function AccessoriesTable({ categories }) {
   const totalPages = Math.ceil(filteredAccessories.length / itemsPerPage);
   const currentAccessories = filteredAccessories.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const load = async () => {
@@ -1911,7 +1953,7 @@ function AccessoriesTable({ categories }) {
           </table>
         )}
       </div>
-      <TablePagination 
+      <TablePagination
         currentPage={currentPage}
         totalPages={totalPages}
         totalItems={filteredAccessories.length}
@@ -2425,7 +2467,9 @@ function NewReleasesTable() {
       toast.success("Status updated.");
       load();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to toggle active status.");
+      toast.error(
+        err.response?.data?.message || "Failed to toggle active status.",
+      );
     }
   };
 
@@ -2621,7 +2665,13 @@ function WallMagazineFormModal({ open, onClose, magazine, onSaved }) {
         isActive: magazine.isActive || false,
       });
     } else {
-      setForm({ title: "", description: "", buttonText: "", buttonLink: "", isActive: false });
+      setForm({
+        title: "",
+        description: "",
+        buttonText: "",
+        buttonLink: "",
+        isActive: false,
+      });
     }
     setError("");
   }, [magazine, open]);
@@ -2680,7 +2730,9 @@ function WallMagazineFormModal({ open, onClose, magazine, onSaved }) {
               <input
                 required
                 value={form.title}
-                onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, title: e.target.value }))
+                }
                 className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-accent-teal transition"
               />
             </div>
@@ -2692,7 +2744,9 @@ function WallMagazineFormModal({ open, onClose, magazine, onSaved }) {
                 required
                 rows={3}
                 value={form.description}
-                onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, description: e.target.value }))
+                }
                 className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-accent-teal transition resize-none"
               />
             </div>
@@ -2703,7 +2757,9 @@ function WallMagazineFormModal({ open, onClose, magazine, onSaved }) {
                 </label>
                 <input
                   value={form.buttonText}
-                  onChange={(e) => setForm((p) => ({ ...p, buttonText: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, buttonText: e.target.value }))
+                  }
                   className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-accent-teal transition"
                   placeholder="e.g. READ MORE"
                 />
@@ -2714,7 +2770,9 @@ function WallMagazineFormModal({ open, onClose, magazine, onSaved }) {
                 </label>
                 <input
                   value={form.buttonLink}
-                  onChange={(e) => setForm((p) => ({ ...p, buttonLink: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, buttonLink: e.target.value }))
+                  }
                   className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-accent-teal transition"
                   placeholder="e.g. https://..."
                 />
@@ -2725,10 +2783,15 @@ function WallMagazineFormModal({ open, onClose, magazine, onSaved }) {
                 type="checkbox"
                 id="wm-isActive"
                 checked={form.isActive}
-                onChange={(e) => setForm((p) => ({ ...p, isActive: e.target.checked }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, isActive: e.target.checked }))
+                }
                 className="w-4 h-4 rounded border-gray-700 bg-[#222] text-accent-teal"
               />
-              <label htmlFor="wm-isActive" className="text-xs font-bold text-gray-400 tracking-widest uppercase cursor-pointer">
+              <label
+                htmlFor="wm-isActive"
+                className="text-xs font-bold text-gray-400 tracking-widest uppercase cursor-pointer"
+              >
                 Set as Active
               </label>
             </div>
@@ -2746,7 +2809,13 @@ function WallMagazineFormModal({ open, onClose, magazine, onSaved }) {
                 disabled={loading}
                 className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {loading ? <PigLoader size="mini" text="SAVING..." /> : isEdit ? "UPDATE" : "CREATE"}
+                {loading ? (
+                  <PigLoader size="mini" text="SAVING..." />
+                ) : isEdit ? (
+                  "UPDATE"
+                ) : (
+                  "CREATE"
+                )}
               </button>
             </div>
           </form>
@@ -2810,7 +2879,12 @@ function WallMagazineImageModal({ open, onClose, magazine, onSaved }) {
             <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">
               MANAGE IMAGE: {magazine.title}
             </h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-white font-bold">X</button>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white font-bold"
+            >
+              X
+            </button>
           </div>
           {error && (
             <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
@@ -2821,12 +2895,21 @@ function WallMagazineImageModal({ open, onClose, magazine, onSaved }) {
           <div className="border border-gray-700 rounded-xl p-5 bg-[#222]">
             {magazine.imageUrl ? (
               <div className="mb-4 rounded overflow-hidden border border-gray-600 bg-black max-h-48 flex justify-center">
-                <img src={magazine.imageUrl} alt="Wall Magazine" className="h-48 object-cover" />
+                <img
+                  src={magazine.imageUrl}
+                  alt="Wall Magazine"
+                  className="h-48 object-cover"
+                />
               </div>
             ) : (
-              <p className="text-xs text-gray-500 mb-4">No image uploaded yet.</p>
+              <p className="text-xs text-gray-500 mb-4">
+                No image uploaded yet.
+              </p>
             )}
-            <form onSubmit={handleUploadImage} className="flex items-center gap-3">
+            <form
+              onSubmit={handleUploadImage}
+              className="flex items-center gap-3"
+            >
               <input
                 type="file"
                 accept="image/*"
@@ -2985,7 +3068,11 @@ function WallMagazineTable() {
                   </td>
                   <td className="px-4 py-3">
                     {r.imageUrl ? (
-                      <img src={r.imageUrl} alt="Img" className="h-8 w-12 object-cover rounded" />
+                      <img
+                        src={r.imageUrl}
+                        alt="Img"
+                        className="h-8 w-12 object-cover rounded"
+                      />
                     ) : (
                       <span className="text-gray-500 text-xs">No img</span>
                     )}
@@ -3077,7 +3164,9 @@ function FeaturedSectionsTable() {
       toast.success("Section status updated.");
       load();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to toggle active status.");
+      toast.error(
+        err.response?.data?.message || "Failed to toggle active status.",
+      );
     } finally {
       setActionLoading(false);
     }
@@ -3544,7 +3633,9 @@ function DashboardOverviewWrapper() {
     load();
   }, []);
 
-  return <DashboardOverview data={dashboardData} loading={isLoading} error={error} />;
+  return (
+    <DashboardOverview data={dashboardData} loading={isLoading} error={error} />
+  );
 }
 
 // ─── Store Reviews Table ──────────────────────────────────────────────────
@@ -3843,7 +3934,10 @@ function GalleryTable() {
                 <div className="flex gap-3 mt-4">
                   <button
                     type="button"
-                    onClick={() => { setUploadOpen(false); setFiles([]); }}
+                    onClick={() => {
+                      setUploadOpen(false);
+                      setFiles([]);
+                    }}
                     disabled={actionLoading}
                     className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50"
                   >
@@ -4158,7 +4252,9 @@ function TestimonialsTable() {
       toast.success("Testimonial deleted.");
       load();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to delete testimonial.");
+      toast.error(
+        err.response?.data?.message || "Failed to delete testimonial.",
+      );
     } finally {
       setActionLoading(false);
     }
@@ -4536,7 +4632,13 @@ function TestimonialsTable() {
 // ─── Rider Form Modal ────────────────────────────────────────────────────────
 function RiderFormModal({ open, onClose, rider, onSaved }) {
   const isEdit = !!rider;
-  const [form, setForm] = useState({ name: "", location: "", bio: "", boardModel: "", instagram: "" });
+  const [form, setForm] = useState({
+    name: "",
+    location: "",
+    bio: "",
+    boardModel: "",
+    instagram: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -4550,7 +4652,13 @@ function RiderFormModal({ open, onClose, rider, onSaved }) {
         instagram: rider.instagram || "",
       });
     } else {
-      setForm({ name: "", location: "", bio: "", boardModel: "", instagram: "" });
+      setForm({
+        name: "",
+        location: "",
+        bio: "",
+        boardModel: "",
+        instagram: "",
+      });
     }
     setError("");
   }, [rider, open]);
@@ -4578,39 +4686,124 @@ function RiderFormModal({ open, onClose, rider, onSaved }) {
 
   return (
     <AnimatePresence>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4" onClick={onClose}>
-        <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }} className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.92, opacity: 0 }}
+          className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
           <h2 className="font-oswald text-2xl font-bold tracking-widest text-white mb-6">
             {isEdit ? "EDIT RIDER" : "ADD RIDER"}
           </h2>
-          {error && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{error}</div>}
+          {error && (
+            <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+              {error}
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Name *</label>
-              <input required value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                Name *
+              </label>
+              <input
+                required
+                value={form.name}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, name: e.target.value }))
+                }
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
+              />
             </div>
             <div>
-              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Location *</label>
-              <input required value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                Location *
+              </label>
+              <input
+                required
+                value={form.location}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, location: e.target.value }))
+                }
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
+              />
             </div>
             <div>
-              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Bio *</label>
-              <textarea required minLength={10} rows={4} value={form.bio} onChange={e => setForm(p => ({ ...p, bio: e.target.value }))} className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none" placeholder="Minimal 10 karakter..." />
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                Bio *
+              </label>
+              <textarea
+                required
+                minLength={10}
+                rows={4}
+                value={form.bio}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, bio: e.target.value }))
+                }
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none"
+                placeholder="Minimal 10 karakter..."
+              />
             </div>
             <div>
-              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">🏄 Surfboard (Board Model)</label>
-              <input value={form.boardModel} onChange={e => setForm(p => ({ ...p, boardModel: e.target.value }))} placeholder="e.g. FreePig Custom 6'2" className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                🏄 Surfboard (Board Model)
+              </label>
+              <input
+                value={form.boardModel}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, boardModel: e.target.value }))
+                }
+                placeholder="e.g. FreePig Custom 6'2"
+                className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
+              />
             </div>
             <div>
-              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Instagram Handle</label>
+              <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                Instagram Handle
+              </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">@</span>
-                <input value={form.instagram} onChange={e => setForm(p => ({ ...p, instagram: e.target.value }))} placeholder="rider_handle" className="w-full bg-[#222] border border-gray-700 rounded-lg pl-7 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+                  @
+                </span>
+                <input
+                  value={form.instagram}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, instagram: e.target.value }))
+                  }
+                  placeholder="rider_handle"
+                  className="w-full bg-[#222] border border-gray-700 rounded-lg pl-7 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
+                />
               </div>
             </div>
             <div className="flex gap-3 mt-2">
-              <button type="button" onClick={onClose} disabled={loading} className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50">CANCEL</button>
-              <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">{loading ? <PigLoader size="mini" text="SAVING..." /> : isEdit ? "UPDATE" : "CREATE"}</button>
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={loading}
+                className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50"
+              >
+                CANCEL
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50"
+              >
+                {loading ? (
+                  <PigLoader size="mini" text="SAVING..." />
+                ) : isEdit ? (
+                  "UPDATE"
+                ) : (
+                  "CREATE"
+                )}
+              </button>
             </div>
           </form>
         </motion.div>
@@ -4625,7 +4818,13 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
   const [videoFile, setVideoFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, type: "", targetId: null, title: "", message: "" });
+  const [deleteConfirm, setDeleteConfirm] = useState({
+    isOpen: false,
+    type: "",
+    targetId: null,
+    title: "",
+    message: "",
+  });
 
   if (!open || !rider) return null;
 
@@ -4677,7 +4876,8 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
       type: "image",
       targetId: imageId,
       title: "DELETE IMAGE?",
-      message: "Are you sure you want to delete this image? This action cannot be undone.",
+      message:
+        "Are you sure you want to delete this image? This action cannot be undone.",
     });
   };
 
@@ -4687,7 +4887,8 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
       type: "video",
       targetId: null,
       title: "DELETE HERO VIDEO?",
-      message: "Are you sure you want to delete the hero video? This action cannot be undone.",
+      message:
+        "Are you sure you want to delete the hero video? This action cannot be undone.",
     });
   };
 
@@ -4700,64 +4901,142 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
       } else if (deleteConfirm.type === "video") {
         await riderService.deleteVideo(rider.id);
       }
-      toast.success(`${deleteConfirm.type === "video" ? "Video" : "Image"} deleted.`);
+      toast.success(
+        `${deleteConfirm.type === "video" ? "Video" : "Image"} deleted.`,
+      );
       onSaved();
       onClose();
     } catch (err) {
-      toast.error(err.response?.data?.message || `Failed to delete ${deleteConfirm.type}.`);
-      setError(err.response?.data?.message || `Failed to delete ${deleteConfirm.type}.`);
+      toast.error(
+        err.response?.data?.message ||
+          `Failed to delete ${deleteConfirm.type}.`,
+      );
+      setError(
+        err.response?.data?.message ||
+          `Failed to delete ${deleteConfirm.type}.`,
+      );
     } finally {
       setLoading(false);
-      setDeleteConfirm({ isOpen: false, type: "", targetId: null, title: "", message: "" });
+      setDeleteConfirm({
+        isOpen: false,
+        type: "",
+        targetId: null,
+        title: "",
+        message: "",
+      });
     }
   };
 
   return (
     <AnimatePresence>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10" onClick={onClose}>
-        <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }} className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-2xl shadow-2xl my-auto" onClick={e => e.stopPropagation()}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.92, opacity: 0 }}
+          className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-2xl shadow-2xl my-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">MANAGE RIDER MEDIA</h2>
-              <p className="text-gray-500 text-xs tracking-widest mt-0.5">{rider.name}</p>
+              <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">
+                MANAGE RIDER MEDIA
+              </h2>
+              <p className="text-gray-500 text-xs tracking-widest mt-0.5">
+                {rider.name}
+              </p>
             </div>
-            <button onClick={onClose} className="text-gray-400 hover:text-white text-lg font-bold w-8 h-8">✕</button>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white text-lg font-bold w-8 h-8"
+            >
+              ✕
+            </button>
           </div>
-          {error && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{error}</div>}
-          
+          {error && (
+            <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+              {error}
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Video Section */}
             <div>
-              <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-3">Hero Video</h3>
+              <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-3">
+                Hero Video
+              </h3>
               <div className="bg-[#222] border border-gray-700 rounded-xl p-4">
                 {rider.videoUrl ? (
                   <div className="relative group w-full h-32 rounded-lg overflow-hidden bg-black mb-4">
-                    <video src={rider.videoUrl} className="w-full h-full object-cover opacity-50" />
+                    <video
+                      src={rider.videoUrl}
+                      className="w-full h-full object-cover opacity-50"
+                    />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <button onClick={handleDeleteVideo} disabled={loading} className="px-3 py-1 bg-red-500/80 text-white rounded-full text-[9px] font-bold tracking-widest hover:bg-red-600 transition disabled:opacity-50">DELETE VIDEO</button>
+                      <button
+                        onClick={handleDeleteVideo}
+                        disabled={loading}
+                        className="px-3 py-1 bg-red-500/80 text-white rounded-full text-[9px] font-bold tracking-widest hover:bg-red-600 transition disabled:opacity-50"
+                      >
+                        DELETE VIDEO
+                      </button>
                     </div>
                   </div>
                 ) : (
                   <p className="text-gray-600 text-xs mb-4">Belum ada video.</p>
                 )}
-                <form onSubmit={handleUploadVideo} className="flex flex-col gap-3">
-                  <input type="file" accept="video/mp4,video/webm,video/quicktime" onChange={(e) => setVideoFile(e.target.files[0])} className="text-[10px] text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-white/10 file:text-white" />
-                  <button type="submit" disabled={!videoFile || loading} className="w-full py-2 bg-white text-black rounded-full text-[10px] font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">UPLOAD VIDEO</button>
+                <form
+                  onSubmit={handleUploadVideo}
+                  className="flex flex-col gap-3"
+                >
+                  <input
+                    type="file"
+                    accept="video/mp4,video/webm,video/quicktime"
+                    onChange={(e) => setVideoFile(e.target.files[0])}
+                    className="text-[10px] text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-white/10 file:text-white"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!videoFile || loading}
+                    className="w-full py-2 bg-white text-black rounded-full text-[10px] font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50"
+                  >
+                    UPLOAD VIDEO
+                  </button>
                 </form>
               </div>
             </div>
 
             {/* Images Section */}
             <div>
-              <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-3">Photos ({rider.images?.length || 0})</h3>
+              <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-3">
+                Photos ({rider.images?.length || 0})
+              </h3>
               <div className="bg-[#222] border border-gray-700 rounded-xl p-4">
                 {rider.images?.length > 0 ? (
                   <div className="flex flex-wrap gap-2 mb-4 max-h-40 overflow-y-auto custom-scrollbar pr-2">
-                    {rider.images.map(img => (
-                      <div key={img.id} className="relative group w-16 h-16 rounded-lg overflow-hidden bg-[#111] border border-gray-700">
-                        <img src={img.url} className="w-full h-full object-cover group-hover:opacity-50 transition" />
+                    {rider.images.map((img) => (
+                      <div
+                        key={img.id}
+                        className="relative group w-16 h-16 rounded-lg overflow-hidden bg-[#111] border border-gray-700"
+                      >
+                        <img
+                          src={img.url}
+                          className="w-full h-full object-cover group-hover:opacity-50 transition"
+                        />
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                          <button onClick={() => handleDeleteImage(img.id)} disabled={loading} className="p-1 bg-red-500/80 text-white rounded text-[8px] hover:bg-red-600">✕</button>
+                          <button
+                            onClick={() => handleDeleteImage(img.id)}
+                            disabled={loading}
+                            className="p-1 bg-red-500/80 text-white rounded text-[8px] hover:bg-red-600"
+                          >
+                            ✕
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -4765,9 +5044,24 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
                 ) : (
                   <p className="text-gray-600 text-xs mb-4">No images yet.</p>
                 )}
-                <form onSubmit={handleUploadImages} className="flex flex-col gap-3">
-                  <input type="file" accept="image/*" multiple onChange={(e) => setFiles(Array.from(e.target.files))} className="text-[10px] text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-white/10 file:text-white" />
-                  <button type="submit" disabled={files.length === 0 || loading} className="w-full py-2 bg-white text-black rounded-full text-[10px] font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50">UPLOAD IMAGES</button>
+                <form
+                  onSubmit={handleUploadImages}
+                  className="flex flex-col gap-3"
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => setFiles(Array.from(e.target.files))}
+                    className="text-[10px] text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-white/10 file:text-white"
+                  />
+                  <button
+                    type="submit"
+                    disabled={files.length === 0 || loading}
+                    className="w-full py-2 bg-white text-black rounded-full text-[10px] font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50"
+                  >
+                    UPLOAD IMAGES
+                  </button>
                 </form>
               </div>
             </div>
@@ -4776,7 +5070,15 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
       </motion.div>
       <ConfirmationModal
         isOpen={deleteConfirm.isOpen}
-        onClose={() => setDeleteConfirm({ isOpen: false, type: "", targetId: null, title: "", message: "" })}
+        onClose={() =>
+          setDeleteConfirm({
+            isOpen: false,
+            type: "",
+            targetId: null,
+            title: "",
+            message: "",
+          })
+        }
         onConfirm={handleConfirmDelete}
         title={deleteConfirm.title}
         message={deleteConfirm.message}
@@ -4809,7 +5111,9 @@ function RidersTable() {
     }
   };
 
-  useEffect(() => { fetchRiders(); }, []);
+  useEffect(() => {
+    fetchRiders();
+  }, []);
 
   const handleDelete = (id) => {
     setRiderToDelete(id);
@@ -4841,7 +5145,13 @@ function RidersTable() {
             {riders.length} total
           </p>
         </div>
-        <button onClick={() => { setEditRider(null); setModalOpen(true); }} className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition">
+        <button
+          onClick={() => {
+            setEditRider(null);
+            setModalOpen(true);
+          }}
+          className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition"
+        >
           + ADD RIDER
         </button>
       </div>
@@ -4851,7 +5161,9 @@ function RidersTable() {
             <PigLoader size="mini" text="Loading riders..." />
           </div>
         ) : riders.length === 0 ? (
-          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No riders found.</div>
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">
+            No riders found.
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="sticky top-0 z-10">
@@ -4865,23 +5177,58 @@ function RidersTable() {
             </thead>
             <tbody>
               {riders.map((r, idx) => (
-                <tr key={r.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? "bg-[#1c1c1c]" : "bg-[#1a1a1a]"}`}>
+                <tr
+                  key={r.id}
+                  className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? "bg-[#1c1c1c]" : "bg-[#1a1a1a]"}`}
+                >
                   <td className="px-4 py-3">
                     <div className="w-12 h-12 bg-[#333] rounded overflow-hidden flex items-center justify-center">
-                      {r.images?.[0]?.url ? <img src={r.images[0].url} alt={r.name} className="w-full h-full object-cover" /> : <span className="text-gray-600 text-xs">—</span>}
+                      {r.images?.[0]?.url ? (
+                        <img
+                          src={r.images[0].url}
+                          alt={r.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-gray-600 text-xs">—</span>
+                      )}
                     </div>
                   </td>
-                  <td className="px-4 py-3 font-bold text-white tracking-wide">{r.name}</td>
-                  <td className="px-4 py-3 text-gray-400">{r.location || "—"}</td>
+                  <td className="px-4 py-3 font-bold text-white tracking-wide">
+                    {r.name}
+                  </td>
+                  <td className="px-4 py-3 text-gray-400">
+                    {r.location || "—"}
+                  </td>
                   <td className="px-4 py-3 text-center">
-                    <button onClick={() => { setEditRider(r); setMediaModalOpen(true); }} className="px-3 py-1 bg-white/10 text-white rounded-full text-[10px] font-bold tracking-widest hover:bg-accent-teal hover:text-black transition">
-                      MANAGE ({r.images?.length || 0} PICS, {r.videoUrl ? '1 VIDEO' : 'NO VIDEO'})
+                    <button
+                      onClick={() => {
+                        setEditRider(r);
+                        setMediaModalOpen(true);
+                      }}
+                      className="px-3 py-1 bg-white/10 text-white rounded-full text-[10px] font-bold tracking-widest hover:bg-accent-teal hover:text-black transition"
+                    >
+                      MANAGE ({r.images?.length || 0} PICS,{" "}
+                      {r.videoUrl ? "1 VIDEO" : "NO VIDEO"})
                     </button>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex items-center justify-center gap-2">
-                      <button onClick={() => { setEditRider(r); setModalOpen(true); }} className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition">EDIT</button>
-                      <button onClick={() => handleDelete(r.id)} className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition">DELETE</button>
+                      <button
+                        onClick={() => {
+                          setEditRider(r);
+                          setModalOpen(true);
+                        }}
+                        className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition"
+                      >
+                        EDIT
+                      </button>
+                      <button
+                        onClick={() => handleDelete(r.id)}
+                        className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition"
+                      >
+                        DELETE
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -4890,8 +5237,18 @@ function RidersTable() {
           </table>
         )}
       </div>
-      <RiderFormModal open={modalOpen} onClose={() => setModalOpen(false)} rider={editRider} onSaved={fetchRiders} />
-      <RiderMediaModal open={mediaModalOpen} onClose={() => setMediaModalOpen(false)} rider={editRider} onSaved={fetchRiders} />
+      <RiderFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        rider={editRider}
+        onSaved={fetchRiders}
+      />
+      <RiderMediaModal
+        open={mediaModalOpen}
+        onClose={() => setMediaModalOpen(false)}
+        rider={editRider}
+        onSaved={fetchRiders}
+      />
       <ConfirmationModal
         isOpen={!!riderToDelete}
         onClose={() => setRiderToDelete(null)}
@@ -4917,7 +5274,13 @@ function HeroTable() {
   const [actionLoading, setActionLoading] = useState(false);
 
   // Form state
-  const [form, setForm] = useState({ titlePrimary: "", titleSecondary: "", subtitle: "", description: "", isActive: false });
+  const [form, setForm] = useState({
+    titlePrimary: "",
+    titleSecondary: "",
+    subtitle: "",
+    description: "",
+    isActive: false,
+  });
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
   const [formVideoFile, setFormVideoFile] = useState(null);
@@ -4938,11 +5301,19 @@ function HeroTable() {
     }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const openCreate = () => {
     setEditHero(null);
-    setForm({ titlePrimary: "", titleSecondary: "", subtitle: "", description: "", isActive: false });
+    setForm({
+      titlePrimary: "",
+      titleSecondary: "",
+      subtitle: "",
+      description: "",
+      isActive: false,
+    });
     setFormError("");
     setFormVideoFile(null);
     setModalOpen(true);
@@ -4950,7 +5321,13 @@ function HeroTable() {
 
   const openEdit = (hero) => {
     setEditHero(hero);
-    setForm({ titlePrimary: hero.titlePrimary || "", titleSecondary: hero.titleSecondary || "", subtitle: hero.subtitle, description: hero.description || "", isActive: hero.isActive });
+    setForm({
+      titlePrimary: hero.titlePrimary || "",
+      titleSecondary: hero.titleSecondary || "",
+      subtitle: hero.subtitle,
+      description: hero.description || "",
+      isActive: hero.isActive,
+    });
     setFormError("");
     setFormVideoFile(null);
     setModalOpen(true);
@@ -4962,7 +5339,12 @@ function HeroTable() {
     setFormError("");
     try {
       if (editHero) {
-        await heroService.update(editHero.id, { titlePrimary: form.titlePrimary, titleSecondary: form.titleSecondary, subtitle: form.subtitle, description: form.description || undefined });
+        await heroService.update(editHero.id, {
+          titlePrimary: form.titlePrimary,
+          titleSecondary: form.titleSecondary,
+          subtitle: form.subtitle,
+          description: form.description || undefined,
+        });
         toast.success("Hero section updated!");
       } else {
         // Step 1: Create hero
@@ -5047,10 +5429,17 @@ function HeroTable() {
     <div className="flex flex-col h-full p-8 pb-0">
       <div className="flex items-center justify-between mb-6 shrink-0">
         <div>
-          <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">HERO SECTION</h2>
-          <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">Manage landing page hero banner</p>
+          <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">
+            HERO SECTION
+          </h2>
+          <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">
+            Manage landing page hero banner
+          </p>
         </div>
-        <button onClick={openCreate} className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition">
+        <button
+          onClick={openCreate}
+          className="px-5 py-2 bg-white text-black rounded-full text-[10px] font-black tracking-widest hover:bg-gray-200 transition"
+        >
           + ADD HERO
         </button>
       </div>
@@ -5058,11 +5447,17 @@ function HeroTable() {
       {/* Form Modal */}
       <AnimatePresence>
         {modalOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
             onClick={() => setModalOpen(false)}
           >
-            <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
               className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
@@ -5070,43 +5465,92 @@ function HeroTable() {
                 <h2 className="font-oswald text-2xl font-bold tracking-widest text-white">
                   {editHero ? "EDIT HERO" : "CREATE HERO"}
                 </h2>
-                <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-white text-lg font-bold w-8 h-8 flex items-center justify-center">✕</button>
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="text-gray-400 hover:text-white text-lg font-bold w-8 h-8 flex items-center justify-center"
+                >
+                  ✕
+                </button>
               </div>
-              {formError && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{formError}</div>}
+              {formError && (
+                <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                  {formError}
+                </div>
+              )}
               <form onSubmit={handleSave} className="flex flex-col gap-4">
                 <div>
-                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Primary Title (Top) *</label>
-                  <input required type="text" value={form.titlePrimary} onChange={(e) => setForm(p => ({ ...p, titlePrimary: e.target.value }))}
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                    Primary Title (Top) *
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    value={form.titlePrimary}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, titlePrimary: e.target.value }))
+                    }
                     placeholder="e.g. READY FOR"
-                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition"
+                  />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Secondary Title (Main) *</label>
-                  <textarea required rows={2} value={form.titleSecondary} onChange={(e) => setForm(p => ({ ...p, titleSecondary: e.target.value }))}
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                    Secondary Title (Main) *
+                  </label>
+                  <textarea
+                    required
+                    rows={2}
+                    value={form.titleSecondary}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, titleSecondary: e.target.value }))
+                    }
                     placeholder="e.g. THE LINEUP"
-                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none" />
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none"
+                  />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Subtitle *</label>
-                  <textarea required rows={3} value={form.subtitle} onChange={(e) => setForm(p => ({ ...p, subtitle: e.target.value }))}
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                    Subtitle *
+                  </label>
+                  <textarea
+                    required
+                    rows={3}
+                    value={form.subtitle}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, subtitle: e.target.value }))
+                    }
                     placeholder="e.g. BUILD DIFFERENT, RIDE DIFFERENT"
-                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none" />
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none"
+                  />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Description</label>
-                  <textarea rows={3} value={form.description} onChange={(e) => setForm(p => ({ ...p, description: e.target.value }))}
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={form.description}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, description: e.target.value }))
+                    }
                     placeholder="e.g. Custom surfboards made for your identity."
-                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none" />
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none"
+                  />
                 </div>
                 {!editHero && (
                   <div>
                     <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">
-                      Background Video <span className="text-gray-600 normal-case font-normal">(optional)</span>
+                      Background Video{" "}
+                      <span className="text-gray-600 normal-case font-normal">
+                        (optional)
+                      </span>
                     </label>
                     <input
                       type="file"
                       accept="video/mp4,video/webm,video/quicktime"
-                      onChange={(e) => setFormVideoFile(e.target.files[0] || null)}
+                      onChange={(e) =>
+                        setFormVideoFile(e.target.files[0] || null)
+                      }
                       className="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-white/10 file:text-white hover:file:bg-white/20 transition"
                     />
                     {formVideoFile && (
@@ -5118,19 +5562,42 @@ function HeroTable() {
                 )}
                 {!editHero && (
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <div className={`w-10 h-5 rounded-full transition-colors duration-300 relative ${form.isActive ? 'bg-accent-teal' : 'bg-gray-700'}`}
-                      onClick={() => setForm(p => ({ ...p, isActive: !p.isActive }))}>
-                      <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-300 ${form.isActive ? 'translate-x-5' : ''}`} />
+                    <div
+                      className={`w-10 h-5 rounded-full transition-colors duration-300 relative ${form.isActive ? "bg-accent-teal" : "bg-gray-700"}`}
+                      onClick={() =>
+                        setForm((p) => ({ ...p, isActive: !p.isActive }))
+                      }
+                    >
+                      <div
+                        className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-300 ${form.isActive ? "translate-x-5" : ""}`}
+                      />
                     </div>
-                    <span className="text-xs text-gray-400 font-bold tracking-widest uppercase">Set as Active</span>
+                    <span className="text-xs text-gray-400 font-bold tracking-widest uppercase">
+                      Set as Active
+                    </span>
                   </label>
                 )}
                 <div className="flex gap-3 mt-2">
-                  <button type="button" onClick={() => setModalOpen(false)} disabled={formLoading}
-                    className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50">CANCEL</button>
-                  <button type="submit" disabled={formLoading}
-                    className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50 flex items-center justify-center gap-2">
-                    {formLoading ? <PigLoader size="mini" text="SAVING..." /> : (editHero ? "UPDATE" : "CREATE")}
+                  <button
+                    type="button"
+                    onClick={() => setModalOpen(false)}
+                    disabled={formLoading}
+                    className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50"
+                  >
+                    CANCEL
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={formLoading}
+                    className="flex-1 py-2.5 bg-white text-black rounded-full text-xs font-bold tracking-widest hover:bg-gray-200 transition disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {formLoading ? (
+                      <PigLoader size="mini" text="SAVING..." />
+                    ) : editHero ? (
+                      "UPDATE"
+                    ) : (
+                      "CREATE"
+                    )}
                   </button>
                 </div>
               </form>
@@ -5142,36 +5609,83 @@ function HeroTable() {
       {/* Video Upload Modal */}
       <AnimatePresence>
         {videoModalHero && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
-            onClick={() => { setVideoModalHero(null); setVideoFile(null); }}
+            onClick={() => {
+              setVideoModalHero(null);
+              setVideoFile(null);
+            }}
           >
-            <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
               className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h2 className="font-oswald text-xl font-bold tracking-widest text-white">UPLOAD HERO VIDEO</h2>
-                  <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">{videoModalHero.title}</p>
+                  <h2 className="font-oswald text-xl font-bold tracking-widest text-white">
+                    UPLOAD HERO VIDEO
+                  </h2>
+                  <p className="text-gray-500 text-[10px] tracking-widest mt-0.5">
+                    {videoModalHero.title}
+                  </p>
                 </div>
-                <button onClick={() => { setVideoModalHero(null); setVideoFile(null); }} className="text-gray-400 hover:text-white text-lg font-bold">✕</button>
+                <button
+                  onClick={() => {
+                    setVideoModalHero(null);
+                    setVideoFile(null);
+                  }}
+                  className="text-gray-400 hover:text-white text-lg font-bold"
+                >
+                  ✕
+                </button>
               </div>
               {videoModalHero.videoUrl && (
                 <div className="mb-5 rounded-xl overflow-hidden border border-gray-700 bg-black max-h-48 flex justify-center">
-                  <video src={videoModalHero.videoUrl} controls className="h-48 object-contain" />
+                  <video
+                    src={videoModalHero.videoUrl}
+                    controls
+                    className="h-48 object-contain"
+                  />
                 </div>
               )}
-              <form onSubmit={handleUploadVideo} className="flex flex-col gap-4">
-                <input type="file" accept="video/mp4,video/webm,video/quicktime"
+              <form
+                onSubmit={handleUploadVideo}
+                className="flex flex-col gap-4"
+              >
+                <input
+                  type="file"
+                  accept="video/mp4,video/webm,video/quicktime"
                   onChange={(e) => setVideoFile(e.target.files[0])}
-                  className="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-white/10 file:text-white hover:file:bg-white/20 transition" />
+                  className="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-white/10 file:text-white hover:file:bg-white/20 transition"
+                />
                 <div className="flex gap-3">
-                  <button type="button" onClick={() => { setVideoModalHero(null); setVideoFile(null); }} disabled={videoLoading}
-                    className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50">CANCEL</button>
-                  <button type="submit" disabled={!videoFile || videoLoading}
-                    className="flex-1 py-2.5 bg-accent-teal text-black rounded-full text-xs font-bold tracking-widest hover:bg-accent-teal/80 transition disabled:opacity-50 flex items-center justify-center gap-2">
-                    {videoLoading ? <PigLoader size="mini" text="UPLOADING..." /> : "UPLOAD VIDEO"}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setVideoModalHero(null);
+                      setVideoFile(null);
+                    }}
+                    disabled={videoLoading}
+                    className="flex-1 py-2.5 border border-gray-600 rounded-full text-gray-400 text-xs font-bold tracking-widest hover:border-white hover:text-white transition disabled:opacity-50"
+                  >
+                    CANCEL
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={!videoFile || videoLoading}
+                    className="flex-1 py-2.5 bg-accent-teal text-black rounded-full text-xs font-bold tracking-widest hover:bg-accent-teal/80 transition disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {videoLoading ? (
+                      <PigLoader size="mini" text="UPLOADING..." />
+                    ) : (
+                      "UPLOAD VIDEO"
+                    )}
                   </button>
                 </div>
               </form>
@@ -5194,9 +5708,13 @@ function HeroTable() {
       {/* Table */}
       <div className="flex-1 overflow-y-auto min-h-0 mb-8 rounded-xl border border-white/5 custom-scrollbar">
         {loading ? (
-          <div className="py-16 flex justify-center"><PigLoader size="mini" text="Loading hero sections..." /></div>
+          <div className="py-16 flex justify-center">
+            <PigLoader size="mini" text="Loading hero sections..." />
+          </div>
         ) : heroes.length === 0 ? (
-          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">No hero sections yet. Create one to get started.</div>
+          <div className="py-20 text-center text-gray-500 tracking-widest text-sm">
+            No hero sections yet. Create one to get started.
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="sticky top-0 z-10">
@@ -5212,30 +5730,62 @@ function HeroTable() {
             </thead>
             <tbody>
               {heroes.map((h, idx) => (
-                <tr key={h.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? 'bg-[#1c1c1c]' : 'bg-[#1a1a1a]'}`}>
-                  <td className="px-4 py-3 font-bold text-[#4ADDDE] tracking-wide max-w-[120px] truncate">{h.titlePrimary}</td>
-                  <td className="px-4 py-3 font-bold text-white tracking-wide max-w-[160px] truncate">{h.titleSecondary}</td>
-                  <td className="px-4 py-3 text-gray-400 max-w-[160px] truncate">{h.subtitle}</td>
-                  <td className="px-4 py-3 text-gray-500 text-xs max-w-[180px] truncate">{h.description || '—'}</td>
-                  <td className="px-4 py-3">
-                    {h.videoUrl
-                      ? <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-full text-[9px] font-bold">VIDEO ✓</span>
-                      : <span className="px-2 py-0.5 bg-gray-700/50 text-gray-500 rounded-full text-[9px] font-bold">NO VIDEO</span>}
+                <tr
+                  key={h.id}
+                  className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? "bg-[#1c1c1c]" : "bg-[#1a1a1a]"}`}
+                >
+                  <td className="px-4 py-3 font-bold text-[#4ADDDE] tracking-wide max-w-[120px] truncate">
+                    {h.titlePrimary}
+                  </td>
+                  <td className="px-4 py-3 font-bold text-white tracking-wide max-w-[160px] truncate">
+                    {h.titleSecondary}
+                  </td>
+                  <td className="px-4 py-3 text-gray-400 max-w-[160px] truncate">
+                    {h.subtitle}
+                  </td>
+                  <td className="px-4 py-3 text-gray-500 text-xs max-w-[180px] truncate">
+                    {h.description || "—"}
                   </td>
                   <td className="px-4 py-3">
-                    <button onClick={() => handleToggle(h.id)} disabled={actionLoading}
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest transition ${h.isActive ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-gray-500/20 text-gray-400 border border-gray-600 hover:bg-gray-700/50'}`}>
-                      {h.isActive ? 'ACTIVE' : 'INACTIVE'}
+                    {h.videoUrl ? (
+                      <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-full text-[9px] font-bold">
+                        VIDEO ✓
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 bg-gray-700/50 text-gray-500 rounded-full text-[9px] font-bold">
+                        NO VIDEO
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => handleToggle(h.id)}
+                      disabled={actionLoading}
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest transition ${h.isActive ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-gray-500/20 text-gray-400 border border-gray-600 hover:bg-gray-700/50"}`}
+                    >
+                      {h.isActive ? "ACTIVE" : "INACTIVE"}
                     </button>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-center gap-2">
-                      <button onClick={() => setVideoModalHero(h)}
-                        className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-widest text-white hover:bg-white/20 transition">VIDEO</button>
-                      <button onClick={() => openEdit(h)}
-                        className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition">EDIT</button>
-                      <button onClick={() => setHeroToDelete(h.id)}
-                        className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition">DELETE</button>
+                      <button
+                        onClick={() => setVideoModalHero(h)}
+                        className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-widest text-white hover:bg-white/20 transition"
+                      >
+                        VIDEO
+                      </button>
+                      <button
+                        onClick={() => openEdit(h)}
+                        className="px-3 py-1 border border-gray-600 rounded-full text-[10px] font-bold tracking-widest text-gray-300 hover:border-white hover:text-white transition"
+                      >
+                        EDIT
+                      </button>
+                      <button
+                        onClick={() => setHeroToDelete(h.id)}
+                        className="px-3 py-1 border border-red-500/40 rounded-full text-[10px] font-bold tracking-widest text-red-400 hover:bg-red-500/10 transition"
+                      >
+                        DELETE
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -5254,9 +5804,9 @@ const SIDEBAR_ITEMS = [
   { id: "hero", label: "Hero Section", icon: FiVideo },
   { id: "new-releases", label: "New Releases", icon: FiStar },
   { id: "featured", label: "Featured Sections", icon: FiLayout },
-  { 
-    id: "master-data", 
-    label: "Master Data", 
+  {
+    id: "master-data",
+    label: "Master Data",
     icon: FiDatabase,
     subItems: [
       { id: "wall-magazine", label: "Wall Magazine", icon: FiFileText },
@@ -5266,7 +5816,7 @@ const SIDEBAR_ITEMS = [
       { id: "gallery", label: "Gallery", icon: FiImage },
       { id: "testimonials", label: "Testimonials", icon: FiHeart },
       { id: "riders", label: "Riders", icon: FiUsers },
-    ]
+    ],
   },
 ];
 
