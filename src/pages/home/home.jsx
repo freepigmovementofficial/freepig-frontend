@@ -349,7 +349,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="bg-[#000000] min-h-screen font-poppins overflow-x-hidden text-white">
+    <div className="bg-[#010E19] min-h-screen font-poppins overflow-x-hidden text-white">
       <CTAPopup isOpen={showPopup} onClose={() => setShowPopup(false)} />
 
       {/* LOGIN PROMPT POPUP */}
@@ -359,7 +359,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-[#010E19]/80 z-50 flex items-center justify-center p-4"
             onClick={() => setShowLoginPrompt(false)}
           >
             <motion.div
@@ -367,7 +367,7 @@ export default function Home() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#1A2127] border border-[#000000] rounded-2xl p-8 max-w-sm w-full text-center relative"
+              className="bg-[#1A2127] border border-[#010E19] rounded-2xl p-8 max-w-sm w-full text-center relative"
             >
               <h3 className="font-oswald text-2xl font-bold tracking-widest text-white mb-2">
                 LOGIN REQUIRED
@@ -419,12 +419,12 @@ export default function Home() {
             }}
           ></div>
 
-          {/* Gradient tambahan untuk fade-out video ke warna hitam #000000 agar menyatu tanpa garis pembatas */}
+          {/* Gradient tambahan untuk fade-out video ke warna hitam #010E19 agar menyatu tanpa garis pembatas */}
           <div
             className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
             style={{
               background:
-                "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
+                "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #010E19 100%)",
             }}
           ></div>
 
@@ -433,7 +433,7 @@ export default function Home() {
             src={bercakPembatas}
             alt="Bercak pembatas video"
             className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[60%]"
-            style={{ filter: "brightness(0)" }}
+            style={{ filter: "brightness(0) saturate(100%) invert(4%) sepia(71%) saturate(1436%) hue-rotate(178deg) brightness(94%) contrast(99%)" }}
           />
         </div>
 
@@ -527,7 +527,6 @@ export default function Home() {
         {/* Background biru yang ukurannya dipotong atas-bawah biar fotonya nembus */}
         <div className="absolute top-14 bottom-[-40px] left-0 w-full bg-[#1A2127] z-0"></div>
 
-        {/* Bercak background dipindah ke mari biar bisa nembus ke atas persis kayak maskot */}
         <img
           src={bercakBercak}
           alt="Bercak background"
@@ -545,14 +544,14 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-16 py-4">
             {/* IMAGE SIDE */}
             <div className="w-full md:w-1/2 relative z-20">
-              <div className="w-full max-w-[644px] h-[400px] md:h-[550px] mx-auto rounded-[32px] overflow-hidden border border-[#4ADDDE] relative group shadow-2xl bg-black">
+              <div className="w-full max-w-[644px] h-[400px] md:h-[550px] mx-auto rounded-[32px] overflow-hidden border border-[#4ADDDE] relative group shadow-2xl bg-[#010E19]">
                 <img
                   loading="lazy"
                   src={aboutUsImg}
                   alt="About Freepigmovement"
                   className="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-[1.5s] ease-out group-hover:scale-105 group-hover:grayscale-0"
                 />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-500"></div>
+                <div className="absolute inset-0 bg-[#010E19]/20 group-hover:bg-[#010E19]/10 transition duration-500"></div>
               </div>
             </div>
 
@@ -631,7 +630,7 @@ export default function Home() {
                 />
 
                 {/* Overlay for text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#010E19]/90 via-[#010E19]/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
 
                 {/* Label (Bottom Left) */}
                 <div className="absolute inset-x-0 bottom-0 px-8 pb-10 md:px-12 md:pb-14 flex items-end">
@@ -666,7 +665,7 @@ export default function Home() {
         </motion.div>
 
         {/* Base dark overlay */}
-        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute inset-0 bg-[#010E19]/10"></div>
 
         {/* Shadow Kanan Atas (Hanya fokus di pojok) */}
         <div
@@ -965,7 +964,7 @@ export default function Home() {
       </section>
 
       {/* SURFBOARDS PRODUCTS */}
-      <section className="w-full bg-[#000000] py-24">
+      <section className="w-full bg-[#010E19] py-24">
         <Container>
           <FadeUp className="flex items-center gap-4 sm:gap-6 mb-12">
             <h3 className="font-poppins text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-wide text-white whitespace-nowrap">
@@ -1045,7 +1044,7 @@ export default function Home() {
       </section>
 
       {/* FOOTER IMAGES GRID */}
-      <section className="w-full bg-[#000000] py-24">
+      <section className="w-full bg-[#010E19] py-24">
         <div className="w-full px-4 md:px-[70px]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px]">
             {[
@@ -1085,7 +1084,7 @@ export default function Home() {
                 />
 
                 {/* Dark gradient overlay for text readability */}
-                {/* <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/90 transition duration-500 z-10"></div> */}
+                {/* <div className="absolute inset-0 bg-gradient-to-t from-[#010E19]/80 via-[#010E19]/20 to-transparent group-hover:from-[#010E19]/90 transition duration-500 z-10"></div> */}
 
                 {/* Text Container */}
                 <div className="absolute bottom-0 left-0 right-0 p-8 pb-10 z-20 flex flex-col transform -rotate-3 transition-transform duration-300 group-hover:-translate-y-2">
@@ -1129,12 +1128,11 @@ export default function Home() {
                       <span className="block font-road-rage text-[#4ADDDD] text-[60px] md:text-[70px] leading-[0.9] md:leading-[0.75] relative z-20 drop-shadow-md break-words whitespace-normal">
                         {wallMagazine.title}
                       </span>
-                      {/* Efek Garis Brush Putih */}
                       {/* <img
                         src={bercakPembatas}
                         alt=""
-                        className="absolute -bottom-6 left-0 w-[110%] min-w-[300px] h-10 object-cover z-10 pointer-events-none opacity-90 brightness-200"
-                        style={{ filter: "brightness(0) invert(1)" }}
+                        className="absolute -bottom-6 left-0 w-[110%] min-w-[300px] h-10 object-cover z-10 pointer-events-none opacity-100"
+                        style={{ filter: "brightness(0) saturate(100%) invert(4%) sepia(71%) saturate(1436%) hue-rotate(178deg) brightness(94%) contrast(99%)" }}
                       /> */}
                     </span>
                   </div>
@@ -1163,14 +1161,14 @@ export default function Home() {
               {/* IMAGE SIDE */}
               <div className="w-full md:w-1/2 relative z-20 order-1 md:order-2 mt-8 md:mt-0">
                 <FadeUp>
-                  <div className="w-full max-w-[644px] h-[400px] md:h-[500px] mx-auto rounded-[32px] overflow-hidden border border-[#4ADDDE] relative group shadow-2xl bg-black">
+                  <div className="w-full max-w-[644px] h-[400px] md:h-[500px] mx-auto rounded-[32px] overflow-hidden border border-[#4ADDDE] relative group shadow-2xl bg-[#010E19]">
                     <img
                       loading="lazy"
                       src={wallMagazine.imageUrl}
                       alt={wallMagazine.title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-500"></div>
+                    <div className="absolute inset-0 bg-[#010E19]/20 group-hover:bg-[#010E19]/10 transition duration-500"></div>
                   </div>
                 </FadeUp>
               </div>
@@ -1231,7 +1229,7 @@ export default function Home() {
       </section>
 
       {/* CUSTOMER REVIEWS SECTION */}
-      <section className="w-full bg-[#000000] pt-28 pb-24">
+      <section className="w-full bg-[#010E19] pt-28 pb-24">
         <Container>
           <FadeUp>
             {/* Header */}
@@ -1386,7 +1384,7 @@ export default function Home() {
                         reviewPage ===
                         Math.ceil(reviews.length / reviewsPerPage)
                       }
-                      className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-[#282B30] hover:bg-black text-white rounded transition disabled:opacity-50"
+                      className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-[#282B30] hover:bg-[#010E19] text-white rounded transition disabled:opacity-50"
                     >
                       <FaChevronRight className="text-[10px] md:text-xs" />
                     </button>

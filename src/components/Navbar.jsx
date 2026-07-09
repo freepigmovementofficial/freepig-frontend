@@ -52,7 +52,7 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#010E19]/70 backdrop-blur-sm px-4"
             onClick={() => setShowLogoutConfirm(false)}
           >
             <motion.div
@@ -97,7 +97,7 @@ export default function Navbar() {
       className={`fixed top-0 left-0 w-full flex items-center px-10 md:px-20 z-50 transition-all duration-500
         ${
           scrolled
-            ? "py-3 bg-black/40 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.4)] border-b border-white/5"
+            ? "py-3 bg-[#010E19]/40 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.4)] border-b border-white/5"
             : "py-6 bg-transparent"
         } text-white`}
     >
@@ -237,7 +237,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="absolute top-full left-0 w-full h-screen bg-black flex flex-col items-center pt-10 pb-40 gap-8 md:hidden border-t border-white/10 shadow-2xl overflow-y-auto"
+            className="absolute top-full left-0 w-full h-screen bg-[#010E19] flex flex-col items-center pt-10 pb-40 gap-8 md:hidden border-t border-white/10 shadow-2xl overflow-y-auto"
           >
         <Link
           to="/store"

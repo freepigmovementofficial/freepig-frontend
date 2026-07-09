@@ -142,11 +142,11 @@ export default function ProductDetail() {
   const waveWidthPercent = waveMax > 0 ? ((waveMax - waveMin) / 10) * 100 : 0;
 
   return (
-    <div className="bg-[#000000] min-h-screen font-poppins text-white pb-24">
+    <div className="bg-[#010E19] min-h-screen font-poppins text-white pb-24">
       {/* ── HERO BANNER ── */}
       {product.videoUrl ? (
         <div
-          className="relative w-full overflow-hidden bg-black"
+          className="relative w-full overflow-hidden bg-[#010E19]"
           style={{ height: "500px" }}
         >
           <iframe
@@ -171,11 +171,11 @@ export default function ProductDetail() {
             }}
           ></div>
 
-          {/* Gradient tambahan untuk fade-out banner ke warna hitam #000000 agar menyatu tanpa garis pembatas */}
+          {/* Gradient tambahan untuk fade-out banner ke warna hitam #010E19 agar menyatu tanpa garis pembatas */}
           <div
             className="absolute bottom-0 left-0 w-full h-32 md:h-56 pointer-events-none z-[5]"
             style={{
-              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 100%)",
+              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, #010E19 100%)",
             }}
           ></div>
 
@@ -228,14 +228,14 @@ export default function ProductDetail() {
                 <>
                   <button
                     onClick={goPrev}
-                    className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-black/50 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black/80 transition-all duration-200 z-10"
+                    className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-[#010E19]/50 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[#010E19]/80 transition-all duration-200 z-10"
                     aria-label="Previous image"
                   >
                     <FiChevronLeft size={20} />
                   </button>
                   <button
                     onClick={goNext}
-                    className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-black/50 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black/80 transition-all duration-200 z-10"
+                    className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-[#010E19]/50 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[#010E19]/80 transition-all duration-200 z-10"
                     aria-label="Next image"
                   >
                     <FiChevronRight size={20} />
@@ -247,7 +247,7 @@ export default function ProductDetail() {
                         key={i}
                         onClick={() => setActiveIndex(i)}
                         className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${
-                          i === activeIndex ? "bg-black w-3" : "bg-black/30"
+                          i === activeIndex ? "bg-[#010E19] w-3" : "bg-[#010E19]/30"
                         }`}
                       />
                     ))}
@@ -262,7 +262,7 @@ export default function ProductDetail() {
                 {totalImages > 4 && (
                   <button
                     onClick={() => scrollCarousel(-1)}
-                    className="absolute left-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black transition-all duration-200 z-10 shadow-lg"
+                    className="absolute left-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-[#010E19]/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[#010E19] transition-all duration-200 z-10 shadow-lg"
                   >
                     <FiChevronLeft size={18} />
                   </button>
@@ -295,7 +295,7 @@ export default function ProductDetail() {
                 {totalImages > 4 && (
                   <button
                     onClick={() => scrollCarousel(1)}
-                    className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black transition-all duration-200 z-10 shadow-lg"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-[#010E19]/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[#010E19] transition-all duration-200 z-10 shadow-lg"
                   >
                     <FiChevronRight size={18} />
                   </button>

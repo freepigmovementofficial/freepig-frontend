@@ -46,7 +46,7 @@ export default function Gallery() {
   }, []);
 
   return (
-    <div className="bg-[#000000] min-h-screen font-poppins pt-28 pb-20 text-white selection:bg-accent-teal selection:text-black">
+    <div className="bg-[#010E19] min-h-screen font-poppins pt-28 pb-20 text-white selection:bg-accent-teal selection:text-black">
       <Container>
         <div className="text-center mb-16">
           <FadeUp>
@@ -137,7 +137,7 @@ export default function Gallery() {
                     />
 
                     {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                    <div className="absolute inset-0 bg-[#010E19]/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
                       {img.caption && (
                         <motion.p
                           initial={{ y: 10, opacity: 0 }}
@@ -186,7 +186,7 @@ export default function Gallery() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-10 bg-black/90 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-10 bg-[#010E19]/90 backdrop-blur-sm"
           >
             <button
               onClick={() => setSelectedImage(null)}

@@ -111,7 +111,7 @@ export default function Login() {
         : "Create your free account";
 
   return (
-    <div className="min-h-screen flex font-poppins overflow-hidden bg-[#0d0d0d]">
+    <div className="min-h-screen flex font-poppins overflow-hidden bg-[#010E19]">
       {/* ══════════ LEFT PANEL — Brand Visual ══════════ */}
       <div className="hidden lg:flex relative w-[52%] flex-shrink-0 flex-col items-start justify-end p-16 overflow-hidden">
         {/* Video background */}
@@ -125,8 +125,8 @@ export default function Login() {
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#010E19]/80 via-[#010E19]/50 to-[#010E19]/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#010E19]/80 via-transparent to-[#010E19]/20" />
 
         {/* Logo top-left */}
         <Link

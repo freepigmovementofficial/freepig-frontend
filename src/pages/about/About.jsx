@@ -23,7 +23,7 @@ const FadeUp = ({ children, delay = 0, className = "" }) => (
 export default function About() {
   useDocumentTitle("About Us | FreePigMovement");
   return (
-    <div className="bg-[#000000] min-h-screen font-poppins text-white overflow-x-hidden">
+    <div className="bg-[#010E19] min-h-screen font-poppins text-white overflow-x-hidden">
       {/* ── MAIN CONTENT ── */}
       <div className="w-full mx-auto px-6 md:px-[70px] pt-44 pb-24">
         {/* Section label */}
@@ -56,7 +56,7 @@ export default function About() {
                 alt="About Us"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+              <div className="absolute inset-0 bg-[#010E19]/20 group-hover:bg-transparent transition-colors duration-500" />
             </FadeUp>
           </div>
 

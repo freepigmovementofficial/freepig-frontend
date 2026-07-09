@@ -41,7 +41,7 @@ export default function Riders() {
   }, []);
 
   return (
-    <div className="bg-[#000000] min-h-screen font-poppins text-white pb-24">
+    <div className="bg-[#010E19] min-h-screen font-poppins text-white pb-24">
       {/* ── HERO BANNER ── */}
       <div
         className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12"

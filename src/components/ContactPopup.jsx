@@ -25,7 +25,7 @@ export default function ContactPopup() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#010E19]/80 px-4"
           onClick={() => setIsOpen(false)}
         >
           <motion.div
@@ -50,7 +50,7 @@ export default function ContactPopup() {
                 alt="Heading"
                 className="absolute inset-0 w-full h-full object-cover opacity-90"
               />
-              <div className="absolute inset-0 bg-black/60"></div>
+              <div className="absolute inset-0 bg-[#010E19]/60"></div>
               <h2 className="relative z-10 font-oswald text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-widest text-center mt-2 px-4">
                 GET IN TOUCH WITH OUR TEAM
               </h2>

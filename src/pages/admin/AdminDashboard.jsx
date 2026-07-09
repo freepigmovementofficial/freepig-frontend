@@ -248,7 +248,7 @@ function ProductFormModal({ open, onClose, product, categories, onSaved }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
         onClick={onClose}
       >
         <motion.div
@@ -663,7 +663,7 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
         onClick={onClose}
       >
         <motion.div
@@ -729,7 +729,7 @@ function ProductImagesModal({ open, onClose, product, onSaved }) {
 
                       {/* Type badge */}
                       <div className="absolute top-1 left-1 flex gap-1">
-                        <span className="text-[9px] font-bold bg-black/80 text-accent-teal px-1.5 py-0.5 rounded tracking-wider">
+                        <span className="text-[9px] font-bold bg-[#010E19]/80 text-accent-teal px-1.5 py-0.5 rounded tracking-wider">
                           {img.type}
                         </span>
                         {isMain && (
@@ -944,7 +944,7 @@ function ProductDimensionsModal({ open, onClose, productSlug, onSaved }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
         onClick={onClose}
       >
         <motion.div
@@ -1312,7 +1312,7 @@ function ProductsTable({ categories }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -1576,7 +1576,7 @@ function AccessoryFormModal({ open, onClose, accessory, categories, onSaved }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
         onClick={onClose}
       >
         <motion.div
@@ -1799,7 +1799,7 @@ function AccessoriesTable({ categories }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -2021,7 +2021,7 @@ function NewReleaseFormModal({ open, onClose, release, onSaved, products }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
         onClick={onClose}
       >
         <motion.div
@@ -2241,7 +2241,7 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
         onClick={onClose}
       >
         <motion.div
@@ -2275,7 +2275,7 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
                 Background Video
               </h3>
               {release.videoUrl ? (
-                <div className="mb-4 rounded overflow-hidden border border-gray-600 bg-black max-h-48 flex justify-center">
+                <div className="mb-4 rounded overflow-hidden border border-gray-600 bg-[#010E19] max-h-48 flex justify-center">
                   <video
                     src={release.videoUrl}
                     controls
@@ -2313,7 +2313,7 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
                 Release Logo
               </h3>
               {release.logoUrl ? (
-                <div className="mb-4 rounded overflow-hidden border border-gray-600 bg-black max-h-48 flex justify-center p-4 relative group">
+                <div className="mb-4 rounded overflow-hidden border border-gray-600 bg-[#010E19] max-h-48 flex justify-center p-4 relative group">
                   <img
                     src={release.logoUrl}
                     alt="Release Logo"
@@ -2356,7 +2356,7 @@ function NewReleaseMediaModal({ open, onClose, release, onSaved }) {
                   {release.images.map((img) => (
                     <div
                       key={img.id}
-                      className="relative w-32 h-32 border border-gray-600 rounded bg-black group overflow-hidden"
+                      className="relative w-32 h-32 border border-gray-600 rounded bg-[#010E19] group overflow-hidden"
                     >
                       <img
                         src={img.url}
@@ -2511,7 +2511,7 @@ function NewReleasesTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -2704,7 +2704,7 @@ function WallMagazineFormModal({ open, onClose, magazine, onSaved }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
         onClick={onClose}
       >
         <motion.div
@@ -2865,7 +2865,7 @@ function WallMagazineImageModal({ open, onClose, magazine, onSaved }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
         onClick={onClose}
       >
         <motion.div
@@ -2894,7 +2894,7 @@ function WallMagazineImageModal({ open, onClose, magazine, onSaved }) {
 
           <div className="border border-gray-700 rounded-xl p-5 bg-[#222]">
             {magazine.imageUrl ? (
-              <div className="mb-4 rounded overflow-hidden border border-gray-600 bg-black max-h-48 flex justify-center">
+              <div className="mb-4 rounded overflow-hidden border border-gray-600 bg-[#010E19] max-h-48 flex justify-center">
                 <img
                   src={magazine.imageUrl}
                   alt="Wall Magazine"
@@ -3269,7 +3269,7 @@ function FeaturedSectionsTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
             onClick={() => setCreateModalOpen(false)}
           >
             <motion.div
@@ -3334,7 +3334,7 @@ function FeaturedSectionsTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 py-10 overflow-y-auto"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4 py-10 overflow-y-auto"
             onClick={() => setEditSection(null)}
           >
             <motion.div
@@ -3482,7 +3482,7 @@ function FeaturedSectionsTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -3703,7 +3703,7 @@ function ReviewsTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -3912,7 +3912,7 @@ function GalleryTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -3968,7 +3968,7 @@ function GalleryTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -4024,7 +4024,7 @@ function GalleryTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -4286,7 +4286,7 @@ function TestimonialsTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
             onClick={() => setFormOpen(false)}
           >
             <motion.div
@@ -4416,7 +4416,7 @@ function TestimonialsTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
             onClick={() => setPhotoItem(null)}
           >
             <motion.div
@@ -4483,7 +4483,7 @@ function TestimonialsTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -4690,7 +4690,7 @@ function RiderFormModal({ open, onClose, rider, onSaved }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
         onClick={onClose}
       >
         <motion.div
@@ -4933,7 +4933,7 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
+        className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4 overflow-y-auto py-10"
         onClick={onClose}
       >
         <motion.div
@@ -4973,7 +4973,7 @@ function RiderMediaModal({ open, onClose, rider, onSaved }) {
               </h3>
               <div className="bg-[#222] border border-gray-700 rounded-xl p-4">
                 {rider.videoUrl ? (
-                  <div className="relative group w-full h-32 rounded-lg overflow-hidden bg-black mb-4">
+                  <div className="relative group w-full h-32 rounded-lg overflow-hidden bg-[#010E19] mb-4">
                     <video
                       src={rider.videoUrl}
                       className="w-full h-full object-cover opacity-50"
@@ -5451,7 +5451,7 @@ function HeroTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
             onClick={() => setModalOpen(false)}
           >
             <motion.div
@@ -5613,7 +5613,7 @@ function HeroTable() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center px-4"
+            className="fixed inset-0 bg-[#010E19]/70 z-50 flex items-center justify-center px-4"
             onClick={() => {
               setVideoModalHero(null);
               setVideoFile(null);
@@ -5646,7 +5646,7 @@ function HeroTable() {
                 </button>
               </div>
               {videoModalHero.videoUrl && (
-                <div className="mb-5 rounded-xl overflow-hidden border border-gray-700 bg-black max-h-48 flex justify-center">
+                <div className="mb-5 rounded-xl overflow-hidden border border-gray-700 bg-[#010E19] max-h-48 flex justify-center">
                   <video
                     src={videoModalHero.videoUrl}
                     controls

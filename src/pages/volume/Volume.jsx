@@ -394,7 +394,7 @@ export default function Volume() {
 
   return (
     <div
-      className="min-h-screen text-white bg-[#000000]"
+      className="min-h-screen text-white bg-[#010E19]"
       style={{
         fontFamily: "'Poppins', sans-serif",
       }}
@@ -414,7 +414,7 @@ export default function Volume() {
       {/* ══════════════════ CALCULATOR SECTION ══════════════════ */}
       <div
         className="w-full px-6 md:px-[70px] py-8 md:py-10 mt-16 sm:mt-24 relative z-20"
-        style={{ backgroundColor: "#000000" }}
+        style={{ backgroundColor: "#010E19" }}
       >
         <div className="w-full mx-auto flex flex-col lg:grid lg:grid-cols-3 gap-[20px] items-start">
           {/* ─── LEFT: Controls ─── */}

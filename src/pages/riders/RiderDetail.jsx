@@ -121,7 +121,7 @@ export default function RiderDetail() {
   return (
     <div className="bg-[#010E19] min-h-screen font-poppins text-white pb-24">
       {/* ── HERO VIDEO ── */}
-      <div className="relative w-full h-[40vh] sm:h-[50vh] md:h-[70vh] bg-black overflow-hidden">
+      <div className="relative w-full h-[40vh] sm:h-[50vh] md:h-[70vh] bg-[#010E19] overflow-hidden">
         {videoUrl ? (
           <video
             src={videoUrl}
@@ -178,14 +178,14 @@ export default function RiderDetail() {
                   <>
                     <button
                       onClick={goMainPrev}
-                      className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-black/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black/80 transition-all duration-200 z-10"
+                      className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-[#010E19]/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[#010E19]/80 transition-all duration-200 z-10"
                       aria-label="Previous photo"
                     >
                       <FiChevronLeft size={22} />
                     </button>
                     <button
                       onClick={goMainNext}
-                      className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-black/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-black/80 transition-all duration-200 z-10"
+                      className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-[#010E19]/60 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[#010E19]/80 transition-all duration-200 z-10"
                       aria-label="Next photo"
                     >
                       <FiChevronRight size={22} />
@@ -297,7 +297,7 @@ export default function RiderDetail() {
                     alt={`${rider.name} gallery ${idx + 1}`}
                     className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-[#010E19]/40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
                     <span className="text-white text-xs font-bold tracking-widest uppercase">
                       View
                     </span>
@@ -317,7 +317,7 @@ export default function RiderDetail() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setModalIndex(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-10 bg-black/90 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-10 bg-[#010E19]/90 backdrop-blur-sm"
           >
             {/* Close */}
             <button

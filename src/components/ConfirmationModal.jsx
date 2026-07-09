@@ -23,7 +23,7 @@ export default function ConfirmationModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm px-4"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#010E19]/75 backdrop-blur-sm px-4"
           onClick={loading ? undefined : onClose}
         >
           <motion.div
