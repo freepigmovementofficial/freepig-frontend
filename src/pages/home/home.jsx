@@ -367,7 +367,7 @@ export default function Home() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#1a1a1a] border border-[#333] rounded-2xl p-8 max-w-sm w-full text-center relative"
+              className="bg-[#1A2127] border border-[#000000] rounded-2xl p-8 max-w-sm w-full text-center relative"
             >
               <h3 className="font-oswald text-2xl font-bold tracking-widest text-white mb-2">
                 LOGIN REQUIRED
@@ -444,16 +444,16 @@ export default function Home() {
           transition={{ duration: 0.9, ease: "easeOut" }}
         >
           {/* Stacked typographic hero title — layout matches Figma reference */}
-          <h1 className="font-road-rage text-white drop-shadow-xl tracking-wide leading-none mb-0">
+          <h1 className="font-road-rage text-white tracking-wide leading-none mb-0">
             {hero?.titlePrimary || hero?.titleSecondary ? (
               <span className="relative flex flex-col items-start w-fit max-w-[100vw] mb-4">
                 {hero.titlePrimary && (
-                  <span className="text-[clamp(30px,6vw,50px)] lg:text-[60px] text-[#4ADDDE] drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] leading-[0.9] ml-[clamp(10px,4vw,30px)] lg:ml-[20px] relative z-20 block uppercase whitespace-pre-line">
+                  <span className="text-[clamp(30px,6vw,50px)] lg:text-[60px] text-[#4ADDDE] drop-shadow-[0_8px_16px_rgba(0,0,0,0.4)] leading-[0.9] ml-[clamp(10px,4vw,30px)] lg:ml-[20px] relative z-20 block uppercase whitespace-pre-line">
                     {hero.titlePrimary}
                   </span>
                 )}
                 {hero.titleSecondary && (
-                  <span className="text-[clamp(50px,12vw,90px)] lg:text-[110px] text-white drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] leading-[0.85] relative z-20 block uppercase mt-4 lg:mt-5 whitespace-pre-line">
+                  <span className="text-[clamp(50px,12vw,90px)] lg:text-[110px] text-white drop-shadow-[0_8px_16px_rgba(0,0,0,0.4)] leading-[0.85] relative z-20 block uppercase mt-4 lg:mt-5 whitespace-pre-line">
                     {hero.titleSecondary}
                   </span>
                 )}

@@ -384,24 +384,13 @@ export default function Volume() {
   const [width, setWidth] = useState(20.5);
   const [thickness, setThickness] = useState(2.75);
   const [boardType, setBoardType] = useState("shortboard");
-  const [volume, setVolume] = useState(null);
-  const [calculated, setCalculated] = useState(false);
 
-  const calculate = () => {
-    const factor = SHAPE_FACTORS[boardType];
-
-    // Convert all measurements to cm exactly as the original documentation explains
-    const lengthCm = getLengthCm(length);
-    const widthCm = getWidthCm(width);
-    const thicknessCm = getThicknessCm(thickness);
-
-    // EXACT math from the old website's script.js
-    const rawVal = (lengthCm * widthCm * thicknessCm * factor) / 100;
-    const vol = Math.floor(rawVal) / 10;
-
-    setVolume(vol.toFixed(1));
-    setCalculated(true);
-  };
+  const factor = SHAPE_FACTORS[boardType];
+  const lengthCm = getLengthCm(length);
+  const widthCm = getWidthCm(width);
+  const thicknessCm = getThicknessCm(thickness);
+  const rawVal = (lengthCm * widthCm * thicknessCm * factor) / 100;
+  const volume = (Math.floor(rawVal) / 10).toFixed(1);
 
   return (
     <div
@@ -516,13 +505,11 @@ export default function Volume() {
               }}
             >
               {/* Button kiri */}
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={calculate}
-                className="flex-shrink-0 px-8 py-3 text-[11px] font-bold tracking-widest uppercase text-black bg-white hover:bg-gray-200 transition-colors duration-300"
+              <div
+                className="flex-shrink-0 px-8 py-3 text-[11px] font-bold tracking-widest uppercase text-black bg-white cursor-default"
               >
-                Calculate
-              </motion.button>
+                Volume
+              </div>
 
               {/* Divider */}
               <div
@@ -532,29 +519,9 @@ export default function Volume() {
 
               {/* Hasil kanan */}
               <div className="flex-1 flex items-center justify-center px-5 py-2.5 gap-1.5 min-w-[100px]">
-                <AnimatePresence mode="wait">
-                  {calculated ? (
-                    <motion.span
-                      key="val"
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                      className="text-sm font-bold text-white"
-                    >
-                      {volume}
-                    </motion.span>
-                  ) : (
-                    <motion.span
-                      key="dash"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-sm text-gray-500 tracking-widest"
-                    >
-                      — —.— —
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                <span className="text-sm font-bold text-white">
+                  {volume}
+                </span>
                 <span className="text-xs text-gray-500 tracking-widest">L</span>
               </div>
             </div>
