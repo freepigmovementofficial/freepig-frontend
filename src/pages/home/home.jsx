@@ -433,7 +433,10 @@ export default function Home() {
             src={bercakPembatas}
             alt="Bercak pembatas video"
             className="absolute bottom-[-1px] left-0 w-full object-cover pointer-events-none z-10 mix-blend-normal translate-y-[60%]"
-            style={{ filter: "brightness(0) saturate(100%) invert(4%) sepia(71%) saturate(1436%) hue-rotate(178deg) brightness(94%) contrast(99%)" }}
+            style={{
+              filter:
+                "brightness(0) saturate(100%) invert(4%) sepia(71%) saturate(1436%) hue-rotate(178deg) brightness(94%) contrast(99%)",
+            }}
           />
         </div>
 
@@ -672,7 +675,7 @@ export default function Home() {
           className="absolute inset-0 pointer-events-none z-[2]"
           style={{
             background:
-              "radial-gradient(circle at top right, rgba(0,0,0,0.85) 0%, transparent 50%)",
+              "radial-gradient(circle at top right, rgba(1, 14, 25, 0.85) 0%, transparent 50%)",
           }}
         ></div>
 
@@ -681,7 +684,7 @@ export default function Home() {
           className="absolute inset-0 pointer-events-none z-[2]"
           style={{
             background:
-              "radial-gradient(circle at bottom left, rgba(0,0,0,0.85) 0%, transparent 60%)",
+              "radial-gradient(circle at bottom left, rgba(1, 14, 25, 0.85) 0%, transparent 60%)",
           }}
         ></div>
 
@@ -690,11 +693,11 @@ export default function Home() {
           className="absolute inset-0 pointer-events-none z-[2]"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 25%)",
+              "linear-gradient(to top, rgba(1, 14, 25, 0.9) 0%, transparent 25%)",
           }}
         ></div>
         {/* Top gradient transition to blend with background */}
-        <div className="absolute top-0 left-0 w-full h-32 md:h-48 bg-gradient-to-b from-[#0A0F13] to-transparent pointer-events-none z-[5]"></div>
+        <div className="absolute top-0 left-0 w-full h-32 md:h-48 bg-gradient-to-b from-[#010E19] to-transparent pointer-events-none z-[5]"></div>
 
         {/* LEFT — Text content */}
         <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center px-8 md:px-[70px] py-32 md:py-32">
@@ -1231,7 +1234,7 @@ export default function Home() {
       {/* CUSTOMER REVIEWS SECTION */}
       <section className="w-full bg-[#010E19] pt-28 pb-24">
         <Container>
-          <FadeUp>
+          <FadeUp className="relative z-20">
             {/* Header */}
             <div className="text-center mb-12 border-b border-[#143336] pb-8">
               <h2 className="font-road-rage text-5xl md:text-[56px] tracking-wide text-[#4ADDDD] uppercase mb-3 drop-shadow-md">
