@@ -589,7 +589,7 @@ export default function Home() {
                     className="text-white text-[15px] font-road-rage tracking-widest hover:text-accent-teal transition duration-300 flex items-center gap-1"
                     whileHover={{ x: 5 }}
                   >
-                    DISCOVER OUR STORYyy{" "}
+                    DISCOVER OUR STORY{" "}
                     <FaChevronRight className="text-accent-teal text-[15px]" />
                   </motion.button>
                 </div>
