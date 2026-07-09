@@ -4917,7 +4917,7 @@ function HeroTable() {
   const [actionLoading, setActionLoading] = useState(false);
 
   // Form state
-  const [form, setForm] = useState({ title: "", subtitle: "", description: "", isActive: false });
+  const [form, setForm] = useState({ titlePrimary: "", titleSecondary: "", subtitle: "", description: "", isActive: false });
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
   const [formVideoFile, setFormVideoFile] = useState(null);
@@ -4942,7 +4942,7 @@ function HeroTable() {
 
   const openCreate = () => {
     setEditHero(null);
-    setForm({ title: "", subtitle: "", description: "", isActive: false });
+    setForm({ titlePrimary: "", titleSecondary: "", subtitle: "", description: "", isActive: false });
     setFormError("");
     setFormVideoFile(null);
     setModalOpen(true);
@@ -4950,7 +4950,7 @@ function HeroTable() {
 
   const openEdit = (hero) => {
     setEditHero(hero);
-    setForm({ title: hero.title, subtitle: hero.subtitle, description: hero.description || "", isActive: hero.isActive });
+    setForm({ titlePrimary: hero.titlePrimary || "", titleSecondary: hero.titleSecondary || "", subtitle: hero.subtitle, description: hero.description || "", isActive: hero.isActive });
     setFormError("");
     setFormVideoFile(null);
     setModalOpen(true);
@@ -4962,12 +4962,13 @@ function HeroTable() {
     setFormError("");
     try {
       if (editHero) {
-        await heroService.update(editHero.id, { title: form.title, subtitle: form.subtitle, description: form.description || undefined });
+        await heroService.update(editHero.id, { titlePrimary: form.titlePrimary, titleSecondary: form.titleSecondary, subtitle: form.subtitle, description: form.description || undefined });
         toast.success("Hero section updated!");
       } else {
         // Step 1: Create hero
         const res = await heroService.create({
-          title: form.title,
+          titlePrimary: form.titlePrimary,
+          titleSecondary: form.titleSecondary,
           subtitle: form.subtitle,
           description: form.description || undefined,
           isActive: form.isActive,
@@ -5074,9 +5075,15 @@ function HeroTable() {
               {formError && <div className="mb-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">{formError}</div>}
               <form onSubmit={handleSave} className="flex flex-col gap-4">
                 <div>
-                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Title *</label>
-                  <textarea required rows={2} value={form.title} onChange={(e) => setForm(p => ({ ...p, title: e.target.value }))}
-                    placeholder="e.g. RIDE YOUR\nOWN WAVE"
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Primary Title (Top) *</label>
+                  <input required type="text" value={form.titlePrimary} onChange={(e) => setForm(p => ({ ...p, titlePrimary: e.target.value }))}
+                    placeholder="e.g. READY FOR"
+                    className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 tracking-widest uppercase block mb-1">Secondary Title (Main) *</label>
+                  <textarea required rows={2} value={form.titleSecondary} onChange={(e) => setForm(p => ({ ...p, titleSecondary: e.target.value }))}
+                    placeholder="e.g. THE LINEUP"
                     className="w-full bg-[#222] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent-teal transition resize-none" />
                 </div>
                 <div>
@@ -5194,7 +5201,8 @@ function HeroTable() {
           <table className="w-full text-sm">
             <thead className="sticky top-0 z-10">
               <tr className="bg-[#222] text-gray-400 text-[10px] tracking-[0.2em] uppercase shadow-md">
-                <th className="px-4 py-3 text-left">Title</th>
+                <th className="px-4 py-3 text-left">Primary Title</th>
+                <th className="px-4 py-3 text-left">Secondary Title</th>
                 <th className="px-4 py-3 text-left">Subtitle</th>
                 <th className="px-4 py-3 text-left">Description</th>
                 <th className="px-4 py-3 text-left">Video</th>
@@ -5205,7 +5213,8 @@ function HeroTable() {
             <tbody>
               {heroes.map((h, idx) => (
                 <tr key={h.id} className={`border-t border-white/5 hover:bg-white/5 transition ${idx % 2 === 0 ? 'bg-[#1c1c1c]' : 'bg-[#1a1a1a]'}`}>
-                  <td className="px-4 py-3 font-bold text-white tracking-wide max-w-[160px] truncate">{h.title}</td>
+                  <td className="px-4 py-3 font-bold text-[#4ADDDE] tracking-wide max-w-[120px] truncate">{h.titlePrimary}</td>
+                  <td className="px-4 py-3 font-bold text-white tracking-wide max-w-[160px] truncate">{h.titleSecondary}</td>
                   <td className="px-4 py-3 text-gray-400 max-w-[160px] truncate">{h.subtitle}</td>
                   <td className="px-4 py-3 text-gray-500 text-xs max-w-[180px] truncate">{h.description || '—'}</td>
                   <td className="px-4 py-3">

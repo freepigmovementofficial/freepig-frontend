@@ -396,7 +396,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* HERO SECTION */}
-      <section className="relative w-full h-screen flex flex-col justify-end pb-0 px-6 md:px-[70px] overflow-visible z-10">
+      <section className="relative w-full h-screen flex flex-col justify-end pb-16 md:pb-25 px-6 md:px-[70px] overflow-visible z-10">
         {/* Video diperpanjang ke bawah sejauh 128px (seukuran mt-32) biar ngisi ruang kosong */}
         <div
           className="absolute top-0 left-0 w-full z-0"
@@ -445,14 +445,18 @@ export default function Home() {
         >
           {/* Stacked typographic hero title — layout matches Figma reference */}
           <h1 className="font-road-rage text-white drop-shadow-xl tracking-wide leading-none mb-0">
-            {hero?.title && hero.title.toUpperCase() ? (
-              <span className="text-5xl md:text-7xl lg:text-8xl break-words max-w-2xl block">
-                {hero.title.split("\n").map((line, i) => (
-                  <React.Fragment key={i}>
-                    {line}
-                    {i !== hero.title.split("\n").length - 1 && <br />}
-                  </React.Fragment>
-                ))}
+            {hero?.titlePrimary || hero?.titleSecondary ? (
+              <span className="relative flex flex-col items-start w-fit max-w-[100vw] mb-4">
+                {hero.titlePrimary && (
+                  <span className="text-[clamp(30px,6vw,50px)] lg:text-[60px] text-[#4ADDDE] drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] leading-[0.9] ml-[clamp(10px,4vw,30px)] lg:ml-[20px] relative z-20 block uppercase whitespace-pre-line">
+                    {hero.titlePrimary}
+                  </span>
+                )}
+                {hero.titleSecondary && (
+                  <span className="text-[clamp(50px,12vw,90px)] lg:text-[110px] text-white drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] leading-[0.85] relative z-20 block uppercase mt-4 lg:mt-5 whitespace-pre-line">
+                    {hero.titleSecondary}
+                  </span>
+                )}
               </span>
             ) : (
               <span className="relative flex flex-col items-start w-fit max-w-[100vw]">
@@ -467,7 +471,7 @@ export default function Home() {
                 {/* W and AVE container */}
                 <span className="relative flex items-end -mt-[clamp(15px,4vw,30px)] lg:-mt-[40px] z-10">
                   {/* W — rotated just like in Figma */}
-                  <span className="block text-[clamp(70px,20vw,145px)] lg:text-[200px] leading-[0.75] -rotate-[10deg] origin-bottom transform">
+                  <span className="block text-[clamp(70px,20vw,145px)] lg:text-[200px] leading-[0.75] origin-bottom transform me-[25px]">
                     B
                   </span>
                   {/* AVE */}
@@ -479,7 +483,7 @@ export default function Home() {
             )}
           </h1>
 
-          <p className="text-white/90 text-sm md:text-base lg:text-lg max-w-2xl lg:max-w-3xl font-poppins mt-2 leading-relaxed drop-shadow-md whitespace-pre-line">
+          <p className="text-white/90 drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] text-sm md:text-base lg:text-lg max-w-2xl lg:max-w-3xl font-poppins mt-2 leading-relaxed  whitespace-pre-line">
             {hero?.subtitle ||
               "Genuine quality performance shapes handcrafted by our local crew.\nBuilt honest, made to last, and ready for any wave."}
           </p>

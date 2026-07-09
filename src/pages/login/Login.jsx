@@ -146,18 +146,25 @@ export default function Login() {
           <p className="text-[11px] font-bold tracking-[0.35em] text-gray-400 uppercase mb-3">
             FreePigMovement
           </p>
-          <h1 className="font-road-rage font-normal text-[40px] xl:text-[54px] text-white leading-none mb-5">
-            {hero?.title
-              ? hero.title.split("\n").map((line, i) => (
-                  <React.Fragment key={i}>
-                    {line}
-                    {i !== hero.title.split("\n").length - 1 && <br />}
-                  </React.Fragment>
-                ))
-              : <>BUILD DIFFERENT,<br /> RIDE DIFFERENT</>}
+          <h1 className="font-road-rage font-normal text-[40px] xl:text-[54px] leading-none mb-5">
+            {hero?.titlePrimary || hero?.titleSecondary ? (
+              <>
+                {hero.titlePrimary && (
+                  <span className="block text-[#4ADDDE] uppercase">{hero.titlePrimary}</span>
+                )}
+                {hero.titleSecondary && (
+                  <span className="block text-white uppercase mt-1">{hero.titleSecondary}</span>
+                )}
+              </>
+            ) : (
+              <span className="text-white">
+                FREE PIG ,<br /> MOVEMENT
+              </span>
+            )}
           </h1>
           <p className="text-gray-300 text-base leading-relaxed font-light">
-            {hero?.subtitle || "Handcrafted surfboards shaped for your identity. Quality since 2001."}
+            {hero?.subtitle ||
+              "Handcrafted surfboards shaped for your identity. Quality since 2001."}
           </p>
 
           {/* Decorative divider */}

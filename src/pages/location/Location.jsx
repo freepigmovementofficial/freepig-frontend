@@ -58,9 +58,7 @@ export default function Location() {
   return (
     <div className="bg-[#000000] min-h-screen font-poppins text-white pb-24">
       {/* ── HERO BANNER ── */}
-      <div
-        className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12"
-      >
+      <div className="relative w-full flex items-center justify-center overflow-visible z-10 pt-32 pb-12">
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -82,7 +80,7 @@ export default function Location() {
           className="grid grid-cols-1 md:grid-cols-2 gap-[20px] items-start"
         >
           {/* Shop Details */}
-          <div className="bg-[#222] p-8 md:p-12 border border-[#333] shadow-2xl rounded-[30px] flex flex-col justify-center">
+          <div className="bg-[#1A2127] p-8 md:p-12 border border-[#333] shadow-2xl rounded-[30px] flex flex-col justify-center">
             <h2 className="font-oswald text-4xl md:text-5xl font-bold tracking-widest text-white mb-2 uppercase">
               {shop.name}
             </h2>
