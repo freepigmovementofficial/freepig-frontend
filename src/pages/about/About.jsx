@@ -7,6 +7,7 @@ import bercakPembatas from "../../assets/bercakPembatas.webp";
 import ourCustomer from "../../assets/ourCustomer.webp";
 import aboutUsImg from "../../assets/aboutUs.webp";
 import logoPutih from "../../assets/logoPutih.webp";
+import maskotBabi from "../../assets/maskotBabi.webp";
 
 const FadeUp = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -43,7 +44,7 @@ export default function About() {
         </FadeUp>
 
         {/* ── CONTENT GRID ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-[20px] items-start mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-[20px] items-center mb-24">
           {/* Left Side - Tall Image */}
           <div className="lg:col-span-5">
             <FadeUp
@@ -121,10 +122,17 @@ export default function About() {
 
         {/* ── TAGLINE HIGHLIGHT ── */}
         <FadeUp delay={0.1}>
-          <div className="relative border border-white/10 rounded-2xl px-8 md:px-16 py-14 text-center overflow-hidden bg-[#1A2127]">
+          <div className="relative border border-white/10 rounded-2xl px-8 md:px-16 py-14 text-center overflow-visible bg-[#1A2127]">
             {/* Decorative glow */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/3 to-transparent pointer-events-none" />
             <div className="absolute -top-6 -left-6 w-32 h-32 bg-white/4 rounded-full blur-3xl pointer-events-none" />
+
+            {/* Maskot Babi */}
+            <img
+              src={maskotBabi}
+              alt="Maskot Babi"
+              className="absolute -top-36 md:-top-52 -right-4 md:-right-10 w-[220px] md:w-[300px] lg:w-[340px] opacity-90 pointer-events-none z-10 select-none"
+            />
 
             <p className="text-[11px] text-gray-500 tracking-[0.35em] uppercase font-bold mb-5">
               Our Tagline
