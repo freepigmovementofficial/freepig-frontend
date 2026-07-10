@@ -167,13 +167,13 @@ export default function Store() {
                   <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">
                     SKILL LEVEL
                   </span>
-                  <div className="flex gap-1.5 w-full">
+                  <div className="flex gap-1.5 w-full md:w-auto">
                     {skillLevels.map((skill) => (
                       <button
                         key={skill}
                         id={`filter-skill-${skill.toLowerCase()}`}
                         onClick={() => handleSkillClick(skill)}
-                        className={`flex-1 min-h-[32px] md:min-h-[44px] flex items-center justify-center px-1 md:px-5 py-1 md:py-2 rounded-full border text-[7px] md:text-[10px] font-black tracking-widest transition-all duration-300 ${
+                        className={`flex-1 md:flex-none min-h-[32px] md:min-h-[44px] flex items-center justify-center px-1 md:px-5 py-1 md:py-2 rounded-full border text-[7px] md:text-[10px] font-black tracking-widest transition-all duration-300 ${
                           activeSkill === skill
                             ? "bg-white text-black border-white shadow-lg"
                             : "border-[#555] text-gray-400 hover:border-white hover:text-white"
@@ -188,13 +188,13 @@ export default function Store() {
                   <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">
                     WAVES
                   </span>
-                  <div className="flex gap-1.5 w-full">
+                  <div className="flex gap-1.5 w-full md:w-auto">
                     {waveTypes.map((wave) => (
                       <button
                         key={wave}
                         id={`filter-wave-${wave.toLowerCase()}`}
                         onClick={() => handleWaveClick(wave)}
-                        className={`flex-1 min-h-[32px] md:min-h-[44px] flex items-center justify-center px-1 md:px-5 py-1 md:py-2 rounded-full border text-[7px] md:text-[10px] font-black tracking-widest transition-all duration-300 ${
+                        className={`flex-1 md:flex-none min-h-[32px] md:min-h-[44px] flex items-center justify-center px-1 md:px-5 py-1 md:py-2 rounded-full border text-[7px] md:text-[10px] font-black tracking-widest transition-all duration-300 ${
                           activeWave === wave
                             ? "bg-white text-black border-white shadow-lg"
                             : "border-[#555] text-gray-400 hover:border-white hover:text-white"
@@ -213,7 +213,7 @@ export default function Store() {
                 <span className="text-[10px] font-black tracking-[0.25em] text-gray-500 uppercase shrink-0">
                   CATEGORY
                 </span>
-                <div className="flex gap-1.5 w-full">
+                <div className="flex gap-1.5 w-full md:w-auto">
                   {categories
                     .filter((cat) =>
                       [
@@ -233,7 +233,7 @@ export default function Store() {
                             prev === cat.id ? null : cat.id,
                           )
                         }
-                        className={`flex-1 min-h-[32px] md:min-h-[44px] flex items-center justify-center px-1 md:px-5 py-1 md:py-2 rounded-full border text-[8px] md:text-[10px] font-black tracking-widest transition-all duration-300 ${
+                        className={`flex-1 md:flex-none min-h-[32px] md:min-h-[44px] flex items-center justify-center px-1 md:px-5 py-1 md:py-2 rounded-full border text-[8px] md:text-[10px] font-black tracking-widest transition-all duration-300 ${
                           activeCategory === cat.id
                             ? "bg-white text-black border-white shadow-lg"
                             : "border-[#555] text-gray-400 hover:border-white hover:text-white"
@@ -248,13 +248,13 @@ export default function Store() {
           </div>
 
           {/* Tab toggle (Right Side) */}
-          <div className="flex gap-1.5 w-full lg:w-auto">
+          <div className="flex gap-1.5 w-full md:w-auto">
             {["SURFBOARD", "ACCESSORIES"].map((tab) => (
               <button
                 key={tab}
                 id={`tab-${tab.toLowerCase()}`}
                 onClick={() => handleTabChange(tab)}
-                className={`flex-1 lg:flex-none min-h-[32px] md:min-h-[44px] flex items-center justify-center px-1 md:px-6 py-1 md:py-2.5 rounded-full border text-[8px] md:text-[10px] font-black tracking-widest transition-all duration-300 ${
+                className={`flex-1 md:flex-none min-h-[32px] md:min-h-[44px] flex items-center justify-center px-1 md:px-6 py-1 md:py-2.5 rounded-full border text-[8px] md:text-[10px] font-black tracking-widest transition-all duration-300 ${
                   activeTab === tab
                     ? "bg-white text-black border-white shadow-lg"
                     : "border-[#555] text-gray-400 hover:border-white hover:text-white"
