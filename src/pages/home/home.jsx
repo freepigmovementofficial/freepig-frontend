@@ -1141,7 +1141,7 @@ export default function Home() {
                   </div>
 
                   {/* Add top margin to push description down since title is absolute/overlapping */}
-                  <div className="mt-8 md:mt-12 text-gray-200 text-sm md:text-base leading-relaxed mb-10 font-poppins whitespace-pre-wrap max-w-xl">
+                  <div className="mt-8 md:mt-12 text-justify text-gray-200 text-sm md:text-base leading-relaxed mb-10 font-poppins whitespace-pre-wrap max-w-xl">
                     {wallMagazine.description}
                   </div>
                   {wallMagazine.buttonText && wallMagazine.buttonLink && (
