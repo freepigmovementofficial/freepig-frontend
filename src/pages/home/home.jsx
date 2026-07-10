@@ -486,7 +486,7 @@ export default function Home() {
             )}
           </h1>
 
-          <p className="text-white/90 drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] text-sm md:text-base lg:text-lg max-w-2xl lg:max-w-3xl font-poppins mt-2 leading-relaxed  whitespace-pre-line">
+          <p className="text-white/90 drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] text-xs md:text-sm lg:text-base max-w-2xl lg:max-w-3xl font-poppins mt-2 leading-relaxed  whitespace-pre-line">
             {hero?.subtitle ||
               "Genuine quality performance shapes handcrafted by our local crew.\nBuilt honest, made to last, and ready for any wave."}
           </p>
