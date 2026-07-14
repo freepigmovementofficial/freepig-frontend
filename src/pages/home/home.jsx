@@ -397,6 +397,7 @@ export default function Home() {
 
       {/* HERO SECTION */}
       <section className="relative w-full h-screen flex flex-col justify-end pb-16 md:pb-25 px-6 md:px-[70px] overflow-visible z-10">
+        l
         {/* Video diperpanjang ke bawah sejauh 128px (seukuran mt-32) biar ngisi ruang kosong */}
         <div
           className="absolute top-0 left-0 w-full z-0"
@@ -439,7 +440,6 @@ export default function Home() {
             }}
           />
         </div>
-
         <motion.div
           className="max-w-3xl flex flex-col items-start z-10"
           initial={{ opacity: 0, y: 50 }}
